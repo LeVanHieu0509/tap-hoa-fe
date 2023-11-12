@@ -11,21 +11,11 @@ interface PaginationProps {
   onChangeLimited?: (limited: Limit) => void;
 }
 
-const Pagination = ({
-  limited,
-  totalPage,
-  currentPage,
-  onChangeLimited,
-  onChangePage,
-}: PaginationProps) => {
+const Pagination = ({ limited, totalPage, currentPage, onChangeLimited, onChangePage }: PaginationProps) => {
   return (
     <PaginationWrapper>
       <SelectLimited value={limited} onChange={onChangeLimited} />
-      <NumberPagination
-        totalPage={totalPage}
-        currentPage={currentPage}
-        onChangePage={onChangePage}
-      />
+      <NumberPagination totalPage={totalPage} currentPage={currentPage} onChangePage={onChangePage} />
     </PaginationWrapper>
   );
 };

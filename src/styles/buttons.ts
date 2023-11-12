@@ -60,7 +60,7 @@ export const ButtonStyle: any = css<ButtonStyleProps>`
   }
 `;
 
-export const ButtonPrimary = styled.button<{ withIcon?: any }>`
+export const ButtonPrimary = styled.button<{ size?: any; withIcon?: any }>`
   ${ButtonStyle}
   background: ${({ theme }) => theme.color.status.primary};
 
@@ -84,7 +84,7 @@ export const ButtonLinkPrimary = styled.a`
   background: ${({ theme }) => theme.color.status.primary};
 `;
 
-export const ButtonSecondary = styled.button<{ withIcon?: any }>`
+export const ButtonSecondary = styled.button<{ size?: any; withIcon?: any }>`
   ${ButtonStyle}
 
   color: ${({ theme }) => theme.color.status.primary};

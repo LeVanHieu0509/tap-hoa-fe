@@ -2,13 +2,7 @@ import { Limit } from "components/table";
 import IconSort from "components/table/icons/sort";
 import useClickAway from "hooks/use-click-away";
 import { useRef, useState } from "react";
-import {
-  EntriesPage,
-  List,
-  SelectFiled,
-  SelectLimitedWrapper,
-  SelectWrapper,
-} from "./styled";
+import { EntriesPage, List, SelectFiled, SelectLimitedWrapper, SelectWrapper } from "./styled";
 
 interface SelectLimitedProps {
   value: Limit;
