@@ -1,10 +1,11 @@
 import styled from "styled-components";
-import { device } from "../../styles/media";
+import { device } from "styles/media";
 
 export const AdminLayoutWrapper = styled.div`
   width: 100%;
   background-color: #eceff180;
   overflow: auto;
+  display: flex;
 
   @media ${device.mobile} {
     flex-direction: column;

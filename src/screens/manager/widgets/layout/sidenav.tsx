@@ -61,7 +61,15 @@ export const listSidenav = [
   },
 ];
 
-export function Sidenav({ brandImg, brandName, routes }) {
+interface SidenavProps {
+  brandImg: String;
+  brandName?: String;
+}
+
+export function Sidenav({
+  brandImg = `${process.env.basePath}/public/img/logo-ct.png`,
+  brandName = "TẠP HOÁ JUN BF",
+}: SidenavProps) {
   const router = useRouter();
   const [controller, dispatch] = useMaterialTailwindController();
   const { sidenavColor, sidenavType, openSidenav } = controller;
@@ -128,17 +136,5 @@ export function Sidenav({ brandImg, brandName, routes }) {
     </aside>
   );
 }
-
-Sidenav.defaultProps = {
-  brandImg: `${process.env.basePath}/public/img/logo-ct.png`,
-  brandName: "TẠP HOÁ JUN BF",
-};
-
-Sidenav.propTypes = {
-  brandImg: PropTypes.string,
-  brandName: PropTypes.string,
-};
-
-Sidenav.displayName = "/src/widgets/layout/sidnave.jsx";
 
 export default Sidenav;

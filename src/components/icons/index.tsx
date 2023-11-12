@@ -1,10 +1,12 @@
 import { useTheme } from "styled-components";
 import IconClose from "./source/close";
 import Tick from "./source/tick";
+import IconArrowDown from "./source/arrow-down";
 
 const IconComponent = {
   close: IconClose,
   tick: Tick,
+  "arrow-down": IconArrowDown,
 };
 
 export interface IconProps {

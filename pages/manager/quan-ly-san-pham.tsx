@@ -1,10 +1,27 @@
-import React from "react";
-import ManagerScreen from "screens/manager";
+import { useMaterialTailwindController } from "screens/manager/context";
+import ManagerProductScreen from "screens/manager/quan-ly-san-pham";
+import Header from "screens/manager/widgets/header";
+import { Footer, Sidenav } from "screens/manager/widgets/layout";
 
 interface ManagerPageProps {}
 
 const ManagerPage = ({}: ManagerPageProps) => {
-  return <ManagerScreen />;
+  const [controller] = useMaterialTailwindController();
+  const { sidenavType } = controller;
+
+  return (
+    <div className="min-h-screen bg-blue-gray-50/50">
+      <Sidenav brandImg={sidenavType === "dark" ? "/img/logo-ct.png" : "/img/logo-ct-dark.png"} />
+
+      <div className="p-4 xl:ml-80">
+        <div className="w-full">
+          <Header />
+          <ManagerProductScreen />
+          <Footer />
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default ManagerPage;
