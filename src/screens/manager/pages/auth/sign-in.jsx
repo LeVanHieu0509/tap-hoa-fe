@@ -1,5 +1,5 @@
+import { Button, Card, CardBody, CardFooter, CardHeader, Checkbox, Input, Typography } from "@material-tailwind/react";
 import Link from "next/link";
-import { Card, CardHeader, CardBody, CardFooter, Input, Checkbox, Button, Typography } from "@material-tailwind/react";
 
 export function SignIn() {
   return (

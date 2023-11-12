@@ -1,14 +1,11 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
-import React, { Fragment, useEffect, useMemo } from "react";
+import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { rootAction } from "redux/reducers/root-reducer";
 import { ThemeProvider } from "styled-components";
 import { LightTheme } from "styles/theme";
-import AdminLayout from "../admin-layout";
-import BlankLayout from "../blank-layout";
-import CustomerLayout from "../customer-layout";
-import OnlyHeaderLayout from "../only-header-layout";
+import { AdminLayoutWrapper } from "./styled";
 
 interface ThemeWrapperProps {
   children: React.ReactNode;
@@ -18,26 +15,6 @@ interface ThemeWrapperProps {
 const ThemeWrapper = ({ children, component }: ThemeWrapperProps) => {
   const router = useRouter();
   const dispath = useDispatch();
-
-  const Layout = useMemo(() => {
-    if (router.pathname.startsWith("/customer")) {
-      return CustomerLayout;
-    }
-
-    if (router.pathname.startsWith("/manager")) {
-      return AdminLayout;
-    }
-
-    if (router.pathname.startsWith("/customer/cart")) {
-      return OnlyHeaderLayout;
-    }
-
-    if ("/_error".includes(router.pathname)) {
-      return Fragment;
-    }
-
-    return BlankLayout;
-  }, [router.pathname]);
 
   useEffect(() => {
     dispath(rootAction.setInitialized(true));
@@ -72,10 +49,10 @@ const ThemeWrapper = ({ children, component }: ThemeWrapperProps) => {
         {/* <meta name="theme-color" content={LightTheme.color.text.body} /> */}
         <meta name="description" content="E-Letter" />
 
-        <title>Angels - Thiên đường sơn nails</title>
+        <title>TẠP HOÁ JUN BF</title>
       </Head>
       {children}
-      <Layout>{component}</Layout>
+      <AdminLayoutWrapper>{component}</AdminLayoutWrapper>
     </ThemeProvider>
   );
 };

@@ -80,7 +80,7 @@ export function Tables() {
           <table className="w-full min-w-[640px] table-auto">
             <thead>
               <tr>
-                {["companies", "members", "budget", "completion", ""].map((el) => (
+                {["companies", "members", "quantity_inventory", "completion", ""].map((el) => (
                   <th key={el} className="border-b border-blue-gray-50 py-3 px-5 text-left">
                     <Typography variant="small" className="text-[11px] font-bold uppercase text-blue-gray-400">
                       {el}
@@ -90,7 +90,7 @@ export function Tables() {
               </tr>
             </thead>
             <tbody>
-              {projectsTableData.map(({ img, name, members, budget, completion }, key) => {
+              {projectsTableData.map(({ img, name, members, quantity_inventory, completion }, key) => {
                 const className = `py-3 px-5 ${
                   key === projectsTableData.length - 1 ? "" : "border-b border-blue-gray-50"
                 }`;
@@ -105,22 +105,10 @@ export function Tables() {
                         </Typography>
                       </div>
                     </td>
-                    <td className={className}>
-                      {members.map(({ img, name }, key) => (
-                        <Tooltip key={name} content={name}>
-                          <Avatar
-                            src={img}
-                            alt={name}
-                            size="xs"
-                            variant="circular"
-                            className={`cursor-pointer border-2 border-white ${key === 0 ? "" : "-ml-2.5"}`}
-                          />
-                        </Tooltip>
-                      ))}
-                    </td>
+                    <td className={className}></td>
                     <td className={className}>
                       <Typography variant="small" className="text-xs font-medium text-blue-gray-600">
-                        {budget}
+                        {quantity_inventory}
                       </Typography>
                     </td>
                     <td className={className}>

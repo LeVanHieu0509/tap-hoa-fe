@@ -1,28 +1,27 @@
-import Link from "next/link";
 import {
-  Navbar,
-  Typography,
-  Button,
-  IconButton,
-  Breadcrumbs,
-  Input,
-  Menu,
-  MenuHandler,
-  MenuList,
-  MenuItem,
-  Avatar,
-} from "@material-tailwind/react";
-import {
-  UserCircleIcon,
-  Cog6ToothIcon,
+  Bars3Icon,
   BellIcon,
   ClockIcon,
+  Cog6ToothIcon,
   CreditCardIcon,
-  Bars3Icon,
+  UserCircleIcon,
 } from "@heroicons/react/24/solid";
-import { useMaterialTailwindController, setOpenConfigurator, setOpenSidenav } from "screens/manager/context";
+import {
+  Avatar,
+  Breadcrumbs,
+  Button,
+  IconButton,
+  Menu,
+  MenuHandler,
+  MenuItem,
+  MenuList,
+  Navbar,
+  Typography,
+} from "@material-tailwind/react";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
+import { setOpenConfigurator, setOpenSidenav, useMaterialTailwindController } from "screens/manager/context";
 import { listSidenav } from "./sidenav";
 
 export function DashboardNavbar() {

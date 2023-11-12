@@ -1,6 +1,5 @@
-import { ChartPieIcon, UserIcon, UserPlusIcon, ArrowRightOnRectangleIcon } from "@heroicons/react/24/solid";
-import { Navbar, Footer } from "screens/manager/widgets/layout";
-import routes from "screens/manager/routes";
+import { ArrowRightOnRectangleIcon, ChartPieIcon, UserIcon, UserPlusIcon } from "@heroicons/react/24/solid";
+import { Footer, Navbar } from "screens/manager/widgets/layout";
 
 export function Auth() {
   const navbarRoutes = [

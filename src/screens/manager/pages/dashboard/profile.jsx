@@ -160,19 +160,6 @@ export function Profile() {
                         view project
                       </Button>
                     </Link>
-                    <div>
-                      {members.map(({ img, name }, key) => (
-                        <Tooltip key={name} content={name}>
-                          <Avatar
-                            src={img}
-                            alt={name}
-                            size="xs"
-                            variant="circular"
-                            className={`cursor-pointer border-2 border-white ${key === 0 ? "" : "-ml-2.5"}`}
-                          />
-                        </Tooltip>
-                      ))}
-                    </div>
                   </CardFooter>
                 </Card>
               ))}

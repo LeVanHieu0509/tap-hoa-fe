@@ -104,14 +104,6 @@ export function Sidenav({ brandImg, brandName, routes }) {
       </div>
       <div className="m-4">
         <ul className="mb-4 flex flex-col gap-4">
-          <li className="mx-3.5 mt-4 mb-2">
-            <Typography
-              variant="small"
-              color={sidenavType === "dark" ? "white" : "blue-gray"}
-              className="font-black uppercase opacity-75"
-            ></Typography>
-          </li>
-
           {listSidenav.map((item, key) => (
             <li key={key}>
               <Link href={item.href}>

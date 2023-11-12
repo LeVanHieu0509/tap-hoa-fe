@@ -1,12 +1,12 @@
-import React from "react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import { Button, IconButton, Switch, Typography, Chip } from "@material-tailwind/react";
+import { Button, Chip, IconButton, Switch, Typography } from "@material-tailwind/react";
+import React from "react";
 import {
-  useMaterialTailwindController,
+  setFixedNavbar,
   setOpenConfigurator,
   setSidenavColor,
   setSidenavType,
-  setFixedNavbar,
+  useMaterialTailwindController,
 } from "screens/manager/context";
 
 function formatNumber(number, decPlaces) {
