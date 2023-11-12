@@ -9,4 +9,4 @@ export interface LoadingProps {
 }
 
 // eslint-disable-next-line no-unused-vars
-export type LoadingKey = { [key in LoadingName]: LoadingType | any };
+export type LoadingKey = { [key in LoadingName]?: LoadingType };

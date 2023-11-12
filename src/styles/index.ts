@@ -118,11 +118,11 @@ export const FormWrapper = styled.div`
   }
 `;
 
-export const ActionsWrapper = styled.div`
+export const ActionsWrapper = styled.div<{ justify?: string }>`
   margin-bottom: 24px;
   display: flex;
   width: 100%;
-  justify-content: end;
+  justify-content: ${({ justify }) => justify ?? "end"};
 
   align-items: center;
 `;

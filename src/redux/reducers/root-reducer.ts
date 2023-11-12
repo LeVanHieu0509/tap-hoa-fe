@@ -1,7 +1,9 @@
+import { LoadingKey } from "@custom-types/loading";
 import { createSlice } from "@reduxjs/toolkit";
+import { isBoolean, pickBy } from "lodash";
 
 interface RootState {
-  loading: any;
+  loading: LoadingKey;
   initialized: boolean;
   accessToken?: string;
   headerHeight: number;
@@ -17,16 +19,18 @@ const rootSlice = createSlice({
   name: "root",
   initialState: initialState,
   reducers: {
-    setLoading: (state, actions: { payload: { name: string; loading: boolean } }) => {
-      const { name, loading } = actions.payload;
-      const loadingState = state.loading;
-      if (loading) {
-        loadingState[name] = true;
+    setLoading: (state, actions: { type: string; payload: LoadingKey }) => {
+      const payload = actions.payload;
+      if (isBoolean(actions.payload)) {
+        state.loading = {
+          ...state.loading,
+          ...payload,
+        };
       } else {
-        delete loadingState[name];
+        state.loading = pickBy({ ...state.loading, ...actions.payload }, (value) => value) as LoadingKey;
       }
-      state.loading = { ...loadingState };
     },
+
     setInitialized(state, actions) {
       state.initialized = actions.payload;
     },

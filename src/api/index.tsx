@@ -1,11 +1,10 @@
 import axios from "axios";
 import { get, set } from "lodash";
 
-const URL = `${process.env.basePath}`;
+const URL = `${process.env.basePath}/backend`;
 
 const request = axios.create({
   baseURL: URL,
-  timeout: 90_000, // 90s
 });
 
 request.interceptors.request.use(

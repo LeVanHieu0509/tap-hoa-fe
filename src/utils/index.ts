@@ -1,5 +1,45 @@
-import { round } from "lodash";
+import { Alert } from "components/alert";
+import { get, round } from "lodash";
 import moment from "moment";
+
+export const handleError = (
+  e: any,
+  defaultMessage = "Lỗi kết nối mạng. Quý khách vui lòng truy cập lại sau hoặc liên hệ Tổng đài Dịch vụ khách hàng 1800 96 96 90 (miễn cước) để được hỗ trợ nhanh kịp thời."
+) => {
+  if (!e?.isAxiosError) {
+    Alert("ERROR", defaultMessage);
+    return;
+  }
+  if (!e?.response) {
+    Alert(
+      "ERROR",
+      "Lỗi kết nối mạng. Quý khách vui lòng truy cập lại sau hoặc liên hệ Tổng đài Dịch vụ khách hàng 1800 96 96 90 (miễn cước) để được hỗ trợ nhanh kịp thời."
+    );
+    return;
+  }
+  const status = get(e, "response.status");
+  switch (status) {
+    case 401: {
+      Alert("ERROR", "Phiên đăng nhập đã hết hạn");
+      break;
+    }
+    case 400:
+    case 500:
+    case 502:
+    case 503:
+    case 422: {
+      Alert(
+        "ERROR",
+        "Lỗi kết nối mạng. Quý khách vui lòng truy cập lại sau hoặc liên hệ Tổng đài Dịch vụ khách hàng 1800 96 96 90 (miễn cước) để được hỗ trợ nhanh kịp thời."
+      );
+      break;
+    }
+    default: {
+      Alert("ERROR", defaultMessage);
+      break;
+    }
+  }
+};
 
 export const formatNumberTwoString = (stt: number) => {
   if (stt < 10) return stt.toString().length > 1 ? stt : "0" + stt.toString();
@@ -118,4 +158,12 @@ export const calculatePercent = (number: number, total: number, max?: number, de
 export const typeOnlyNumber = (text: string) => {
   let value = text.replace(/[^0-9]/g, "") + "";
   return value;
+};
+
+export const isIOS = () => {
+  return (
+    ["iPad Simulator", "iPhone Simulator", "iPod Simulator", "iPad", "iPhone", "iPod"].includes(navigator.platform) ||
+    // iPad on iOS 13 detection
+    (navigator.userAgent.includes("Mac") && "ontouchend" in document)
+  );
 };
