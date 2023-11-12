@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: __release.serviceName__
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: __release.serviceName__
+  template:
+    metadata:
+      labels:
+        app: __release.serviceName__
+    spec:
+      containers:
+        - name: __release.serviceName__
+          image: __build.acrName__/__build.imageName__:__build.imageTag__
+          ports:
+            - containerPort: 3000
+      imagePullSecrets:
+        - name: __acrsecret__

@@ -1,0 +1,140 @@
+import styled, { css } from "styled-components";
+
+import { device } from "./media";
+
+export const Container = styled.div`
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 15px;
+  padding-right: 15px;
+  width: 100%;
+
+  @media (min-width: 576px) {
+    max-width: 540px;
+  }
+
+  @media (min-width: 769px) {
+    max-width: 720px;
+  }
+
+  @media (min-width: 992px) {
+    max-width: 960px;
+  }
+
+  @media (min-width: 1240px) {
+    max-width: 1270px;
+  }
+
+  @media (max-width: 768px) {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+`;
+
+export const Spacing = styled.div`
+  flex: 1;
+`;
+
+interface ScrollCustomProps {
+  tableScroll?: boolean;
+  overFlowY?: boolean;
+  overFlowYWidth?: number; // width cho scroll Y
+  radius?: number;
+  heightContainer?: number;
+
+  padding?: number;
+}
+
+export const ScrollCustom = styled.div<ScrollCustomProps>`
+  max-height: ${({ heightContainer }) => (heightContainer ? heightContainer + "px" : null)};
+
+  overflow: auto;
+  z-index: 100;
+  padding-right: ${({ padding }) => (padding ? padding + "px" : null)};
+
+  @media ${device.mobile} {
+    max-height: ${({ heightContainer }) => (heightContainer ? "100%" : null)};
+    overflow: hidden;
+  }
+
+  ::-webkit-scrollbar {
+    width: ${({ overFlowY, overFlowYWidth }) => (overFlowY ? overFlowYWidth + "px" : "0px")};
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #dbdfe1;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #888;
+  }
+  ::-webkit-scrollbar-thumb {
+    border-radius: ${({ radius }) => (radius ? radius + "px" : "0px")};
+    background-clip: padding-box;
+  }
+  ${({ tableScroll }) => tableScroll && TableScrollStyle}
+`;
+
+export const TableScrollStyle = css`
+  /* width */
+  div {
+    div {
+      div {
+        ::-webkit-scrollbar {
+          height: 7px;
+        }
+
+        /* Track */
+        ::-webkit-scrollbar-track {
+          background: transparent;
+        }
+
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+          background: #dbdfe1;
+          border-radius: 8px;
+        }
+
+        /* Handle on hover */
+        ::-webkit-scrollbar-thumb:hover {
+          background: #888;
+        }
+      }
+    }
+  }
+`;
+
+export const FormWrapper = styled.div`
+  width: 58%;
+
+  @media ${device.mobile} {
+    width: 100%;
+  }
+`;
+
+export const ActionsWrapper = styled.div`
+  margin-bottom: 24px;
+  display: flex;
+  width: 100%;
+  justify-content: end;
+
+  align-items: center;
+`;
+
+export const ServicesScreenWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  @media ${device.mobile} {
+    gap: 16px;
+  }
+`;
+
+export const QuanLyServicesScreenWrapper = styled.div``;
