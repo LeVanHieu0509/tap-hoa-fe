@@ -47,14 +47,14 @@ interface ScrollCustomProps {
 
 export const ScrollCustom = styled.div<ScrollCustomProps>`
   max-height: ${({ heightContainer }) => (heightContainer ? heightContainer + "px" : null)};
-
-  overflow: auto;
+  display: flex;
+  overflow-y: auto;
   z-index: 100;
   padding-right: ${({ padding }) => (padding ? padding + "px" : null)};
 
   @media ${device.mobile} {
-    max-height: ${({ heightContainer }) => (heightContainer ? "100%" : null)};
-    overflow: hidden;
+    max-height: ${({ heightContainer }) => (heightContainer ? heightContainer + "px" : null)};
+    overflow: auto;
   }
 
   ::-webkit-scrollbar {

@@ -170,7 +170,7 @@ export function ManagerProductScreen() {
         product_expired_date: "123",
       },
     ]);
-  }, [lists]);
+  }, []);
 
   const formatValueRequest = (data: any, config: TableConfig) => {
     switch (config.key) {
@@ -202,7 +202,6 @@ export function ManagerProductScreen() {
           node: formatValueRequest(d, config),
           originData: {
             multiSelectId: d["id"],
-            disabled: d["status"] !== "Pending",
           },
         }))
       ),
@@ -242,7 +241,7 @@ export function ManagerProductScreen() {
             />
           </ActionsWrapper>
 
-          <ScrollCustom tableScroll>
+          <ScrollCustom tableScroll className="ok">
             <Table
               multiSelect={isSelectAll && multiSelect}
               onChangeMultiSelect={isSelectAll ? setMultiSelect : null}

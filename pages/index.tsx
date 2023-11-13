@@ -5,7 +5,7 @@ import LoadingPage from "components/loading-page";
 import useRedirect from "hooks/use-redirect";
 
 const Home = () => {
-  useRedirect("/quan-ly");
+  useRedirect("/manager");
 
   return <LoadingPage loading={true} />;
 };

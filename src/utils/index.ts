@@ -1,5 +1,6 @@
 import { Alert } from "components/alert";
-import { get, round } from "lodash";
+import CryptoJS from "crypto-js";
+import { get, isArray, range, round, sum } from "lodash";
 import moment from "moment";
 
 export const handleError = (
@@ -41,30 +42,9 @@ export const handleError = (
   }
 };
 
-export const formatNumberTwoString = (stt: number) => {
-  if (stt < 10) return stt.toString().length > 1 ? stt : "0" + stt.toString();
-  return stt;
-};
-
-export const coverDateNumberToString = (date: any) => {
-  if (date?.length < 10) {
-    return date;
-  }
-  if (/[0-3][0-9]\/[0-1][0-9]\/[1-2]\d{3}/.test(date)) {
-    return date;
-  }
-  if (date && moment(date).isValid()) {
-    return moment(date).format("DD/MM/YYYY");
-  }
-  return date;
-};
-
-export const formatNumber = (num: number | string, minimumFractionDigits = 0) => {
-  return !isNaN(+num)
-    ? (+num)?.toLocaleString("de-DE", {
-        minimumFractionDigits: minimumFractionDigits,
-      })
-    : "0";
+export const typeOnlyNumber = (text: string) => {
+  let value = text.replace(/[^0-9]/g, "") + "";
+  return value;
 };
 
 export const removeVietnameseTones = (str: string) => {
@@ -92,53 +72,94 @@ export const removeVietnameseTones = (str: string) => {
   str = str.trim();
   // Remove punctuations
   // Bỏ dấu câu, kí tự đặc biệt
-  // str = str.replace(
-  //   /!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\.|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|`|-|{|}|\||\\/g,
-  //   ""
-  // );
+  str = str.replace(/!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\.|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g, " ");
   return str;
 };
 
-export function validateEmail(email: string) {
-  // var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  var re = /^([a-zA-Z0-9_.-]*)@[a-zA-Z\-0-9]+(\.[a-zA-Z]{2,})+$/;
-  return re.test(String(email).toLowerCase());
-}
-
-/**
- * Check valid date format DD/MM/YYYY
- * @param date {string | number} date
- * @returns {boolean} date is valid
- */
-export const isValidDate = (date?: string): boolean => {
-  if (!date || date?.length < 10) {
-    return false;
-  }
-  return moment(date, "DD/MM/YYYY", true).isValid();
+export const percentageFormula = (value: number, maxValue: number) => {
+  return Math.round((value / maxValue) * 100);
 };
 
-export const convertNameToCharacter = (name: string) => {
-  const splitName = name?.split(" ");
-  let fristCharacter = "";
-  let lastCharacter = "";
+export const formatNumberToMoneyString = (
+  number: number | string,
+  lang?: "us" | "vi"
+): { value: number; unit: string; result: string } => {
+  number = Math.round(+number);
 
-  if (splitName?.length == 1) {
-    lastCharacter = splitName?.pop();
+  if (number >= 1000) {
+    let numberObj = {
+      value: number,
+      unit: "",
+      result: "",
+    };
+
+    if (number >= 1000000000) {
+      numberObj.value = Math.round(number / 1000000) / 1000;
+      numberObj.unit = lang === "us" ? "B" : " Tỷ";
+    } else if (number >= 1000000) {
+      numberObj.value = Math.round(number / 100000) / 10;
+      numberObj.unit = lang === "us" ? "M" : " Tr";
+    }
+    // else if (number >= 1000) {
+    //   numberObj.value = Math.round(number / 100) / 10;
+    //   numberObj.unit = lang === "us" ? "K" : " Ng";
+    // }
+    numberObj.result = formatNumber(numberObj.value) + numberObj.unit;
+
+    return numberObj;
   } else {
-    fristCharacter = splitName?.shift().slice(0, 1);
-    lastCharacter = splitName?.pop().slice(0, 1);
+    return {
+      value: number ? +number.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.") : 0,
+      unit: "",
+      result: number ? number.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.") : "0",
+    };
   }
-  return fristCharacter + lastCharacter;
 };
 
-export const getDateFrom = (format?: string): string => {
-  return moment()
-    .startOf("month")
-    .format(format ?? "DD/MM/YYYY");
+export const formatToMoney = (num: number | string, minimumFractionDigits = 0) => {
+  const language = process.browser && navigator ? navigator.language : "en";
+  return (+num)?.toLocaleString(language, { minimumFractionDigits: minimumFractionDigits });
 };
 
-export const getDateTo = (format?: string): string => {
-  return moment().format(format ?? "DD/MM/YYYY");
+export const formatNumber = (num: number | string, round?: boolean, minimumFractionDigits = 0) => {
+  if (round) {
+    return !isNaN(+num)
+      ? Math.round(+num)?.toLocaleString("de-DE", { minimumFractionDigits: minimumFractionDigits })
+      : "0";
+  } else {
+    return !isNaN(+num) ? (+num)?.toLocaleString("de-DE", { minimumFractionDigits: minimumFractionDigits }) : "0";
+  }
+};
+
+export const encryptPassword = (val: string) => {
+  let res = CryptoJS.AES.encrypt(JSON.stringify(val), "secretFWD2021").toString();
+  return res;
+};
+
+export const coverDateNumberToString = (date: any) => {
+  if (date?.length < 10) {
+    return date;
+  }
+  if (/[0-3][0-9]\/[0-1][0-9]\/[1-2]\d{3}/.test(date)) {
+    return date;
+  }
+  if (date && moment(date).isValid()) {
+    return moment(date).format("DD/MM/YYYY");
+  }
+  return date;
+};
+
+export const formatNumberTwoString = (stt: number) => {
+  if (stt < 10) return stt.toString().length > 1 ? stt : "0" + stt.toString();
+  return stt;
+};
+
+export const calculateTotal = (data: any[], key: string): number => {
+  if (!data?.length) {
+    return 0;
+  }
+
+  return sum(data.map((item) => item[key]));
 };
 
 export const calculatePercent = (number: number, total: number, max?: number, decimal = 0): number => {
@@ -155,15 +176,158 @@ export const calculatePercent = (number: number, total: number, max?: number, de
   return percent;
 };
 
-export const typeOnlyNumber = (text: string) => {
-  let value = text.replace(/[^0-9]/g, "") + "";
-  return value;
+export const convertTabToPlaceHolder = (tab: string) => {
+  switch (tab) {
+    case "daily":
+      return "Chọn ngày";
+    case "monthly":
+      return "Chọn tháng";
+    case "yearly":
+      return "Chọn năm";
+    default:
+      return null;
+  }
 };
 
-export const isIOS = () => {
-  return (
-    ["iPad Simulator", "iPhone Simulator", "iPod Simulator", "iPad", "iPhone", "iPod"].includes(navigator.platform) ||
-    // iPad on iOS 13 detection
-    (navigator.userAgent.includes("Mac") && "ontouchend" in document)
-  );
+export const getDateFrom = (format?: string): string => {
+  return moment()
+    .startOf("month")
+    .format(format ?? "DD/MM/YYYY");
+};
+
+export const getDateTo = (format?: string): string => {
+  return moment().format(format ?? "DD/MM/YYYY");
+};
+
+export const formatDateRequest = (date: string): string => {
+  const dateFormat = moment(date, "DD/MM/YYYY").format("YYYY-MM-DD");
+  return dateFormat;
+};
+
+export const formatDateRequestFromMonth = (date: string): string => {
+  const dateFormat = moment(date, "MM/YYYY").format("YYYY-MM");
+  return dateFormat;
+};
+
+export function addLevelDepth(data: any) {
+  let maxDepth = 0;
+
+  function addLevel(list: any[], level = 0) {
+    list?.forEach((item) => {
+      if (level > maxDepth) {
+        maxDepth = level;
+      }
+      item.level = level;
+      addLevel(item.children, level + 1);
+    });
+  }
+  addLevel(data);
+
+  function addDepth(list: any[]) {
+    list?.forEach((item) => {
+      item.depth = maxDepth - item.level;
+      addDepth(item.children);
+    });
+  }
+  addDepth(data);
+
+  return data;
+}
+
+export function sumCalculator(items: any[], key: string) {
+  return items?.reduce((total, item) => total + item?.[key], 0);
+}
+
+export const checkIsAD = (agentCode: string) => {
+  if (agentCode?.startsWith("AD")) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
+export const sizeFile = (value: any): number => {
+  let total = 0;
+  if (isArray(value)) {
+    total = sum(value.map((size) => +(size / (1024 * 1024)).toFixed(2)));
+  } else {
+    total = +(value / (1024 * 1024)).toFixed(2);
+  }
+
+  return total;
+};
+
+export const sizeFileString = (size: number): string => {
+  const i = size == 0 ? 0 : Math.floor(Math.log(size) / Math.log(1024));
+  return +(size / Math.pow(1024, i)).toFixed(2) * 1 + " " + ["B", "kB", "MB", "GB", "TB"][i];
+};
+
+export const agentRole = (designation: string) => {
+  if (["FSC", "SFSC", "HDBS", "AGRBS", "FWP", "DFWP"].includes(designation)) {
+    return "TV";
+  } else {
+    return "CQL";
+  }
+};
+
+export const agentIFARole = (designation: string) => {
+  if (
+    [
+      "FWMCEO",
+      "FWMSUM",
+      "FWMAL",
+      "FWMAM",
+      "FWMAD",
+      "FWMMAD",
+      "FWMSD",
+      "FWMMSD",
+      "FWMRD",
+      "FWMTD",
+      "BREMP",
+      "ASEMP",
+      "AVEMP",
+      "MOEMP",
+      "TDEMP",
+      "BOEMP",
+      "WAEMP",
+      "ABKEMP",
+      "VHEMP",
+    ].includes(designation)
+  ) {
+    return "CQL";
+  } else {
+    return "TV";
+  }
+};
+
+export const lineChartByYearNumber = ["", ...range(1, 13).map((item) => item)];
+
+export const getPreviousArrVal = (arr: number[]) => {
+  const outputArr = [];
+  let total = 0;
+  for (let i = 0; i < arr.length; i++) {
+    total += arr[i];
+    outputArr.push(total - arr[i]);
+  }
+  return outputArr;
+};
+
+export const convertNameToCharacter = (name: string) => {
+  const splitName = name?.split(" ");
+  let fristCharacter = "";
+  let lastCharacter = "";
+
+  if (splitName?.length == 1) {
+    lastCharacter = splitName?.pop();
+  } else {
+    fristCharacter = splitName?.shift().slice(0, 1);
+    lastCharacter = splitName?.pop().slice(0, 1);
+  }
+  return fristCharacter + lastCharacter;
+};
+
+export const convertIdentityType: any = {
+  CMND: "CMND",
+  CCCD: "CCCD",
+  HC: "Hộ chiếu",
 };

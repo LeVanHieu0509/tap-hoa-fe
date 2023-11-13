@@ -1,7 +1,7 @@
-import { Button, Card, CardBody, CardFooter, CardHeader, Checkbox, Input, Typography } from "@material-tailwind/react";
 import Link from "next/link";
+import { Card, CardHeader, CardBody, CardFooter, Input, Checkbox, Button, Typography } from "@material-tailwind/react";
 
-export function SignIn() {
+export function SignUp() {
   return (
     <>
       <img
@@ -13,25 +13,26 @@ export function SignIn() {
         <Card className="absolute top-2/4 left-2/4 w-full max-w-[24rem] -translate-y-2/4 -translate-x-2/4">
           <CardHeader variant="gradient" color="blue" className="mb-4 grid h-28 place-items-center">
             <Typography variant="h3" color="white">
-              Sign In
+              Sign Up
             </Typography>
           </CardHeader>
           <CardBody className="flex flex-col gap-4">
+            <Input label="Name" size="lg" />
             <Input type="email" label="Email" size="lg" />
             <Input type="password" label="Password" size="lg" />
             <div className="-ml-2.5">
-              <Checkbox label="Remember Me" />
+              <Checkbox label="I agree the Terms and Conditions" />
             </div>
           </CardBody>
           <CardFooter className="pt-0">
             <Button variant="gradient" fullWidth>
-              Sign In
+              Sign Up
             </Button>
             <Typography variant="small" className="mt-6 flex justify-center">
-              Don't have an account?
-              <Link to="/auth/sign-up">
+              Already have an account?
+              <Link href="/auth/sign-in">
                 <Typography as="span" variant="small" color="blue" className="ml-1 font-bold">
-                  Sign up
+                  Sign in
                 </Typography>
               </Link>
             </Typography>
@@ -42,4 +43,4 @@ export function SignIn() {
   );
 }
 
-export default SignIn;
+export default SignUp;

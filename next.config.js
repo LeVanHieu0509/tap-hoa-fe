@@ -5,7 +5,7 @@ module.exports = {
   },
   publicRuntimeConfig: {
     site: {
-      name: "Next.js + Tailwind CSS template",
+      name: "Tap Hoa Jun Bf",
       url:
         process.env.NODE_ENV === "development"
           ? "http://localhost:3000"
@@ -20,4 +20,16 @@ module.exports = {
     locales: ["en-US"],
     defaultLocale: "en-US",
   },
+
+  async rewrites() {
+    return {
+      fallback: [
+        {
+          source: "/backend/:path*",
+          destination: `${process.env.API_ENDPOINT}/:path*`,
+        },
+      ],
+    };
+  },
+
 };
