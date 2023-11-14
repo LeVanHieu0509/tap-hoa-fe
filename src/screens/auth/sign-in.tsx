@@ -1,15 +1,15 @@
-import { Button, Card, CardBody, CardFooter, CardHeader, Typography } from "@material-tailwind/react";
+import { Button, Card, CardBody, CardFooter, CardHeader, Checkbox, Input, Typography } from "@material-tailwind/react";
 import { onLogin } from "api/auth";
-import CheckBox from "components/checkbox";
-import InputFieldSet from "components/input-fileldset";
+import { Alert } from "components/alert";
 import useActionApi from "hooks/use-action-api";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
+import { useDispatch } from "react-redux";
+import { rootAction } from "redux/reducers/root-reducer";
 
 export function SignIn() {
+  const dispatch = useDispatch();
   const router = useRouter();
-  const [hide, setHide] = useState(true);
   const [login, setLogin] = useState({
     username: "",
     password: "",
@@ -34,11 +34,11 @@ export function SignIn() {
     )
       .then(({ data }) => {
         if (data.status == "1") {
-          localStorage.setItem("currentUser", JSON.stringify(data.data));
-          // dispatch(setUser(currentUser));
+          dispatch(rootAction.setCurrentUser({ user: data.data.user, tokens: data.data.tokens }));
           router.replace("/manager");
+        } else {
+          Alert("ERROR", data.message);
         }
-        console.log("data", data);
       })
       .catch((e) => e);
   };
@@ -84,25 +84,22 @@ export function SignIn() {
             </Typography>
           </CardHeader>
           <CardBody className="flex flex-col gap-4">
-            <InputFieldSet
-              id="username"
-              name="username"
+            <Input
+              crossOrigin
               value={login.username}
-              placeholder="Tên đăng nhập"
-              noTranslateLabel
+              label="Username"
+              size="lg"
               onChange={(e) => onChangeInput("username", e.target.value)}
             />
-            <InputFieldSet
-              id="password"
-              name="password"
-              type={hide ? "password" : "text"}
+            <Input
+              crossOrigin
               value={login.password}
-              placeholder="Mật khẩu"
-              noTranslateLabel
+              label="Password"
+              size="lg"
               onChange={(e) => onChangeInput("password", e.target.value)}
             />
             <div className="-ml-2.5">
-              <CheckBox onChange={() => {}} checked={true} />
+              <Checkbox crossOrigin label="Lưu tài khoản và mật khẩu?" />
             </div>
           </CardBody>
           <CardFooter className="pt-0">
@@ -110,12 +107,12 @@ export function SignIn() {
               Đăng nhập
             </Button>
             <Typography variant="small" className="mt-6 flex justify-center">
-              Don't have an account?
-              <Link href="/auth/sign-up">
+              Chúc bạn một ngày làm việc vui vẻ!
+              {/* <Link href="/auth/sign-up">
                 <Typography as="span" variant="small" color="blue" className="ml-1 font-bold">
                   Sign up
                 </Typography>
-              </Link>
+              </Link> */}
             </Typography>
           </CardFooter>
         </Card>

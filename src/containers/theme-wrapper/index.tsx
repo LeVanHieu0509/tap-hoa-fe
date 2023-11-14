@@ -1,8 +1,8 @@
 import Head from "next/head";
-import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { rootAction } from "redux/reducers/root-reducer";
+import { loadLocalItem } from "redux/store";
 import { ThemeProvider } from "styled-components";
 import { LightTheme } from "styles/theme";
 import { AdminLayoutWrapper } from "./styled";
@@ -13,10 +13,9 @@ interface ThemeWrapperProps {
 }
 
 const ThemeWrapper = ({ children, component }: ThemeWrapperProps) => {
-  const dispath = useDispatch();
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    dispath(rootAction.setInitialized(true));
     const listenter = function (ev: MouseEvent) {
       const button = ev.target as HTMLButtonElement;
       if (button.tagName === "BUTTON" && !button.disabled) {
@@ -40,6 +39,24 @@ const ThemeWrapper = ({ children, component }: ThemeWrapperProps) => {
     };
   }, []);
 
+  useEffect(() => {
+    const data = loadLocalItem("currentUser");
+    if (data) {
+      dispatch(rootAction.setCurrentUser(data));
+    }
+
+    dispatch(rootAction.setInitialized(true));
+
+    const listenerExpires = () => {
+      // signOut({ redirect: false });
+      // router.replace("/");
+    };
+    window.addEventListener("expirestoken", listenerExpires);
+    return () => {
+      window.removeEventListener("expirestoken", listenerExpires);
+    };
+  }, []);
+
   return (
     <ThemeProvider theme={LightTheme}>
       <Head>
@@ -47,7 +64,6 @@ const ThemeWrapper = ({ children, component }: ThemeWrapperProps) => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         {/* <meta name="theme-color" content={LightTheme.color.text.body} /> */}
         <meta name="description" content="E-Letter" />
-
         <title>TẠP HOÁ JUN BF</title>
       </Head>
       {children}

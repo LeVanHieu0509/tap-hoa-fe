@@ -140,8 +140,8 @@ const style = css`
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     line-height: 24px;
-    border: 0 none;
-    outline: 0 none;
+    /* border: 0 none;
+    outline: 0 none; */
     background: transparent;
 
     :disabled {
@@ -371,6 +371,37 @@ const style = css`
   }
   .text-huge {
     font-size: 1.8em;
+  }
+
+  .Toastify__toast-container--bottom-center {
+    width: 80vw;
+  }
+
+  .Toastify__close-button {
+    padding: 12px;
+  }
+
+  .Toastify__close-button > svg {
+    height: 20px;
+    width: 20px;
+  }
+
+  .Toastify__toast {
+    display: flex;
+    align-items: center;
+
+    background: #183028;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
+    border-radius: 8px;
+
+    font-weight: 450;
+    font-size: 16px;
+    line-height: 150%;
+
+    color: white;
+  }
+
+  .Toastify__close-button {
   }
 `;
 

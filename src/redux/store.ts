@@ -90,9 +90,16 @@ function createSagaInjector(runSaga: any, rootSaga: any) {
 // sagaMiddleware.run(rootSaga); // run after create store => important// Add injectSaga method to our store
 export const injectSaga = createSagaInjector(sagaMiddleware.run, rootSaga);
 
-// store.subscribe(() => {
-//   const state = store.getState();
-// });
+store.subscribe(() => {
+  const state = store.getState();
+
+  if (state.rootReducer.initialized) {
+    const { currentUser } = state.rootReducer;
+    const { user, tokens } = currentUser ?? {};
+
+    setLocalItem("currentUser", { user, tokens });
+  }
+});
 
 export type RootState = ReturnType<typeof store.getState>;
 
