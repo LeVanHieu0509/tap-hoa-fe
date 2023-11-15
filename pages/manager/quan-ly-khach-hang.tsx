@@ -1,5 +1,5 @@
 import { useMaterialTailwindController } from "screens/manager/context";
-import { DashboardScreen } from "screens/manager/dashboard";
+import QuanLyKhachHangScreen from "screens/manager/quan-ly-khach-hang";
 import Header from "screens/manager/widgets/header";
 import { Footer, Sidenav } from "screens/manager/widgets/layout";
 
@@ -16,7 +16,7 @@ const ManagerPage = ({}: ManagerPageProps) => {
       <div className="p-4 xl:ml-80">
         <div className="w-full">
           <Header />
-          <DashboardScreen />
+          <QuanLyKhachHangScreen />
           <Footer />
         </div>
       </div>

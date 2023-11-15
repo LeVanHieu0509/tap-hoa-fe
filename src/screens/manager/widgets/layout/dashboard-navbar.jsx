@@ -1,3 +1,4 @@
+import { listSidenav } from "@constants";
 import {
   Bars3Icon,
   BellIcon,
@@ -22,7 +23,6 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
 import { setOpenConfigurator, setOpenSidenav, useMaterialTailwindController } from "screens/manager/context";
-import { listSidenav } from "./sidenav";
 
 export function DashboardNavbar() {
   const [controller, dispatch] = useMaterialTailwindController();

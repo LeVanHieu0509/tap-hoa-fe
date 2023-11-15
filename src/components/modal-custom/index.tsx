@@ -1,6 +1,7 @@
 import { Button, Dialog, DialogBody, DialogFooter, DialogHeader, Typography } from "@material-tailwind/react";
 
 import { useTheme } from "styled-components";
+import { Flex } from "styles/common";
 
 const ModalCustom = ({
   children,
@@ -39,32 +40,34 @@ const ModalCustom = ({
 
       {secondaryBtn || primaryBtn ? (
         <DialogFooter>
-          {secondaryBtn ? (
-            <Button
-              disabled={secondaryBtn?.disable}
-              onClick={secondaryBtn?.onClick}
-              style={{
-                width: "100px",
-                color: "#ffffff",
-                background: theme.color.status.red,
-              }}
-            >
-              {secondaryBtn?.text}
-            </Button>
-          ) : null}
-          {primaryBtn ? (
-            <Button
-              disabled={primaryBtn?.disable}
-              style={{
-                width: "100px",
-                color: "#ffffff",
-                background: theme.color.status.primary,
-              }}
-              onClick={primaryBtn?.onClick}
-            >
-              {primaryBtn?.text}
-            </Button>
-          ) : null}
+          <Flex gap={16} gapMb={16}>
+            {secondaryBtn ? (
+              <Button
+                disabled={secondaryBtn?.disable}
+                onClick={secondaryBtn?.onClick}
+                style={{
+                  width: "100px",
+                  color: "#ffffff",
+                  background: theme.color.status.red,
+                }}
+              >
+                {secondaryBtn?.text}
+              </Button>
+            ) : null}
+            {primaryBtn ? (
+              <Button
+                disabled={primaryBtn?.disable}
+                style={{
+                  width: "100px",
+                  color: "#ffffff",
+                  background: theme.color.status.primary,
+                }}
+                onClick={primaryBtn?.onClick}
+              >
+                {primaryBtn?.text}
+              </Button>
+            ) : null}
+          </Flex>
         </DialogFooter>
       ) : null}
     </Dialog>

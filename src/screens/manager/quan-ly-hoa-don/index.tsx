@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { QuanLySanPhamScreenWrapper } from "./styled";
+import { QuanLyHoaDonScreenWrapper } from "./styled";
 import QuanLyComponent from "../quan-ly-component";
 import { TableConfig } from "@custom-types/config-table";
 
-interface QuanLySanPhamScreenProps {}
+interface QuanLyHoaDonScreenProps {}
 
 const tableConfig: TableConfig[] = [
   {
@@ -15,50 +15,26 @@ const tableConfig: TableConfig[] = [
   },
   {
     key: "product_bar_code",
-    label: "Mã vạch",
+    label: "Trạng thái hoá đơn",
     type: "string",
     show: true,
   },
   {
     key: "product_name",
-    label: "Tên sản phẩm",
+    label: "Tổng tiền",
     type: "string",
     show: true,
   },
   {
-    key: "product_description",
+    key: "Ngày tạo hoá đơn",
     label: "Mô tả",
     type: "rich-text",
     show: true,
   },
   {
     key: "product_price_origin",
-    label: "Giá vốn",
+    label: "Ngày hoá",
     type: "number",
-    show: true,
-  },
-  {
-    key: "product_price_sell",
-    label: "Giá bán",
-    type: "number",
-    show: true,
-  },
-  {
-    key: "product_quantity",
-    label: "Số lượng tồn",
-    type: "number",
-    show: true,
-  },
-  {
-    key: "product_manufacture_date",
-    label: "Ngày sản xuất",
-    type: "date",
-    show: true,
-  },
-  {
-    key: "product_expired_date",
-    label: "Ngày hết hạn",
-    type: "date",
     show: true,
   },
   {
@@ -69,7 +45,7 @@ const tableConfig: TableConfig[] = [
   },
 ];
 
-const QuanLySanPhamScreen = ({}: QuanLySanPhamScreenProps) => {
+const QuanLyHoaDonScreen = ({}: QuanLyHoaDonScreenProps) => {
   const [lists, setLists] = useState<any[]>([]);
   const listFormat = useMemo(
     () =>
@@ -80,10 +56,6 @@ const QuanLySanPhamScreen = ({}: QuanLySanPhamScreenProps) => {
           product_name: item.product_name,
           product_description: item.product_description,
           product_price_origin: item.product_price_origin,
-          product_price_sell: item.product_price_sell,
-          product_quantity: item.product_quantity,
-          product_manufacture_date: item.product_manufacture_date,
-          product_expired_date: item.product_expired_date,
         };
       }),
     [lists]
@@ -173,7 +145,7 @@ const QuanLySanPhamScreen = ({}: QuanLySanPhamScreenProps) => {
   };
 
   return (
-    <QuanLySanPhamScreenWrapper>
+    <QuanLyHoaDonScreenWrapper>
       <QuanLyComponent
         onAdd={handleAddProduct}
         onUpdate={handleUpdateProduct}
@@ -181,8 +153,8 @@ const QuanLySanPhamScreen = ({}: QuanLySanPhamScreenProps) => {
         tableConfig={tableConfig}
         listFormat={listFormat}
       />
-    </QuanLySanPhamScreenWrapper>
+    </QuanLyHoaDonScreenWrapper>
   );
 };
 
-export default QuanLySanPhamScreen;
+export default QuanLyHoaDonScreen;

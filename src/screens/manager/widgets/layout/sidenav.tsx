@@ -5,61 +5,8 @@ import { Avatar, Button, IconButton, Typography } from "@material-tailwind/react
 import { useMaterialTailwindController, setOpenSidenav } from "screens/manager/context";
 import { useRouter } from "next/router";
 
-import {
-  BellIcon,
-  PlusCircleIcon,
-  ShoppingCartIcon,
-  CreditCardIcon,
-  LockOpenIcon,
-  BanknotesIcon,
-} from "@heroicons/react/24/solid";
 import React from "react";
-
-export const listSidenav = [
-  {
-    title: "Tổng quan",
-    href: "/manager",
-    role: ["ADMIN"],
-    icon: BellIcon,
-  },
-  {
-    title: "Quản lý hoá đơn",
-    href: "/manager/quan-ly-hoa-don",
-    role: ["ADMIN", "EMPLOYEE"],
-    icon: PlusCircleIcon,
-  },
-
-  {
-    title: "Quản lý sản phẩm",
-    href: "/manager/quan-ly-san-pham",
-    role: ["ADMIN"],
-    icon: ShoppingCartIcon,
-  },
-  {
-    title: "Quản lý thanh toán",
-    href: "/manager/quan-ly-thanh-toan",
-    role: ["ADMIN", "EMPLOYEE"],
-    icon: CreditCardIcon,
-  },
-  {
-    title: "Quản lý nhân viên",
-    href: "/manager/quan-ly-nhan-vien",
-    role: ["ADMIN"],
-    icon: LockOpenIcon,
-  },
-  {
-    title: "Trang cá nhân",
-    href: "/manager/trang-ca-nhan",
-    role: ["ADMIN", "EMPLOYEE"],
-    icon: BanknotesIcon,
-  },
-  {
-    title: "Quản lý khách hàng",
-    href: "/manager/quan-ly-khach-hang",
-    role: ["ADMIN", "EMPLOYEE"],
-    icon: BanknotesIcon,
-  },
-];
+import { listSidenav } from "@constants";
 
 interface SidenavProps {
   brandImg: String;

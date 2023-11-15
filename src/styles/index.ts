@@ -47,8 +47,7 @@ interface ScrollCustomProps {
 
 export const ScrollCustom = styled.div<ScrollCustomProps>`
   max-height: ${({ heightContainer }) => (heightContainer ? heightContainer + "px" : null)};
-  display: flex;
-  overflow-y: auto;
+
   z-index: 100;
   padding-right: ${({ padding }) => (padding ? padding + "px" : null)};
 

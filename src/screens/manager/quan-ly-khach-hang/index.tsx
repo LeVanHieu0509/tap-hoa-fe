@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { QuanLySanPhamScreenWrapper } from "./styled";
+import { QuanLyKhachHangScreenWrapper } from "./styled";
 import QuanLyComponent from "../quan-ly-component";
 import { TableConfig } from "@custom-types/config-table";
 
-interface QuanLySanPhamScreenProps {}
+interface QuanLyKhachHangScreenProps {}
 
 const tableConfig: TableConfig[] = [
   {
@@ -69,7 +69,7 @@ const tableConfig: TableConfig[] = [
   },
 ];
 
-const QuanLySanPhamScreen = ({}: QuanLySanPhamScreenProps) => {
+const QuanLyKhachHangScreen = ({}: QuanLyKhachHangScreenProps) => {
   const [lists, setLists] = useState<any[]>([]);
   const listFormat = useMemo(
     () =>
@@ -173,7 +173,7 @@ const QuanLySanPhamScreen = ({}: QuanLySanPhamScreenProps) => {
   };
 
   return (
-    <QuanLySanPhamScreenWrapper>
+    <QuanLyKhachHangScreenWrapper>
       <QuanLyComponent
         onAdd={handleAddProduct}
         onUpdate={handleUpdateProduct}
@@ -181,8 +181,8 @@ const QuanLySanPhamScreen = ({}: QuanLySanPhamScreenProps) => {
         tableConfig={tableConfig}
         listFormat={listFormat}
       />
-    </QuanLySanPhamScreenWrapper>
+    </QuanLyKhachHangScreenWrapper>
   );
 };
 
-export default QuanLySanPhamScreen;
+export default QuanLyKhachHangScreen;
