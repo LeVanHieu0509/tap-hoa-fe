@@ -1,7 +1,5 @@
-import PropTypes from "prop-types";
-import { Typography } from "@material-tailwind/react";
 import { HeartIcon } from "@heroicons/react/24/solid";
-import { Interface } from "readline";
+import { Typography } from "@material-tailwind/react";
 
 interface FooterProps {
   brandName?: string;

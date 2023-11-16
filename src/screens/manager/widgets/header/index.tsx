@@ -1,9 +1,8 @@
-import React from "react";
-import { Configurator, DashboardNavbar } from "../layout";
-import { IconButton } from "@material-tailwind/react";
 import { Cog6ToothIcon } from "@heroicons/react/24/solid";
-import { useMaterialTailwindController, setOpenConfigurator } from "screens/manager/context";
+import { IconButton } from "@material-tailwind/react";
 import { useRouter } from "next/router";
+import { setOpenConfigurator, useMaterialTailwindController } from "screens/manager/context";
+import { Configurator, DashboardNavbar } from "../layout";
 
 interface HeaderProps {}
 

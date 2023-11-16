@@ -6,12 +6,15 @@ import ModalCustom from "components/modal-custom";
 import Table from "components/table";
 import TableMobile from "components/table-mobile";
 import { useMemo, useState } from "react";
-import ProductModal from "section/manager/product";
-import DeleteModal from "section/manager/product/delete-modal";
-import FixModal from "section/manager/product/fix-modal";
+import QuanLyHoaDonModal from "section/manager/quan-ly-san-pham";
+import DeleteModal from "section/manager/quan-ly-san-pham/delete-modal";
+import FixModal from "section/manager/quan-ly-san-pham/fix-modal";
 import { ActionsWrapper, ScrollCustom } from "styles";
 import { formatValueTable } from "utils/format-value";
 import Actions from "../components/actions";
+import QuanLySanPhamModal from "section/manager/quan-ly-san-pham";
+import QuanLyThanhToanModal from "section/manager/quan-ly-thanh-toan";
+import QuanLyNhanVienModal from "section/manager/quan-ly-nhan-vien";
 
 interface QuanLyComponent {
   isSelectAll?: boolean;
@@ -148,13 +151,13 @@ export function QuanLyComponent({
   const ModalContent = useMemo(() => {
     switch (type) {
       case "quan-ly-san-pham":
-        return ProductModal;
+        return QuanLySanPhamModal;
       case "quan-ly-hoa-don":
-        return FixModal;
+        return QuanLyHoaDonModal;
       case "quan-ly-thanh-toan":
-        return DeleteModal;
+        return QuanLyThanhToanModal;
       case "quan-ly-nhan-vien":
-        return DeleteModal;
+        return QuanLyNhanVienModal;
       case "tao-hoa-don":
         return DeleteModal;
     }

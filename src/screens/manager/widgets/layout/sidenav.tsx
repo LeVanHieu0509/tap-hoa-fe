@@ -1,12 +1,11 @@
-import PropTypes from "prop-types";
-import Link from "next/link";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { Avatar, Button, IconButton, Typography } from "@material-tailwind/react";
-import { useMaterialTailwindController, setOpenSidenav } from "screens/manager/context";
+import Link from "next/link";
 import { useRouter } from "next/router";
+import { setOpenSidenav, useMaterialTailwindController } from "screens/manager/context";
 
-import React from "react";
 import { listSidenav } from "@constants";
+import React from "react";
 
 interface SidenavProps {
   brandImg: String;

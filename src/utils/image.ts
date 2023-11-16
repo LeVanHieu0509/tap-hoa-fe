@@ -1,4 +1,3 @@
-import JPEG from "jpeg-js";
 import FileResizer from "react-image-file-resizer";
 
 export function getBase64FromFile(file: File) {

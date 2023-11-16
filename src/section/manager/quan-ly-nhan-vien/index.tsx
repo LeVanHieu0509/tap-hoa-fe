@@ -1,15 +1,15 @@
 import React, { useMemo } from "react";
-import { ProductModalWrapper } from "./styled";
+import { QuanLyNhanVienModalWrapper } from "./styled";
 import AddModal from "./add-modal";
 import FixModal from "./fix-modal";
 import DeleteModal from "./delete-modal";
 
-interface ProductModalProps {
+interface QuanLyNhanVienModalProps {
   type?: string;
   data?: any;
 }
 
-const ProductModal = ({ data, type }: ProductModalProps) => {
+const QuanLyNhanVienModal = ({ data, type }: QuanLyNhanVienModalProps) => {
   const ModalContent = useMemo(() => {
     switch (type) {
       case "add":
@@ -24,10 +24,10 @@ const ProductModal = ({ data, type }: ProductModalProps) => {
   }, [type]);
 
   return (
-    <ProductModalWrapper>
+    <QuanLyNhanVienModalWrapper>
       <ModalContent data={data} />
-    </ProductModalWrapper>
+    </QuanLyNhanVienModalWrapper>
   );
 };
 
-export default ProductModal;
+export default QuanLyNhanVienModal;

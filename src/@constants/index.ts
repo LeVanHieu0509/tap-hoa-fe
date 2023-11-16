@@ -1,13 +1,10 @@
 export const CURRENT_USER = "currentUser";
 export const CACHE = "cache";
 
-import { CakeIcon } from "@heroicons/react/24/outline";
 import {
-  BellIcon,
   CreditCardIcon,
   GlobeAmericasIcon,
   HomeIcon,
-  LockOpenIcon,
   PlusCircleIcon,
   ShoppingCartIcon,
   UserCircleIcon,

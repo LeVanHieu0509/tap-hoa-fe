@@ -1,5 +1,4 @@
 import { useMaterialTailwindController } from "screens/manager/context";
-import QuanLyHoaDonScreen from "screens/manager/quan-ly-hoa-don";
 import TaoHoaDonScreen from "screens/manager/tao-hoa-don";
 import Header from "screens/manager/widgets/header";
 import { Footer, Sidenav } from "screens/manager/widgets/layout";

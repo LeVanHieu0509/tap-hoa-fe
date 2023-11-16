@@ -25,9 +25,6 @@ export interface IconProps {
   color?: string;
 }
 
-export type ModifiedData<T> = {
-  [key in keyof T]?: any;
-};
 export interface ValueLabel {
   value: any;
   label: any;
