@@ -1,64 +1,32 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { QuanLyThanhToanScreenWrapper } from "./styled";
-import QuanLyComponent from "../quan-ly-component";
 import { TableConfig } from "@custom-types/config-table";
+import { BillData } from "@custom-types/manager";
+import { getBills } from "api/manager";
+import { Alert } from "components/alert";
+import useActionApi from "hooks/use-action-api";
+import { useEffect, useMemo, useState } from "react";
+import QuanLyComponent from "../quan-ly-component";
+import { QuanLyThanhToanScreenWrapper } from "./styled";
 
 interface QuanLyThanhToanScreenProps {}
 
 const tableConfig: TableConfig[] = [
   {
-    key: "product_code",
-    label: "Mã code",
+    key: "id",
+    label: "Mã thanh toán",
     type: "string",
     primary: true,
     show: true,
   },
   {
-    key: "product_bar_code",
-    label: "Mã vạch",
+    key: "total_price",
+    label: "Tổng tiền",
+    type: "number",
+    show: true,
+  },
+  {
+    key: "status",
+    label: "Trạng thái",
     type: "string",
-    show: true,
-  },
-  {
-    key: "product_name",
-    label: "Tên sản phẩm",
-    type: "string",
-    show: true,
-  },
-  {
-    key: "product_description",
-    label: "Mô tả",
-    type: "rich-text",
-    show: true,
-  },
-  {
-    key: "product_price_origin",
-    label: "Giá vốn",
-    type: "number",
-    show: true,
-  },
-  {
-    key: "product_price_sell",
-    label: "Giá bán",
-    type: "number",
-    show: true,
-  },
-  {
-    key: "product_quantity",
-    label: "Số lượng tồn",
-    type: "number",
-    show: true,
-  },
-  {
-    key: "product_manufacture_date",
-    label: "Ngày sản xuất",
-    type: "date",
-    show: true,
-  },
-  {
-    key: "product_expired_date",
-    label: "Ngày hết hạn",
-    type: "date",
     show: true,
   },
   {
@@ -70,97 +38,48 @@ const tableConfig: TableConfig[] = [
 ];
 
 const QuanLyThanhToanScreen = ({}: QuanLyThanhToanScreenProps) => {
-  const [lists, setLists] = useState<any[]>([]);
+  const [lists, setLists] = useState<BillData[]>([]);
+
+  const actionGetBills = useActionApi(getBills);
   const listFormat = useMemo(
     () =>
       lists.map((item) => {
         return {
-          product_code: item.product_code,
-          product_bar_code: item.product_bar_code,
-          product_name: item.product_name,
-          product_description: item.product_description,
-          product_price_origin: item.product_price_origin,
-          product_price_sell: item.product_price_sell,
-          product_quantity: item.product_quantity,
-          product_manufacture_date: item.product_manufacture_date,
-          product_expired_date: item.product_expired_date,
+          product_code: item.id,
+          total_price: item.total_price,
+          status: item.status,
+          createdAt: item.createdAt,
         };
       }),
     [lists]
   );
 
   useEffect(() => {
-    setLists([
+    actionGetBills(
       {
-        product_code: "123",
-        product_bar_code: "123",
-        product_name: "123",
-        product_description: "123",
-        product_price_origin: "123",
-        product_price_sell: "123",
-        product_quantity: "123",
-        product_manufacture_date: "123",
-        product_expired_date: "123",
+        limit: "",
+        sortOrder: "",
+        sortBy: "",
+        page: "",
+        filter: {},
+        select: null,
       },
       {
-        product_code: "123",
-        product_bar_code: "123",
-        product_name: "123",
-        product_description: "123",
-        product_price_origin: "123",
-        product_price_sell: "123",
-        product_quantity: "123",
-        product_manufacture_date: "123",
-        product_expired_date: "123",
-      },
-      {
-        product_code: "123",
-        product_bar_code: "123",
-        product_name: "123",
-        product_description: "123",
-        product_price_origin: "123",
-        product_price_sell: "123",
-        product_quantity: "123",
-        product_manufacture_date: "123",
-        product_expired_date: "123",
-      },
-      {
-        product_code: "123",
-        product_bar_code: "123",
-        product_name: "123",
-        product_description: "123",
-        product_price_origin: "123",
-        product_price_sell: "123",
-        product_quantity: "123",
-        product_manufacture_date: "123",
-        product_expired_date: "123",
-      },
-      {
-        product_code: "123",
-        product_bar_code: "123",
-        product_name: "123",
-        product_description: "123",
-        product_price_origin: "123",
-        product_price_sell: "123",
-        product_quantity: "123",
-        product_manufacture_date: "123",
-        product_expired_date: "123",
-      },
-      {
-        product_code: "123",
-        product_bar_code: "123",
-        product_name: "123",
-        product_description: "123",
-        product_price_origin: "123",
-        product_price_sell: "123",
-        product_quantity: "123",
-        product_manufacture_date: "123",
-        product_expired_date: "123",
-      },
-    ]);
+        type: "global",
+        name: "",
+      }
+    )
+      .then(({ data }) => {
+        if (data.status == "1") {
+          setLists(data.data.products);
+        } else {
+          Alert("ERROR", data.message);
+        }
+      })
+      .catch((e) => Alert("ERROR", e.message));
   }, []);
 
-  const handleAddProduct = () => {
+  const handleDetailProduct = () => {
     console.log("add product");
   };
 
@@ -175,9 +94,16 @@ const QuanLyThanhToanScreen = ({}: QuanLyThanhToanScreenProps) => {
   return (
     <QuanLyThanhToanScreenWrapper>
       <QuanLyComponent
-        onAdd={handleAddProduct}
-        onUpdate={handleUpdateProduct}
-        onDelete={handleDeleteProduct}
+        type="quan-ly-thanh-toan"
+        detailBtn={{
+          onclick: handleDetailProduct,
+        }}
+        // updateBtn={{
+        //   onclick: handleUpdateProduct,
+        // }}
+        // deleteBtn={{
+        //   onclick: handleDeleteProduct,
+        // }}
         tableConfig={tableConfig}
         listFormat={listFormat}
       />

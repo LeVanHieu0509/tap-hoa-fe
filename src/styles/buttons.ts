@@ -62,7 +62,7 @@ export const ButtonStyle: any = css<ButtonStyleProps>`
 
 export const ButtonPrimary = styled.button<{ size?: any; withIcon?: any }>`
   ${ButtonStyle}
-  background: ${({ theme }) => theme.color.status.primary};
+  background: ${({ theme }) => theme.color.status.blue};
 
   &:hover {
     color: ${({ theme }) => theme.color.status.primary};

@@ -1,3 +1,4 @@
+import { listMappingTopic } from "@constants";
 import { DataTable, TableConfig } from "@custom-types/config-table";
 import { ShowModal } from "@custom-types/manager";
 import { Card, CardBody } from "@material-tailwind/react";
@@ -5,7 +6,7 @@ import ModalCustom from "components/modal-custom";
 import Table from "components/table";
 import TableMobile from "components/table-mobile";
 import { useMemo, useState } from "react";
-import AddModal from "section/manager/product/add-modal";
+import ProductModal from "section/manager/product";
 import DeleteModal from "section/manager/product/delete-modal";
 import FixModal from "section/manager/product/fix-modal";
 import { ActionsWrapper, ScrollCustom } from "styles";
@@ -16,17 +17,56 @@ interface QuanLyComponent {
   isSelectAll?: boolean;
   tableConfig: TableConfig[];
   listFormat: any;
-  onAdd: () => void;
-  onUpdate: () => void;
-  onDelete: () => void;
+  type:
+    | "quan-ly-san-pham"
+    | "quan-ly-hoa-don"
+    | "quan-ly-thanh-toan"
+    | "quan-ly-nhan-vien"
+    | "quan-ly-khach-hang"
+    | "tao-hoa-don";
+  addBtn?: {
+    text?: string;
+    onClick?: (value?: any) => void;
+    disabled?: boolean;
+    size?: "sm" | "md" | "lg";
+  };
+  detailBtn?: {
+    text?: string;
+    onClick?: (value?: any) => void;
+    disabled?: boolean;
+    size?: "sm" | "md" | "lg";
+  };
+
+  deleteBtn?: {
+    text?: string;
+    onClick?: (value?: any) => void;
+    disabled?: boolean;
+    size?: "sm" | "md" | "lg";
+  };
+  updateBtn?: {
+    text?: string;
+    onClick?: (value?: any) => void;
+    disabled?: boolean;
+    size?: "sm" | "md" | "lg";
+  };
+  customBtn?: {
+    text?: string;
+    onClick?: (value?: any) => void;
+    disabled?: boolean;
+    size?: "sm" | "md" | "lg";
+  };
 }
+
 export function QuanLyComponent({
   isSelectAll = false,
   tableConfig,
   listFormat,
-  onAdd,
-  onUpdate,
-  onDelete,
+  type,
+  addBtn,
+  detailBtn,
+  deleteBtn,
+  updateBtn,
+  customBtn,
 }: QuanLyComponent) {
   const [multiSelect, setMultiSelect] = useState([]);
   const [showModal, setShowModal] = useState<ShowModal>({
@@ -36,34 +76,53 @@ export function QuanLyComponent({
     title: "",
   });
 
+  const nameType = useMemo(() => listMappingTopic.find((item) => item.key == type).value, [type]);
+
   const formatValueRequest = (data: any, config: TableConfig) => {
     switch (config.key) {
       case "button":
         return (
           <Actions
             data={data}
-            successBtn={{
-              text: "Sửa",
-              onClick: () =>
-                setShowModal({
-                  type: "fix",
-                  show: true,
-                  data: data,
-                  title: "Sửa sản phẩm",
-                  onConfirm: onUpdate,
-                }),
-            }}
-            errorBtn={{
-              text: "Xoá",
-              onClick: () =>
-                setShowModal({
-                  type: "fix",
-                  show: true,
-                  data: data,
-                  title: "Bạn có chắc chắn xoá sản phẩm?",
-                  onConfirm: onDelete,
-                }),
-            }}
+            successBtn={
+              updateBtn && {
+                text: "Sửa",
+                onClick: () =>
+                  setShowModal({
+                    type: "fix",
+                    show: true,
+                    data: data,
+                    title: `Sửa ${nameType}`,
+                    onConfirm: updateBtn.onClick,
+                  }),
+              }
+            }
+            detailBtn={
+              detailBtn && {
+                text: "Xem chi tiết",
+                onClick: () =>
+                  setShowModal({
+                    type: "fix",
+                    show: true,
+                    data: data,
+                    title: `Xem chi tiết ${nameType}`,
+                    onConfirm: detailBtn.onClick,
+                  }),
+              }
+            }
+            errorBtn={
+              deleteBtn && {
+                text: "Xoá",
+                onClick: () =>
+                  setShowModal({
+                    type: "fix",
+                    show: true,
+                    data: data,
+                    title: "Bạn có chắc chắn xoá?",
+                    onConfirm: deleteBtn.onClick,
+                  }),
+              }
+            }
           />
         );
 
@@ -87,15 +146,19 @@ export function QuanLyComponent({
   );
 
   const ModalContent = useMemo(() => {
-    switch (showModal.type) {
-      case "add":
-        return AddModal;
-      case "fix":
+    switch (type) {
+      case "quan-ly-san-pham":
+        return ProductModal;
+      case "quan-ly-hoa-don":
         return FixModal;
-      case "delete":
+      case "quan-ly-thanh-toan":
+        return DeleteModal;
+      case "quan-ly-nhan-vien":
+        return DeleteModal;
+      case "tao-hoa-don":
         return DeleteModal;
     }
-  }, [showModal]);
+  }, [showModal.type]);
 
   return (
     <div className="mt-12 mb-8 flex flex-col gap-12">
@@ -115,17 +178,19 @@ export function QuanLyComponent({
 
             <Actions
               data={dataTableFormat}
-              successBtn={{
-                text: "Thêm sản phẩm ✅",
-                onClick: () =>
-                  setShowModal({
-                    type: "add",
-                    show: true,
-                    data: null,
-                    title: "Thêm sản phẩm",
-                    onConfirm: onAdd,
-                  }),
-              }}
+              successBtn={
+                addBtn && {
+                  text: `Thêm ${nameType} ✅`,
+                  onClick: () =>
+                    setShowModal({
+                      type: "add",
+                      show: true,
+                      data: null,
+                      title: `Mời bạn thêm ${nameType}!`,
+                      onConfirm: addBtn.onClick,
+                    }),
+                }
+              }
               refreshBtn={{
                 text: "Làm mới 🔄",
                 onClick: () => {},
@@ -168,7 +233,7 @@ export function QuanLyComponent({
               }),
           }}
         >
-          <ModalContent data={showModal.data} />
+          <ModalContent type={showModal.type} data={showModal.data} />
         </ModalCustom>
       )}
     </div>

@@ -35,7 +35,7 @@ interface ActionsProps {
     disabled?: boolean;
     size?: "sm" | "md" | "lg";
   };
-  uploadBtn?: {
+  detailBtn?: {
     text?: string;
     onClick?: (value: any) => void;
     disabled?: boolean;
@@ -43,12 +43,27 @@ interface ActionsProps {
   };
 }
 
-const Actions = ({ data, refreshBtn, successBtn, warringBtn, errorBtn, customBtn, uploadBtn }: ActionsProps) => {
+const Actions = ({ data, refreshBtn, successBtn, warringBtn, errorBtn, customBtn, detailBtn }: ActionsProps) => {
   const theme = useTheme();
 
   return (
     <ActionsWrapper>
       <Flex gap={8} gapMb={8}>
+        {detailBtn ? (
+          <Button
+            disabled={detailBtn?.disabled}
+            onClick={() => detailBtn?.onClick(data)}
+            size={detailBtn?.size ?? "sm"}
+            color="green"
+            style={{
+              color: "#ffffff",
+              background: theme.color.status.green,
+            }}
+          >
+            {detailBtn?.text}
+          </Button>
+        ) : null}
+
         {successBtn ? (
           <Button
             disabled={successBtn?.disabled}
@@ -120,21 +135,6 @@ const Actions = ({ data, refreshBtn, successBtn, warringBtn, errorBtn, customBtn
             }}
           >
             {refreshBtn?.text}
-          </Button>
-        ) : null}
-
-        {uploadBtn ? (
-          <Button
-            disabled={uploadBtn?.disabled}
-            onClick={() => uploadBtn?.onClick(data)}
-            size={uploadBtn?.size ?? "sm"}
-            color="green"
-            style={{
-              color: "#ffffff",
-              background: theme.color.status.green,
-            }}
-          >
-            {uploadBtn?.text}
           </Button>
         ) : null}
       </Flex>

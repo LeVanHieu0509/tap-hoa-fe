@@ -1,7 +1,11 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { QuanLySanPhamScreenWrapper } from "./styled";
-import QuanLyComponent from "../quan-ly-component";
 import { TableConfig } from "@custom-types/config-table";
+import { GetProductOutput } from "@custom-types/manager";
+import { getProducts } from "api/manager";
+import { Alert } from "components/alert";
+import useActionApi from "hooks/use-action-api";
+import { useEffect, useMemo, useState } from "react";
+import QuanLyComponent from "../quan-ly-component";
+import { QuanLySanPhamScreenWrapper } from "./styled";
 
 interface QuanLySanPhamScreenProps {}
 
@@ -28,7 +32,7 @@ const tableConfig: TableConfig[] = [
   {
     key: "product_description",
     label: "Mô tả",
-    type: "rich-text",
+    type: "string",
     show: true,
   },
   {
@@ -70,10 +74,40 @@ const tableConfig: TableConfig[] = [
 ];
 
 const QuanLySanPhamScreen = ({}: QuanLySanPhamScreenProps) => {
-  const [lists, setLists] = useState<any[]>([]);
+  const [lists, setLists] = useState<GetProductOutput[]>();
+
+  const actionGetProducts = useActionApi(getProducts);
+
+  useEffect(() => {
+    actionGetProducts(
+      {
+        limit: "",
+        sortOrder: "",
+        sortBy: "",
+        page: "",
+        filter: {},
+        select: null,
+        priceMin: null,
+        priceMax: null,
+      },
+      {
+        type: "global",
+        name: "",
+      }
+    )
+      .then(({ data }) => {
+        if (data.status == "1") {
+          setLists(data.data.products);
+        } else {
+          Alert("ERROR", data.message);
+        }
+      })
+      .catch((e) => e);
+  }, []);
+
   const listFormat = useMemo(
     () =>
-      lists.map((item) => {
+      lists?.map((item) => {
         return {
           product_code: item.product_code,
           product_bar_code: item.product_bar_code,
@@ -88,77 +122,6 @@ const QuanLySanPhamScreen = ({}: QuanLySanPhamScreenProps) => {
       }),
     [lists]
   );
-
-  useEffect(() => {
-    setLists([
-      {
-        product_code: "123",
-        product_bar_code: "123",
-        product_name: "123",
-        product_description: "123",
-        product_price_origin: "123",
-        product_price_sell: "123",
-        product_quantity: "123",
-        product_manufacture_date: "123",
-        product_expired_date: "123",
-      },
-      {
-        product_code: "123",
-        product_bar_code: "123",
-        product_name: "123",
-        product_description: "123",
-        product_price_origin: "123",
-        product_price_sell: "123",
-        product_quantity: "123",
-        product_manufacture_date: "123",
-        product_expired_date: "123",
-      },
-      {
-        product_code: "123",
-        product_bar_code: "123",
-        product_name: "123",
-        product_description: "123",
-        product_price_origin: "123",
-        product_price_sell: "123",
-        product_quantity: "123",
-        product_manufacture_date: "123",
-        product_expired_date: "123",
-      },
-      {
-        product_code: "123",
-        product_bar_code: "123",
-        product_name: "123",
-        product_description: "123",
-        product_price_origin: "123",
-        product_price_sell: "123",
-        product_quantity: "123",
-        product_manufacture_date: "123",
-        product_expired_date: "123",
-      },
-      {
-        product_code: "123",
-        product_bar_code: "123",
-        product_name: "123",
-        product_description: "123",
-        product_price_origin: "123",
-        product_price_sell: "123",
-        product_quantity: "123",
-        product_manufacture_date: "123",
-        product_expired_date: "123",
-      },
-      {
-        product_code: "123",
-        product_bar_code: "123",
-        product_name: "123",
-        product_description: "123",
-        product_price_origin: "123",
-        product_price_sell: "123",
-        product_quantity: "123",
-        product_manufacture_date: "123",
-        product_expired_date: "123",
-      },
-    ]);
-  }, []);
 
   const handleAddProduct = () => {
     console.log("add product");
@@ -175,9 +138,16 @@ const QuanLySanPhamScreen = ({}: QuanLySanPhamScreenProps) => {
   return (
     <QuanLySanPhamScreenWrapper>
       <QuanLyComponent
-        onAdd={handleAddProduct}
-        onUpdate={handleUpdateProduct}
-        onDelete={handleDeleteProduct}
+        type="quan-ly-san-pham"
+        addBtn={{
+          onclick: handleAddProduct,
+        }}
+        updateBtn={{
+          onclick: handleUpdateProduct,
+        }}
+        deleteBtn={{
+          onclick: handleDeleteProduct,
+        }}
         tableConfig={tableConfig}
         listFormat={listFormat}
       />

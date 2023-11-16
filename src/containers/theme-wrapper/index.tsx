@@ -1,11 +1,14 @@
 import Head from "next/head";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { rootAction } from "redux/reducers/root-reducer";
 import { loadLocalItem } from "redux/store";
 import { ThemeProvider } from "styled-components";
 import { LightTheme } from "styles/theme";
 import { AdminLayoutWrapper } from "./styled";
+import { useRouter } from "next/router";
+import { Dialog, DialogBody, DialogFooter, DialogHeader } from "@material-tailwind/react";
+import { ButtonPrimary } from "styles/buttons";
 
 interface ThemeWrapperProps {
   children: React.ReactNode;
@@ -14,6 +17,10 @@ interface ThemeWrapperProps {
 
 const ThemeWrapper = ({ children, component }: ThemeWrapperProps) => {
   const dispatch = useDispatch();
+  const router = useRouter();
+  const [openExpiredModal, setOpenExpiredModal] = useState(false);
+
+  const linkNotHandle = !["/_error", "/login", "/"].includes(router.pathname);
 
   useEffect(() => {
     const listenter = function (ev: MouseEvent) {
@@ -46,16 +53,28 @@ const ThemeWrapper = ({ children, component }: ThemeWrapperProps) => {
     }
 
     dispatch(rootAction.setInitialized(true));
+  }, []);
 
+  //handle expired token
+  useEffect(() => {
     const listenerExpires = () => {
-      // signOut({ redirect: false });
-      // router.replace("/");
+      localStorage.removeItem("currentUser");
+
+      if (linkNotHandle) {
+        setOpenExpiredModal(true);
+      }
     };
+
     window.addEventListener("expirestoken", listenerExpires);
     return () => {
       window.removeEventListener("expirestoken", listenerExpires);
     };
-  }, []);
+  }, [linkNotHandle]);
+
+  const handleExpired = () => {
+    setOpenExpiredModal(false);
+    router.replace("/auth/sign-in");
+  };
 
   return (
     <ThemeProvider theme={LightTheme}>
@@ -68,6 +87,18 @@ const ThemeWrapper = ({ children, component }: ThemeWrapperProps) => {
       </Head>
       {children}
       <AdminLayoutWrapper>{component}</AdminLayoutWrapper>
+
+      <Dialog handler={() => {}} open={openExpiredModal} size="sm">
+        <DialogHeader>
+          <p>Thông báo</p>
+        </DialogHeader>
+        <DialogBody>
+          <p>Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại.</p>
+        </DialogBody>
+        <DialogFooter>
+          <ButtonPrimary onClick={handleExpired}>Tôi đã hiểu</ButtonPrimary>
+        </DialogFooter>
+      </Dialog>
     </ThemeProvider>
   );
 };

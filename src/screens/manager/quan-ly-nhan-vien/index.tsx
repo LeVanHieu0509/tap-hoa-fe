@@ -175,9 +175,16 @@ const QuanLyNhanVienScreen = ({}: QuanLyNhanVienScreenProps) => {
   return (
     <QuanLyNhanVienScreenWrapper>
       <QuanLyComponent
-        onAdd={handleAddProduct}
-        onUpdate={handleUpdateProduct}
-        onDelete={handleDeleteProduct}
+        type="quan-ly-nhan-vien"
+        addBtn={{
+          onclick: handleAddProduct,
+        }}
+        updateBtn={{
+          onclick: handleUpdateProduct,
+        }}
+        deleteBtn={{
+          onclick: handleDeleteProduct,
+        }}
         tableConfig={tableConfig}
         listFormat={listFormat}
       />

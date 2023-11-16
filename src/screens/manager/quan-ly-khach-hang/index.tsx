@@ -175,9 +175,16 @@ const QuanLyKhachHangScreen = ({}: QuanLyKhachHangScreenProps) => {
   return (
     <QuanLyKhachHangScreenWrapper>
       <QuanLyComponent
-        onAdd={handleAddProduct}
-        onUpdate={handleUpdateProduct}
-        onDelete={handleDeleteProduct}
+        type="quan-ly-khach-hang"
+        addBtn={{
+          onclick: handleAddProduct,
+        }}
+        updateBtn={{
+          onclick: handleUpdateProduct,
+        }}
+        deleteBtn={{
+          onclick: handleDeleteProduct,
+        }}
         tableConfig={tableConfig}
         listFormat={listFormat}
       />

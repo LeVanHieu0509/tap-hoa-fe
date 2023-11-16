@@ -1,10 +1,19 @@
 import axios from "axios";
 import { get, set } from "lodash";
+import { loadLocalItem } from "redux/store";
 
 const URL = `${process.env.basePath}/backend`;
 
+const data = loadLocalItem("currentUser");
+
+const { tokens, user } = data ?? {};
+
 const request = axios.create({
   baseURL: URL,
+  headers: {
+    authorization: `bearer ${tokens?.accessToken}`,
+    "user-client-id": user?.usr_id,
+  },
 });
 
 request.interceptors.request.use(
