@@ -1,0 +1,54 @@
+import { Card, IconButton } from "@material-tailwind/react";
+
+import { range } from "lodash";
+import { FlexColumn } from "styles/common";
+import { CartItemWrapper } from "./styled";
+import { ButtonIcon } from "styles/buttons";
+
+function TrashIcon() {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5">
+      <path
+        fillRule="evenodd"
+        d="M16.5 4.478v.227a48.816 48.816 0 013.878.512.75.75 0 11-.256 1.478l-.209-.035-1.005 13.07a3 3 0 01-2.991 2.77H8.084a3 3 0 01-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 01-.256-1.478A48.567 48.567 0 017.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 013.369 0c1.603.051 2.815 1.387 2.815 2.951zm-6.136-1.452a51.196 51.196 0 013.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 00-6 0v-.113c0-.794.609-1.428 1.364-1.452zm-.355 5.945a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.346-9zm5.48.058a.75.75 0 10-1.498-.058l-.347 9a.75.75 0 001.5.058l.345-9z"
+        clipRule="evenodd"
+      />
+    </svg>
+  );
+}
+interface CartItemProps {}
+
+const CartItem = ({}: CartItemProps) => {
+  return (
+    <CartItemWrapper className="w-full shadow-md rounded-xl hover:bg-gray-100 hover:rounded-xl py-3">
+      <div className="w-full z-10">
+        <div className="flex items-center   ">
+          <div className="flex w-2/5">
+            <div className="flex flex-col justify-between ml-4 flex-grow">
+              <span className="font-bold text-sm mb-2">
+                Iphone 6S Iphone 6S Iphone 6S Iphone 6S Iphone 6S Iphone 6S Iphone 6S
+              </span>
+            </div>
+          </div>
+          <div className="flex justify-center w-1/5">
+            <svg className="fill-current text-gray-600 w-3" viewBox="0 0 448 512">
+              <path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" />
+            </svg>
+            <input className="mx-2 border text-center w-8" type="text" defaultValue={1} />
+            <svg className="fill-current text-gray-600 w-3" viewBox="0 0 448 512">
+              <path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" />
+            </svg>
+          </div>
+          <span className="text-center w-1/5 font-semibold text-sm">30.000</span>
+          <span className="text-center w-1/6 font-semibold text-sm">500.000</span>
+
+          <ButtonIcon color="white" className="text-center">
+            <TrashIcon />
+          </ButtonIcon>
+        </div>
+      </div>
+    </CartItemWrapper>
+  );
+};
+
+export default CartItem;

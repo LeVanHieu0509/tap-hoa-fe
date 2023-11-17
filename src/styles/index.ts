@@ -62,7 +62,7 @@ export const ScrollCustom = styled.div<ScrollCustomProps>`
 
   /* Track */
   ::-webkit-scrollbar-track {
-    background: transparent;
+    background: none;
   }
   /* Handle */
   ::-webkit-scrollbar-thumb {

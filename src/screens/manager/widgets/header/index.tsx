@@ -4,9 +4,11 @@ import { useRouter } from "next/router";
 import { setOpenConfigurator, useMaterialTailwindController } from "screens/manager/context";
 import { Configurator, DashboardNavbar } from "../layout";
 
-interface HeaderProps {}
+interface HeaderProps {
+  className?: string;
+}
 
-const Header = ({}: HeaderProps) => {
+const Header = ({ className }: HeaderProps) => {
   const [controller, dispatch] = useMaterialTailwindController();
   const { sidenavType } = controller;
   const { pathname } = useRouter();

@@ -73,7 +73,7 @@ const QuanLyHoaDonScreen = ({}: QuanLyHoaDonScreenProps) => {
       .catch((e) => Alert("ERROR", e.message));
   }, []);
 
-  const handleAddProduct = () => {
+  const handleDetailProduct = () => {
     console.log("add product");
   };
 
@@ -103,14 +103,17 @@ const QuanLyHoaDonScreen = ({}: QuanLyHoaDonScreenProps) => {
     <QuanLyHoaDonScreenWrapper>
       <QuanLyComponent
         type="quan-ly-hoa-don"
+        tableConfig={tableConfig}
+        listFormat={listFormat}
+        detailBtn={{
+          onclick: handleDetailProduct,
+        }}
         updateBtn={{
           onclick: handleUpdateProduct,
         }}
         deleteBtn={{
           onclick: handleDeleteProduct,
         }}
-        tableConfig={tableConfig}
-        listFormat={listFormat}
       />
     </QuanLyHoaDonScreenWrapper>
   );

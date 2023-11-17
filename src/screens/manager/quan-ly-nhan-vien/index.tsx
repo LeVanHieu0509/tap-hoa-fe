@@ -7,58 +7,28 @@ interface QuanLyNhanVienScreenProps {}
 
 const tableConfig: TableConfig[] = [
   {
-    key: "product_code",
-    label: "Mã code",
+    key: "employee_code",
+    label: "Mã nhân viên",
     type: "string",
     primary: true,
     show: true,
   },
   {
-    key: "product_bar_code",
-    label: "Mã vạch",
+    key: "employee_name",
+    label: "Tên nhân viên",
     type: "string",
     show: true,
   },
   {
-    key: "product_name",
-    label: "Tên sản phẩm",
+    key: "employee_phone",
+    label: "Số điện thoại",
     type: "string",
     show: true,
   },
   {
-    key: "product_description",
-    label: "Mô tả",
+    key: "employee_card",
+    label: "Số tài khoản",
     type: "rich-text",
-    show: true,
-  },
-  {
-    key: "product_price_origin",
-    label: "Giá vốn",
-    type: "number",
-    show: true,
-  },
-  {
-    key: "product_price_sell",
-    label: "Giá bán",
-    type: "number",
-    show: true,
-  },
-  {
-    key: "product_quantity",
-    label: "Số lượng tồn",
-    type: "number",
-    show: true,
-  },
-  {
-    key: "product_manufacture_date",
-    label: "Ngày sản xuất",
-    type: "date",
-    show: true,
-  },
-  {
-    key: "product_expired_date",
-    label: "Ngày hết hạn",
-    type: "date",
     show: true,
   },
   {
@@ -75,15 +45,10 @@ const QuanLyNhanVienScreen = ({}: QuanLyNhanVienScreenProps) => {
     () =>
       lists.map((item) => {
         return {
-          product_code: item.product_code,
-          product_bar_code: item.product_bar_code,
-          product_name: item.product_name,
-          product_description: item.product_description,
-          product_price_origin: item.product_price_origin,
-          product_price_sell: item.product_price_sell,
-          product_quantity: item.product_quantity,
-          product_manufacture_date: item.product_manufacture_date,
-          product_expired_date: item.product_expired_date,
+          employee_code: item.employee_code,
+          employee_phone: item.employee_phone,
+          employee_name: item.employee_name,
+          employee_card: item.employee_card,
         };
       }),
     [lists]
@@ -92,70 +57,10 @@ const QuanLyNhanVienScreen = ({}: QuanLyNhanVienScreenProps) => {
   useEffect(() => {
     setLists([
       {
-        product_code: "123",
-        product_bar_code: "123",
-        product_name: "123",
-        product_description: "123",
-        product_price_origin: "123",
-        product_price_sell: "123",
-        product_quantity: "123",
-        product_manufacture_date: "123",
-        product_expired_date: "123",
-      },
-      {
-        product_code: "123",
-        product_bar_code: "123",
-        product_name: "123",
-        product_description: "123",
-        product_price_origin: "123",
-        product_price_sell: "123",
-        product_quantity: "123",
-        product_manufacture_date: "123",
-        product_expired_date: "123",
-      },
-      {
-        product_code: "123",
-        product_bar_code: "123",
-        product_name: "123",
-        product_description: "123",
-        product_price_origin: "123",
-        product_price_sell: "123",
-        product_quantity: "123",
-        product_manufacture_date: "123",
-        product_expired_date: "123",
-      },
-      {
-        product_code: "123",
-        product_bar_code: "123",
-        product_name: "123",
-        product_description: "123",
-        product_price_origin: "123",
-        product_price_sell: "123",
-        product_quantity: "123",
-        product_manufacture_date: "123",
-        product_expired_date: "123",
-      },
-      {
-        product_code: "123",
-        product_bar_code: "123",
-        product_name: "123",
-        product_description: "123",
-        product_price_origin: "123",
-        product_price_sell: "123",
-        product_quantity: "123",
-        product_manufacture_date: "123",
-        product_expired_date: "123",
-      },
-      {
-        product_code: "123",
-        product_bar_code: "123",
-        product_name: "123",
-        product_description: "123",
-        product_price_origin: "123",
-        product_price_sell: "123",
-        product_quantity: "123",
-        product_manufacture_date: "123",
-        product_expired_date: "123",
+        employee_code: "123",
+        employee_phone: "123",
+        employee_name: "123",
+        employee_card: "123",
       },
     ]);
   }, []);
@@ -176,6 +81,8 @@ const QuanLyNhanVienScreen = ({}: QuanLyNhanVienScreenProps) => {
     <QuanLyNhanVienScreenWrapper>
       <QuanLyComponent
         type="quan-ly-nhan-vien"
+        tableConfig={tableConfig}
+        listFormat={listFormat}
         addBtn={{
           onclick: handleAddProduct,
         }}
@@ -185,8 +92,6 @@ const QuanLyNhanVienScreen = ({}: QuanLyNhanVienScreenProps) => {
         deleteBtn={{
           onclick: handleDeleteProduct,
         }}
-        tableConfig={tableConfig}
-        listFormat={listFormat}
       />
     </QuanLyNhanVienScreenWrapper>
   );

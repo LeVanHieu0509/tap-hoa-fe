@@ -1,3 +1,5 @@
 import styled from "styled-components";
 
-export const QuanLyHoaDonScreenWrapper = styled.div``;
+export const QuanLyHoaDonScreenWrapper = styled.div`
+  flex: 9;
+`;

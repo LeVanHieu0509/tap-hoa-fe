@@ -46,6 +46,8 @@ const ThemeWrapper = ({ children, component }: ThemeWrapperProps) => {
     };
   }, []);
 
+  //handle expired token
+
   useEffect(() => {
     const data = loadLocalItem("currentUser");
     if (data) {
@@ -53,10 +55,7 @@ const ThemeWrapper = ({ children, component }: ThemeWrapperProps) => {
     }
 
     dispatch(rootAction.setInitialized(true));
-  }, []);
 
-  //handle expired token
-  useEffect(() => {
     const listenerExpires = () => {
       localStorage.removeItem("currentUser");
 

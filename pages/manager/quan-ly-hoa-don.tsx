@@ -10,12 +10,12 @@ const ManagerPage = ({}: ManagerPageProps) => {
   const { sidenavType } = controller;
 
   return (
-    <div className="min-h-screen bg-blue-gray-50/50">
+    <div className="min-h-screen bg-blue-gray-50/50 h-screen overflow-hidden">
       <Sidenav brandImg={sidenavType === "dark" ? "/img/logo-ct.png" : "/img/logo-ct-dark.png"} />
 
-      <div className="p-4 xl:ml-80">
-        <div className="w-full">
-          <Header />
+      <div className="p-4 xl:ml-80 h-screen">
+        <div className="w-full flex flex-col">
+          <Header className="flex-1" />
           <QuanLyHoaDonScreen />
           <Footer />
         </div>
