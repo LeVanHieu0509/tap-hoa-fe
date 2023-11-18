@@ -1,12 +1,13 @@
 import { GetProductOutput } from "@custom-types/manager";
-import { FlexColumn } from "styles/common";
-import CartItem from "./cart-item";
-import { ListOrdersWrapper } from "./styled";
 import { useAppSelector } from "hooks/use-redux";
+import { cloneDeep } from "lodash";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { rootAction } from "redux/reducers/root-reducer";
-import { cloneDeep } from "lodash";
+import { FlexColumn } from "styles/common";
 import { getKeyCart } from "utils/cart";
+import CartItem from "./cart-item";
+import { ListOrdersWrapper } from "./styled";
 
 interface ListOrdersProps {
   currentKeyOrder: string;
@@ -17,37 +18,40 @@ interface ListOrdersProps {
 const ListOrders = ({ currentKeyOrder, lists, onClose }: ListOrdersProps) => {
   const dispatch = useDispatch();
   const { orderCarts } = useAppSelector((r) => r.rootReducer);
+  const [quantity, setQuantity] = useState();
 
   const handleIncreaseProduct = (product_code, quantity) => {
-    let productCurrent = cloneDeep(lists);
+    if (quantity < 99) {
+      let productCurrent = cloneDeep(lists);
 
-    productCurrent = productCurrent.map((element) => {
-      if (element.product_code == product_code) {
-        return {
-          ...element,
-          product_quantity: quantity + 1,
-        };
-      } else {
-        return element;
-      }
-    });
-
-    const newOrderCarts = orderCarts.map((elem, index) => {
-      const { id, products } = elem[getKeyCart(elem)];
-
-      return Object.assign({}, elem, {
-        [getKeyCart(elem)]: {
-          id: id,
-          products: getKeyCart(elem) == currentKeyOrder ? productCurrent : products,
-        },
+      productCurrent = productCurrent.map((element) => {
+        if (element.product_code == product_code) {
+          return {
+            ...element,
+            product_quantity: quantity + 1,
+          };
+        } else {
+          return element;
+        }
       });
-    });
 
-    dispatch(rootAction.setOrderCarts(newOrderCarts));
+      const newOrderCarts = orderCarts.map((elem, index) => {
+        const { id, products } = elem[getKeyCart(elem)];
+
+        return Object.assign({}, elem, {
+          [getKeyCart(elem)]: {
+            id: id,
+            products: getKeyCart(elem) == currentKeyOrder ? productCurrent : products,
+          },
+        });
+      });
+
+      dispatch(rootAction.setOrderCarts(newOrderCarts));
+    }
   };
 
   const handleDecreaseProduct = (product_code, quantity) => {
-    if (quantity > 0) {
+    if (quantity > 1) {
       let productCurrent = cloneDeep(lists);
 
       productCurrent = productCurrent.map((element) => {
@@ -75,6 +79,39 @@ const ListOrders = ({ currentKeyOrder, lists, onClose }: ListOrdersProps) => {
       dispatch(rootAction.setOrderCarts(newOrderCarts));
     }
   };
+
+  const handleChangeValue = (product_code, quantity) => {
+    if (quantity > 99) quantity = 99;
+
+    if (Number(quantity) >= 0) {
+      let productCurrent = cloneDeep(lists);
+
+      productCurrent = productCurrent.map((element) => {
+        if (element.product_code == product_code) {
+          return {
+            ...element,
+            product_quantity: Number(quantity),
+          };
+        } else {
+          return element;
+        }
+      });
+
+      const newOrderCarts = orderCarts.map((elem, index) => {
+        const { id, products } = elem[getKeyCart(elem)];
+
+        return Object.assign({}, elem, {
+          [getKeyCart(elem)]: {
+            id: id,
+            products: getKeyCart(elem) == currentKeyOrder ? productCurrent : products,
+          },
+        });
+      });
+
+      dispatch(rootAction.setOrderCarts(newOrderCarts));
+    }
+  };
+
   return (
     <ListOrdersWrapper>
       <>
@@ -93,6 +130,9 @@ const ListOrders = ({ currentKeyOrder, lists, onClose }: ListOrdersProps) => {
               <FlexColumn className="w-full" gap={16} gapMb={16}>
                 {lists?.map((item, index) => (
                   <CartItem
+                    quantity={quantity}
+                    setQuantity={setQuantity}
+                    onChange={handleChangeValue}
                     index={index + 1}
                     key={item.product_code}
                     item={item}

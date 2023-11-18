@@ -6,5 +6,6 @@ export const CardItemWrapper = styled.div`
 
   :hover {
     background: #ccc;
+    cursor: pointer;
   }
 `;

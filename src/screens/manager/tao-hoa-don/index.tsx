@@ -38,13 +38,16 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
     title: "",
   });
 
-  const { orderCarts, currentUser } = useAppSelector((r) => r.rootReducer);
+  const { orderCarts, currentUser, cacheData } = useAppSelector((r) => r.rootReducer);
 
   const actionGetProducts = useActionApi(getProducts);
   const actionDeleteCarts = useActionApi(deleteCarts);
   const actionGetAllCarts = useActionApi(getAllCarts);
 
   useInitialized(() => {
+    if (cacheData.cart) {
+      setCurrentKeyOrder(cacheData.cart?.currentKeyOrder);
+    }
     if (!orderCarts && currentUser) {
       actionGetAllCarts(
         {
@@ -105,6 +108,7 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
     };
 
     setCurrentKeyOrder(`hoa-don-${lengthCart}`);
+
     dispatch(rootAction.setOrderCarts([...orderCarts, newCart]));
   };
 
@@ -278,7 +282,17 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
             {orderCarts?.map((item) => (
               <Button
                 style={{ background: getKeyCart(item) == currentKeyOrder && "#e87722" }}
-                onClick={() => setCurrentKeyOrder(getKeyCart(item))}
+                onClick={() => {
+                  setCurrentKeyOrder(getKeyCart(item));
+
+                  dispatch(
+                    rootAction.setCacheData({
+                      cart: {
+                        currentKeyOrder: getKeyCart(item),
+                      },
+                    })
+                  );
+                }}
                 key={item.value}
                 className="flex items-center gap-3 "
               >

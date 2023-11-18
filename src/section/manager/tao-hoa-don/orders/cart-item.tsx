@@ -1,7 +1,7 @@
 import { GetProductOutput } from "@custom-types/manager";
 import { ButtonIcon } from "styles/buttons";
-import { CartItemWrapper } from "./styled";
 import { formatCurrency } from "utils/format-value";
+import { CartItemWrapper } from "./styled";
 
 function TrashIcon() {
   return (
@@ -20,10 +20,12 @@ interface CartItemProps {
   onClose: (value: string) => void;
   onDecrease: (id: string, quantity: number) => void;
   onIncrease: (value: string, quantity: number) => void;
+  onChange: (data: string, quantity: any) => void;
+  setQuantity: any;
+  quantity: string;
 }
 
-const CartItem = ({ onIncrease, onDecrease, item, index, onClose }: CartItemProps) => {
-  console.log("item", item);
+const CartItem = ({ onIncrease, onDecrease, item, index, onClose, onChange, quantity, setQuantity }: CartItemProps) => {
   return (
     <CartItemWrapper className="w-full shadow-md rounded-xl hover:bg-gray-100 hover:rounded-xl py-3">
       <div className="w-full z-10">
@@ -40,7 +42,13 @@ const CartItem = ({ onIncrease, onDecrease, item, index, onClose }: CartItemProp
               </svg>
             </ButtonIcon>
 
-            <input className="mx-2 border text-center w-8" type="text" defaultValue="0" value={item.product_quantity} />
+            <input
+              onChange={(e) => onChange(item.product_code, Number(e.target.value))}
+              className="mx-2 border text-center w-8"
+              type="text"
+              defaultValue="0"
+              value={item.product_quantity}
+            />
 
             <ButtonIcon onClick={() => onIncrease(item.product_code, item.product_quantity)}>
               <svg className="fill-current text-gray-600 w-3 items-center" viewBox="0 0 448 512">

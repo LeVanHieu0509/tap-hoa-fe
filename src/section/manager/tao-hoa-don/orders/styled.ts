@@ -14,6 +14,6 @@ export const CartItemWrapper = styled.div`
   background: white;
 
   input {
-    width: 40px;
+    width: 50px;
   }
 `;
