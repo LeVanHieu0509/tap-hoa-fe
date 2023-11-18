@@ -1,6 +1,5 @@
 import { Cog6ToothIcon } from "@heroicons/react/24/solid";
 import { IconButton } from "@material-tailwind/react";
-import { useRouter } from "next/router";
 import { setOpenConfigurator, useMaterialTailwindController } from "screens/manager/context";
 import { Configurator, DashboardNavbar } from "../layout";
 
@@ -9,9 +8,7 @@ interface HeaderProps {
 }
 
 const Header = ({ className }: HeaderProps) => {
-  const [controller, dispatch] = useMaterialTailwindController();
-  const { sidenavType } = controller;
-  const { pathname } = useRouter();
+  const [dispatch] = useMaterialTailwindController();
 
   return (
     <div className="w-full">

@@ -49,9 +49,14 @@ const ThemeWrapper = ({ children, component }: ThemeWrapperProps) => {
   //handle expired token
 
   useEffect(() => {
-    const data = loadLocalItem("currentUser");
-    if (data) {
-      dispatch(rootAction.setCurrentUser(data));
+    const currentUser = loadLocalItem("currentUser");
+    const orderCarts = loadLocalItem("orderCarts");
+    const cacheData = loadLocalItem("cacheData");
+
+    if (currentUser) {
+      dispatch(rootAction.setCurrentUser(currentUser));
+      dispatch(rootAction.setOrderCarts(orderCarts));
+      dispatch(rootAction.setCacheData(cacheData));
     }
 
     dispatch(rootAction.setInitialized(true));
@@ -68,6 +73,7 @@ const ThemeWrapper = ({ children, component }: ThemeWrapperProps) => {
     return () => {
       window.removeEventListener("expirestoken", listenerExpires);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [linkNotHandle]);
 
   const handleExpired = () => {

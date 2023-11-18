@@ -1,9 +1,7 @@
-import { Card, IconButton } from "@material-tailwind/react";
-
-import { range } from "lodash";
-import { FlexColumn } from "styles/common";
-import { CartItemWrapper } from "./styled";
+import { GetProductOutput } from "@custom-types/manager";
 import { ButtonIcon } from "styles/buttons";
+import { CartItemWrapper } from "./styled";
+import { formatCurrency } from "utils/format-value";
 
 function TrashIcon() {
   return (
@@ -16,33 +14,47 @@ function TrashIcon() {
     </svg>
   );
 }
-interface CartItemProps {}
+interface CartItemProps {
+  item: GetProductOutput;
+  index: number;
+  onClose: (value: string) => void;
+  onDecrease: (id: string, quantity: number) => void;
+  onIncrease: (value: string, quantity: number) => void;
+}
 
-const CartItem = ({}: CartItemProps) => {
+const CartItem = ({ onIncrease, onDecrease, item, index, onClose }: CartItemProps) => {
+  console.log("item", item);
   return (
     <CartItemWrapper className="w-full shadow-md rounded-xl hover:bg-gray-100 hover:rounded-xl py-3">
       <div className="w-full z-10">
         <div className="flex items-center   ">
           <div className="flex w-2/5">
             <div className="flex flex-col justify-between ml-4 flex-grow">
-              <span className="font-bold text-sm mb-2">
-                Iphone 6S Iphone 6S Iphone 6S Iphone 6S Iphone 6S Iphone 6S Iphone 6S
-              </span>
+              <span className="font-bold text-sm mb-2">{`${index}, ${item.product_name}`}</span>
             </div>
           </div>
-          <div className="flex justify-center w-1/5">
-            <svg className="fill-current text-gray-600 w-3" viewBox="0 0 448 512">
-              <path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" />
-            </svg>
-            <input className="mx-2 border text-center w-8" type="text" defaultValue={1} />
-            <svg className="fill-current text-gray-600 w-3" viewBox="0 0 448 512">
-              <path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" />
-            </svg>
-          </div>
-          <span className="text-center w-1/5 font-semibold text-sm">30.000</span>
-          <span className="text-center w-1/6 font-semibold text-sm">500.000</span>
+          <div className="flex justify-center w-1/5 items-center">
+            <ButtonIcon onClick={() => onDecrease(item.product_code, item.product_quantity)}>
+              <svg className="fill-current text-gray-600 w-3" viewBox="0 0 448 512">
+                <path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" />
+              </svg>
+            </ButtonIcon>
 
-          <ButtonIcon color="white" className="text-center">
+            <input className="mx-2 border text-center w-8" type="text" defaultValue="0" value={item.product_quantity} />
+
+            <ButtonIcon onClick={() => onIncrease(item.product_code, item.product_quantity)}>
+              <svg className="fill-current text-gray-600 w-3 items-center" viewBox="0 0 448 512">
+                <path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" />
+              </svg>
+            </ButtonIcon>
+          </div>
+
+          <span className="text-center w-1/5 font-semibold text-sm">{formatCurrency(item.product_price_sell)}</span>
+          <span className="text-center w-1/6 font-semibold text-sm">
+            {formatCurrency(item.product_price_sell * item.product_quantity)}
+          </span>
+
+          <ButtonIcon color="white" className="text-center" onClick={() => onClose(item.product_code)}>
             <TrashIcon />
           </ButtonIcon>
         </div>

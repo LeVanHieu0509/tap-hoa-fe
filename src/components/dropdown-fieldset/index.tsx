@@ -33,6 +33,7 @@ interface DropDownProps {
   loading?: boolean;
   isSearch?: boolean;
   isChildren?: boolean;
+  setSearchText: any;
   children?: React.ReactNode | React.ReactNode[];
 }
 
@@ -54,11 +55,11 @@ function DropDown({
   isSearch,
   children,
   isChildren = false,
+  setSearchText,
   ...props
 }: DropDownProps) {
   const [show, setShow] = useState(false);
   const [indexFocus, setIndexFocus] = useState(-1);
-  const [pos, setPos] = useState<React.CSSProperties>();
   const ref = useRef<HTMLDivElement>();
   const refButton = useRef<HTMLDivElement>();
 
@@ -77,6 +78,7 @@ function DropDown({
     } else {
       setText(null);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
   useEffect(() => {
@@ -88,6 +90,7 @@ function DropDown({
     }
     return () => {
       if (ref.current) {
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         refButton.current?.removeEventListener("focus", handle);
       }
     };
@@ -220,7 +223,10 @@ function DropDown({
               <input
                 style={{ padding: "12px 16px", width: "100%" }}
                 value={isFocus ? searchKey : selectedLabel}
-                onChange={(e) => setSearchKey(e.target.value)}
+                onChange={(e) => {
+                  setSearchKey(e.target.value);
+                  setSearchText(e.target.value);
+                }}
                 // placeholder={selectedLabel.toString()}
                 onFocus={() => setFocus(true)}
                 onBlur={() => {

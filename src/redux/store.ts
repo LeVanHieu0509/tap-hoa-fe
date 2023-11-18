@@ -94,10 +94,12 @@ store.subscribe(() => {
   const state = store.getState();
 
   if (state.rootReducer.initialized) {
-    const { currentUser } = state.rootReducer;
+    const { currentUser, orderCarts, cacheData } = state.rootReducer;
     const { user, tokens } = currentUser ?? {};
 
     setLocalItem("currentUser", { user, tokens });
+    setLocalItem("orderCarts", orderCarts);
+    setLocalItem("cacheData", cacheData);
   }
 });
 

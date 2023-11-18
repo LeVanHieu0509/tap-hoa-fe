@@ -12,4 +12,8 @@ export const ListOrdersWrapper = styled.div`
 
 export const CartItemWrapper = styled.div`
   background: white;
+
+  input {
+    width: 40px;
+  }
 `;

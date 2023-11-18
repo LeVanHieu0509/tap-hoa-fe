@@ -19,16 +19,17 @@ interface RootState {
       refreshToken: string;
     };
   };
+  orderCarts: any;
+  cacheData: any;
 }
 const initialState: RootState = {
   loading: {},
   initialized: false,
   accessToken: null,
   headerHeight: 91,
-  currentUser: {
-    user: null,
-    tokens: null,
-  },
+  currentUser: null,
+  orderCarts: null,
+  cacheData: null,
 };
 
 const rootSlice = createSlice({
@@ -55,6 +56,12 @@ const rootSlice = createSlice({
     },
     setCurrentUser: (state, actions) => {
       state.currentUser = actions.payload;
+    },
+    setOrderCarts: (state, actions) => {
+      state.orderCarts = actions.payload;
+    },
+    setCacheData: (state, actions) => {
+      state.cacheData = actions.payload;
     },
     setHeaderHeight: (state, actions) => {
       state.headerHeight = actions.payload;

@@ -40,7 +40,7 @@ export interface GetProductOutput {
   product_price_origin: number;
   product_price_sell: number;
   product_slug: string;
-  product_quantity: 140;
+  product_quantity: number;
   product_manufacture_date: string;
   product_expired_date: string;
   createdAt: string;
@@ -124,12 +124,12 @@ export interface GetAllCartOutput {
 }
 
 export interface GetCartsOutput {
-  id: number;
-  cart_state: string;
-  cart_products: CartProducts[];
-  cart_count_product: number;
-  createdAt: string;
-  updatedAt: string;
+  id?: number;
+  cart_state?: string;
+  cart_products?: CartProducts[];
+  cart_count_product?: number;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 // ---------- checkout ---------- //

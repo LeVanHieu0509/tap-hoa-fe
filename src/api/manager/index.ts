@@ -8,6 +8,7 @@ import {
   CreateAndUpdateProductsInput,
   CreateProductsOutput,
   DeleteCartsInput,
+  DeleteProductInput,
   GetAllCartOutput,
   GetAllListInput,
   GetBillInput,
@@ -39,6 +40,10 @@ export const createProduct = (cancelToken: CancelToken, body: CreateAndUpdatePro
 
 export const updateProduct = (cancelToken: CancelToken, body: CreateAndUpdateProductsInput) => {
   return request.post<ResponseFormat<any>>("/products/update-product", body, { cancelToken });
+};
+
+export const deleteProduct = (cancelToken: CancelToken, body: DeleteProductInput) => {
+  return request.post<ResponseFormat<any>>("/products/delete-product", body, { cancelToken });
 };
 
 // ---Cart---//

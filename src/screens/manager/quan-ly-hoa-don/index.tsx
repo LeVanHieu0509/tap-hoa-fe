@@ -55,7 +55,9 @@ const QuanLyHoaDonScreen = ({}: QuanLyHoaDonScreenProps) => {
         sortOrder: "",
         sortBy: "",
         page: "",
-        filter: {},
+        filter: {
+          carts_state: "active",
+        },
         select: null,
       },
       {
