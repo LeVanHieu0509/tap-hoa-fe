@@ -45,8 +45,8 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
   const actionGetAllCarts = useActionApi(getAllCarts);
 
   useInitialized(() => {
-    if (cacheData.cart) {
-      setCurrentKeyOrder(cacheData.cart?.currentKeyOrder);
+    if (cacheData?.cart) {
+      setCurrentKeyOrder(cacheData?.cart?.currentKeyOrder);
     }
     if (!orderCarts && currentUser) {
       actionGetAllCarts(
