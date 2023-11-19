@@ -1,7 +1,7 @@
-import { LoadingPageWrapper } from "./styled";
-import { Spinner } from "@material-tailwind/react";
+import LoadingSection from "components/loading";
 import dynamic from "next/dynamic";
 import { Flex } from "styles/common";
+import { LoadingPageWrapper } from "./styled";
 
 interface LoadingFixedProps {
   loading?: boolean;
@@ -12,8 +12,8 @@ const LoadingPage = ({ loading }: LoadingFixedProps) => {
   return loading ? (
     <Portal>
       <LoadingPageWrapper>
-        <Flex justify="center" align="center" className="fixed">
-          <Spinner color="indigo" />
+        <Flex justify="center" align="center" className="" style={{ margin: "auto 0", height: "100vh" }}>
+          <LoadingSection loading={loading} />
         </Flex>
       </LoadingPageWrapper>
     </Portal>

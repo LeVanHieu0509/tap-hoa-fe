@@ -91,7 +91,13 @@ export interface AddNewCartsInput {
   products: AddNewCartsItemProduct[];
 }
 
-export interface AddNewCartsOutput {}
+export interface AddNewCartsOutput {
+  cart_state: string;
+  cart_products: string;
+  usr_id: string;
+  id: number;
+  cart_count_product: number;
+}
 
 export interface AddToCartsInput {
   id: number;

@@ -27,28 +27,37 @@ interface CartItemProps {
 
 const CartItem = ({ onIncrease, onDecrease, item, index, onClose, onChange, quantity, setQuantity }: CartItemProps) => {
   return (
-    <CartItemWrapper className="w-full shadow-md rounded-xl hover:bg-gray-100 hover:rounded-xl py-3">
+    <CartItemWrapper className="w-full shadow-md rounded-xl hover:bg-gray-100 hover:rounded-xl py-3 px-3">
       <div className="w-full z-10">
-        <div className="flex items-center   ">
+        <div className="flex items-center">
           <div className="flex w-2/5">
-            <div className="flex flex-col justify-between ml-4 flex-grow">
+            <div className=" flex-grow">
               <span className="font-bold text-sm mb-2">{`${index}, ${item.product_name}`}</span>
             </div>
           </div>
-          <div className="flex justify-center w-1/5 items-center">
+
+          <div className="flex w-1/5">
+            <div className="flex flex-col justify-between flex-grow">
+              <span className="font-bold text-sm mb-2">{` ${item.product_code}`}</span>
+            </div>
+          </div>
+
+          <div className="flex  w-1/5 items-center">
             <ButtonIcon onClick={() => onDecrease(item.product_code, item.product_quantity)}>
               <svg className="fill-current text-gray-600 w-3" viewBox="0 0 448 512">
                 <path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" />
               </svg>
             </ButtonIcon>
 
-            <input
-              onChange={(e) => onChange(item.product_code, Number(e.target.value))}
-              className="mx-2 border text-center w-8"
-              type="text"
-              defaultValue="0"
-              value={item.product_quantity}
-            />
+            <div className="">
+              <input
+                onChange={(e) => onChange(item.product_code, Number(e.target.value))}
+                className="mx-2 border text-center "
+                type="text"
+                defaultValue="0"
+                value={item.product_quantity}
+              />
+            </div>
 
             <ButtonIcon onClick={() => onIncrease(item.product_code, item.product_quantity)}>
               <svg className="fill-current text-gray-600 w-3 items-center" viewBox="0 0 448 512">
@@ -57,12 +66,12 @@ const CartItem = ({ onIncrease, onDecrease, item, index, onClose, onChange, quan
             </ButtonIcon>
           </div>
 
-          <span className="text-center w-1/5 font-semibold text-sm">{formatCurrency(item.product_price_sell)}</span>
-          <span className="text-center w-1/6 font-semibold text-sm">
+          <span className=" w-1/5 font-semibold text-sm">{formatCurrency(item.product_price_sell)}</span>
+          <span className=" w-1/6 font-semibold text-sm">
             {formatCurrency(item.product_price_sell * item.product_quantity)}
           </span>
 
-          <ButtonIcon color="white" className="text-center" onClick={() => onClose(item.product_code)}>
+          <ButtonIcon color="white" className="" onClick={() => onClose(item.product_code)}>
             <TrashIcon />
           </ButtonIcon>
         </div>

@@ -9,6 +9,7 @@ import { AdminLayoutWrapper } from "./styled";
 import { useRouter } from "next/router";
 import { Dialog, DialogBody, DialogFooter, DialogHeader } from "@material-tailwind/react";
 import { ButtonPrimary } from "styles/buttons";
+import LoadingPage from "components/loading-page";
 
 interface ThemeWrapperProps {
   children: React.ReactNode;

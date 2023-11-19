@@ -8,17 +8,30 @@ interface TabsOrderProps {
   currentKeyOrder: string;
   handleRemoveItemCarts: any;
   dataCurrentOrder: GetProductOutput[];
+  onReview: () => void;
+  onSaveCart: (type: string) => void;
 }
 
-const TabsOrder = ({ currentKeyOrder, dataCurrentOrder, handleRemoveItemCarts }: TabsOrderProps) => {
+const TabsOrder = ({
+  onSaveCart,
+  currentKeyOrder,
+  dataCurrentOrder,
+  handleRemoveItemCarts,
+  onReview,
+}: TabsOrderProps) => {
   return (
     <TabsOrderWrapper>
       <ContentOrder className="mt-24">
         <ContentLeft>
-          <ListOrders currentKeyOrder={currentKeyOrder} lists={dataCurrentOrder} onClose={handleRemoveItemCarts} />
+          <ListOrders
+            onSaveCart={onSaveCart}
+            currentKeyOrder={currentKeyOrder}
+            lists={dataCurrentOrder}
+            onClose={handleRemoveItemCarts}
+          />
         </ContentLeft>
         <ContentRight>
-          <Checkout lists={dataCurrentOrder} />
+          <Checkout onReview={onReview} lists={dataCurrentOrder} />
         </ContentRight>
       </ContentOrder>
     </TabsOrderWrapper>

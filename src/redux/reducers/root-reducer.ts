@@ -28,7 +28,7 @@ const initialState: RootState = {
   accessToken: null,
   headerHeight: 91,
   currentUser: null,
-  orderCarts: null,
+  orderCarts: [],
   cacheData: null,
 };
 

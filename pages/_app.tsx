@@ -11,6 +11,7 @@ import { store } from "../src/redux/store";
 import "../src/styles/global.css";
 import { GlobalStyle } from "../src/styles/globals";
 import { default as version } from "../version.json";
+import RootAppLoading from "components/root-app-loading";
 
 const App = ({ Component, pageProps }: AppProps) => {
   useEffect(() => {
@@ -32,7 +33,7 @@ const App = ({ Component, pageProps }: AppProps) => {
         <MaterialTailwindControllerProvider>
           <ThemeWrapper component={<Component {...pageProps} />}>
             <GlobalStyle />
-
+            <RootAppLoading />
             <ToastContainer />
           </ThemeWrapper>
         </MaterialTailwindControllerProvider>

@@ -1,7 +1,12 @@
 export type LoadingType = "local" | "global" | "";
 
 //per API need unit key loading
-export type LoadingName = "";
+export type LoadingName =
+  | "loadingActionCheckoutReview"
+  | "loadingActionUpdateCarts"
+  | "loadingSubmitOrder"
+  | "loadingCreateCart"
+  | "";
 
 export interface LoadingProps {
   type: LoadingType;

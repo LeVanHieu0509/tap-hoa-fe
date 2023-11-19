@@ -1,15 +1,23 @@
-import React, { useMemo } from "react";
-import { CheckoutWrapper } from "./styles";
+import { Button } from "@material-tailwind/react";
+import LoadingSection from "components/loading";
+import { useAppSelector } from "hooks/use-redux";
 import { sum } from "lodash";
+import { useMemo } from "react";
 import { formatCurrency } from "utils/format-value";
+import { CheckoutWrapper } from "./styles";
 
 interface CheckoutProps {
   lists?: any;
+  onReview: () => void;
 }
 
-const Checkout = ({ lists }: CheckoutProps) => {
+const Checkout = ({ lists, onReview }: CheckoutProps) => {
+  const {
+    loading: { loadingActionUpdateCarts },
+  } = useAppSelector((r) => r.rootReducer);
+
   const listPrice = useMemo(() => {
-    return lists.map((item) => {
+    return lists?.map((item) => {
       const price = item.product_price_sell * item.product_quantity;
 
       return price;
@@ -26,9 +34,17 @@ const Checkout = ({ lists }: CheckoutProps) => {
             <span>Tổng đơn hàng</span>
             <span>{formatCurrency(sum(listPrice))}</span>
           </div>
-          <button className="bg-indigo-500 font-semibold hover:bg-indigo-600 py-3 text-sm text-white uppercase w-full">
-            Đặt hàng
-          </button>
+
+          <Button
+            disabled={sum(listPrice) <= 0 && true}
+            onClick={onReview}
+            variant="filled"
+            color="green"
+            fullWidth
+            className="text-sm text-white uppercase "
+          >
+            {loadingActionUpdateCarts ? <LoadingSection loading={true} /> : "Đặt hàng"}
+          </Button>
         </div>
       </div>
     </CheckoutWrapper>

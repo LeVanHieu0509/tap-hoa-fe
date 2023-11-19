@@ -373,6 +373,10 @@ const style = css`
     font-size: 1.8em;
   }
 
+  .Toastify__toast-container {
+    z-index: 100000;
+  }
+
   .Toastify__toast-container--bottom-center {
     width: 80vw;
   }

@@ -4,18 +4,20 @@ import { cloneDeep } from "lodash";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { rootAction } from "redux/reducers/root-reducer";
-import { FlexColumn } from "styles/common";
+import { Flex, FlexColumn } from "styles/common";
 import { getKeyCart } from "utils/cart";
 import CartItem from "./cart-item";
 import { ListOrdersWrapper } from "./styled";
+import { Button } from "@material-tailwind/react";
 
 interface ListOrdersProps {
   currentKeyOrder: string;
   lists: GetProductOutput[];
   onClose: (value: string) => void;
+  onSaveCart: (type: string) => void;
 }
 
-const ListOrders = ({ currentKeyOrder, lists, onClose }: ListOrdersProps) => {
+const ListOrders = ({ onSaveCart, currentKeyOrder, lists, onClose }: ListOrdersProps) => {
   const dispatch = useDispatch();
   const { orderCarts } = useAppSelector((r) => r.rootReducer);
   const [quantity, setQuantity] = useState();
@@ -118,13 +120,17 @@ const ListOrders = ({ currentKeyOrder, lists, onClose }: ListOrdersProps) => {
         <div className="container mx-auto ">
           <div className="flex ">
             <div className="w-full ">
+              <Flex justify="flex-end">
+                <Button variant="outlined" size="sm" onClick={() => onSaveCart("draff")}>
+                  Lưu tạm
+                </Button>
+              </Flex>
               <div className="flex mt-10 mb-5">
                 <h3 className="font-semibold text-gray-600 text-xs uppercase w-2/5">Tên sản phẩm</h3>
-                <h3 className="font-semibold text-center text-gray-600 text-xs uppercase w-1/5 text-center">
-                  Số lượng
-                </h3>
-                <h3 className="font-semibold text-center text-gray-600 text-xs uppercase w-1/5 text-center">Giá</h3>
-                <h3 className="font-semibold text-center text-gray-600 text-xs uppercase w-1/6 text-center">Tổng</h3>
+                <h3 className="font-semibold text-gray-600 text-xs uppercase w-1/5">Mã code</h3>
+                <h3 className="font-semibold text-gray-600 text-xs uppercase w-1/5">Số lượng</h3>
+                <h3 className="font-semibold text-gray-600 text-xs uppercase w-1/5 ">Giá</h3>
+                <h3 className="font-semibold  text-gray-600 text-xs uppercase w-1/5">Tổng</h3>
               </div>
 
               <FlexColumn className="w-full" gap={16} gapMb={16}>

@@ -1,7 +1,7 @@
 import { GetCartsOutput, GetProductOutput, ShowModal } from "@custom-types/manager";
 import { PlusIcon } from "@heroicons/react/24/outline";
-import { Button, ButtonGroup } from "@material-tailwind/react";
-import { deleteCarts, getAllCarts, getProducts } from "api/manager";
+import { Button, ButtonGroup, Spinner } from "@material-tailwind/react";
+import { addNewCarts, checkoutConfirm, deleteCarts, getAllCarts, getProducts, updateCarts } from "api/manager";
 import { Alert } from "components/alert";
 import DropDown from "components/dropdown-fieldset";
 import IconClose from "components/icons/source/close";
@@ -9,10 +9,12 @@ import ModalCustom from "components/modal-custom";
 import useActionApi from "hooks/use-action-api";
 import useInitialized from "hooks/use-initialized";
 import { useAppSelector } from "hooks/use-redux";
+import { pick } from "lodash";
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { rootAction } from "redux/reducers/root-reducer";
 import CardItem from "section/manager/tao-hoa-don/card";
+import Invoice from "section/manager/tao-hoa-don/invoice";
 import TabsOrder from "section/manager/tao-hoa-don/tab-orders";
 import { Flex } from "styles/common";
 import { convertKeyCart, getKeyCart } from "utils/cart";
@@ -24,9 +26,14 @@ export interface GetProductOutputCustom extends GetCartsOutput {
   label?: string;
   value?: string;
 }
+function getKeyByValue(object, value) {
+  return Object.keys(object).find((key) => object[key] === value);
+}
+
 const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
   const dispatch = useDispatch();
 
+  const [reLoading, setReloading] = useState(false);
   const [listsProducts, setListProducts] = useState<GetProductOutput[]>();
   const [currentKeyOrder, setCurrentKeyOrder] = useState<any>(null);
   const [searchText, setSearchText] = useState("");
@@ -38,17 +45,33 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
     title: "",
   });
 
-  const { orderCarts, currentUser, cacheData } = useAppSelector((r) => r.rootReducer);
+  const [showModalOrder, setShowModalOrder] = useState<ShowModal>({
+    type: null,
+    show: false,
+    data: null,
+    title: "",
+  });
+
+  const {
+    orderCarts,
+    currentUser,
+    cacheData,
+    loading: { loadingCreateCart },
+  } = useAppSelector((r) => r.rootReducer);
 
   const actionGetProducts = useActionApi(getProducts);
   const actionDeleteCarts = useActionApi(deleteCarts);
   const actionGetAllCarts = useActionApi(getAllCarts);
+  const actionAddNewCarts = useActionApi(addNewCarts);
+  const actionUpdateCarts = useActionApi(updateCarts);
+
+  const actionCheckoutConfirm = useActionApi(checkoutConfirm);
 
   useInitialized(() => {
-    if (cacheData?.cart) {
-      setCurrentKeyOrder(cacheData?.cart?.currentKeyOrder);
-    }
-    if (!orderCarts && currentUser) {
+    // if (cacheData?.cart) {
+    //   setCurrentKeyOrder(cacheData?.cart?.currentKeyOrder);
+    // }
+    if (currentUser || reLoading) {
       actionGetAllCarts(
         {
           limit: "",
@@ -68,53 +91,28 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
         .then(({ data }) => {
           if (data.status == "1") {
             if (data.data.products.length) {
-              //Lưu các hoá đơn từ api có status là active vào local storage
-              let dataOrderCarts = data.data.products.map((item: GetCartsOutput, i) => ({
-                [`hoa-don-${i + 1}`]: {
-                  id: item.id,
-                  products: JSON.parse(item.cart_products.toString()),
-                },
-              }));
+              const newOrderCarts = data.data.products.map((elem, index) => {
+                return Object.assign({}, pick(elem, `hoa-don-${elem.id}`), {
+                  [`hoa-don-${elem.id}`]: {
+                    id: elem.id,
+                    products: JSON.parse(String(elem.cart_products)),
+                  },
+                });
+              });
 
-              dispatch(rootAction.setOrderCarts(dataOrderCarts));
-            } else {
-              dispatch(rootAction.setOrderCarts([]));
+              dispatch(rootAction.setOrderCarts(newOrderCarts));
             }
           } else {
             Alert("ERROR", data.message);
           }
         })
-        .catch((e) => Alert("ERROR", e.message));
+        .catch((e) => console.log(e));
     }
-  }, [orderCarts]);
-
-  const handleAddCart = (lengthCart = 0) => {
-    lengthCart = lengthCart + 1;
-
-    //Xử lý tránh trùng lặp lại hoá đơn đang có
-    orderCarts.forEach((element) => {
-      if (element[`hoa-don-${lengthCart}`]) {
-        lengthCart = lengthCart + 1;
-      } else {
-        lengthCart = lengthCart;
-      }
-    });
-
-    const newCart = {
-      [`hoa-don-${lengthCart}`]: {
-        id: null,
-        products: [],
-      },
-    };
-
-    setCurrentKeyOrder(`hoa-don-${lengthCart}`);
-
-    dispatch(rootAction.setOrderCarts([...orderCarts, newCart]));
-  };
+  }, [reLoading]);
 
   // gọi api products
   useEffect(() => {
-    if (currentUser) {
+    if (currentUser || reLoading) {
       actionGetProducts(
         {
           limit: "",
@@ -140,20 +138,91 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
         })
         .catch((e) => e);
     }
-  }, [currentUser]);
+  }, [currentUser, reLoading]);
 
   // Lấy ra product trong hoá đơn hiện tại mà user chọn
   const dataProductInCartCurrent: any = useMemo(() => {
-    return orderCarts?.find((item) => item[currentKeyOrder]);
+    return orderCarts?.length > 0 && orderCarts?.find((item) => item[currentKeyOrder]);
   }, [currentKeyOrder, orderCarts]);
 
-  const handleCancelCart = () => {
+  const handleAddCart = () => {
+    actionAddNewCarts(
+      {
+        products: [],
+      },
+      {
+        type: "local",
+        name: "loadingCreateCart",
+      }
+    )
+      .then(({ data }) => {
+        if (data.status == "1") {
+          const newCart = {
+            [`hoa-don-${data.data.id}`]: {
+              id: data.data.id,
+              products: [],
+            },
+          };
+          setCurrentKeyOrder(`hoa-don-${data.data.id}`);
+          dispatch(rootAction.setOrderCarts(orderCarts ? [...orderCarts, newCart] : [newCart]));
+        } else {
+          Alert("ERROR", data.message);
+        }
+      })
+      .catch((e) => e);
+  };
+
+  const handleSaveDraffOrder = async (type) => {
+    if (currentKeyOrder && orderCarts?.length > 0) {
+      const dataCartCurrent: any = dataProductInCartCurrent[currentKeyOrder];
+      //all api checkout để get thông tín sản phẩm.
+      await actionUpdateCarts(
+        {
+          id: dataCartCurrent?.id,
+          products: dataCartCurrent?.products,
+        },
+        {
+          type: "global",
+          name: "",
+        }
+      )
+        .then(({ data }) => {
+          if (data.status == "1") {
+            const newOrderCarts = orderCarts.map((elem, index) => {
+              const { id, products } = elem[getKeyCart(elem)];
+
+              return Object.assign({}, elem, {
+                [getKeyCart(elem)]: {
+                  id: id ? id : data.data.id,
+                  products: products,
+                },
+              });
+            });
+            setShowModal({
+              show: false,
+            });
+
+            dispatch(rootAction.setOrderCarts(newOrderCarts));
+
+            if (type == "draff") {
+              Alert("SUCCESSFUL", "Hoá đơn của bạn đã được lưu lại!");
+            }
+          } else {
+            Alert("ERROR", data.message);
+          }
+        })
+        .catch((e) => e);
+    } else {
+      Alert("WARNING", "Vui lòng chọn hoá đơn trước khi lưu!");
+    }
+  };
+
+  const handleCancelCart = async () => {
     if (showModal.data) {
       const newOrderCarts = orderCarts.filter((item) => !item[currentKeyOrder]);
-
       //if cart in database, call api for delete. If it don`t db, delete in local storage
       if (showModal.data[currentKeyOrder].id) {
-        actionDeleteCarts(
+        await actionDeleteCarts(
           {
             id: showModal.data[currentKeyOrder].id,
           },
@@ -181,7 +250,7 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
   };
 
   const handleAddItemToCart = ({ product_code, product_name, product_price_sell }: GetProductOutput) => {
-    if (currentKeyOrder && orderCarts.length > 0) {
+    if (dataProductInCartCurrent && currentKeyOrder && orderCarts.length > 0) {
       const newProduct = {
         product_code,
         product_name,
@@ -189,7 +258,7 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
         product_quantity: 1,
       };
 
-      let products = dataProductInCartCurrent[currentKeyOrder].products;
+      let products = dataProductInCartCurrent[currentKeyOrder]?.products;
 
       //2 sản phẩm giống nhau, thì tăng số lượng lên
       // nếu như sản phẩm đã có trong list products thì update số lượng lên ++
@@ -256,6 +325,48 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
     }
   };
 
+  const handleReviewOrder = async () => {
+    await handleSaveDraffOrder("submit");
+
+    setShowModalOrder({
+      show: true,
+      title: "Thanh toán",
+      data: dataProductInCartCurrent[currentKeyOrder].id,
+    });
+  };
+
+  const handleSubmitOrder = async () => {
+    if (showModalOrder.data) {
+      actionCheckoutConfirm(
+        {
+          id: showModalOrder.data,
+        },
+        {
+          type: "global",
+          name: "",
+        }
+      )
+        .then(async ({ data }) => {
+          if (data.status == "1") {
+            const newOrderCarts = orderCarts.filter((item) => !item[currentKeyOrder]);
+            Alert("SUCCESSFUL", data.message);
+
+            setShowModalOrder({
+              show: false,
+            });
+
+            dispatch(rootAction.setOrderCarts([...newOrderCarts]));
+            setReloading(true);
+          } else {
+            Alert("ERROR", data.message);
+          }
+        })
+        .catch((e) => {
+          Alert("ERROR", e);
+        });
+    }
+  };
+
   return (
     <TaoHoaDonScreenWrapper>
       <Flex justify="space-between" style={{ position: "sticky", top: 100 }}>
@@ -279,73 +390,103 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
 
         <Flex gap={16} gapMb={8} align="center" justify="flex-end">
           <ButtonGroup size="sm" className="flex w-max flex-row gap-4 " color="teal">
-            {orderCarts?.map((item) => (
-              <Button
-                style={{ background: getKeyCart(item) == currentKeyOrder && "#e87722" }}
-                onClick={() => {
-                  setCurrentKeyOrder(getKeyCart(item));
+            {orderCarts?.length > 0 &&
+              orderCarts?.map((item) => (
+                <Button
+                  style={{ background: getKeyCart(item) == currentKeyOrder && "#e87722" }}
+                  onClick={() => {
+                    setCurrentKeyOrder(getKeyCart(item));
 
-                  dispatch(
-                    rootAction.setCacheData({
-                      cart: {
-                        currentKeyOrder: getKeyCart(item),
-                      },
-                    })
-                  );
-                }}
-                key={item.value}
-                className="flex items-center gap-3 "
-              >
-                <span className="mr-2">{convertKeyCart(item)}</span>
-                <span
-                  onClick={() =>
-                    setShowModal({
-                      show: true,
-                      data: item,
-                      title: `Đóng đặt hàng ${convertKeyCart(item)}`,
-                    })
-                  }
+                    dispatch(
+                      rootAction.setCacheData({
+                        cart: {
+                          currentKeyOrder: getKeyCart(item),
+                        },
+                      })
+                    );
+                  }}
+                  key={item.value}
+                  className="flex items-center gap-3 "
                 >
-                  <IconClose color="white" />
-                </span>
-              </Button>
-            ))}
+                  <span className="mr-2">{convertKeyCart(item)}</span>
+                  <span
+                    onClick={() =>
+                      setShowModal({
+                        show: true,
+                        data: item,
+                        title: `Đóng đặt hàng ${convertKeyCart(item)}`,
+                      })
+                    }
+                  >
+                    <IconClose color="white" />
+                  </span>
+                </Button>
+              ))}
           </ButtonGroup>
 
-          <Button color="green" onClick={() => handleAddCart(orderCarts?.length ?? 0)}>
-            <PlusIcon height={14} width={14} />
+          <Button disabled={Boolean(loadingCreateCart)} color="green" onClick={() => handleAddCart()}>
+            {loadingCreateCart ? <Spinner className="h-4 w-4" /> : <PlusIcon height={14} width={14} />}
           </Button>
         </Flex>
       </Flex>
 
       <TabsOrder
+        onSaveCart={handleSaveDraffOrder}
+        onReview={handleReviewOrder}
         currentKeyOrder={currentKeyOrder}
         dataCurrentOrder={dataProductInCartCurrent ? dataProductInCartCurrent[currentKeyOrder].products : []}
         handleRemoveItemCarts={handleRemoveItemCarts}
       />
 
-      <ModalCustom
-        show={showModal.show}
-        onCloseModal={() => {
-          setShowModal({
-            show: false,
-          });
-        }}
-        title={showModal.title}
-        primaryBtn={{
-          text: "Xác nhận",
-          onClick: handleCancelCart,
-        }}
-        secondaryBtn={{
-          text: "Huỷ bỏ",
-          onClick: () =>
+      {showModal.show && (
+        <ModalCustom
+          show={showModal.show}
+          onCloseModal={() => {
             setShowModal({
               show: false,
-            }),
-        }}
-      >
-        Thông tin của <span>{showModal.data?.label}</span> sẽ không được lưu lại. Bạn có chắc chắn muốn đóng không?
-      </ModalCustom>
+            });
+          }}
+          title={showModal.title}
+          primaryBtn={{
+            text: "Đồng ý",
+            onClick: handleCancelCart,
+          }}
+          secondaryBtn={{
+            text: "Bỏ qua",
+            onClick: () =>
+              setShowModal({
+                show: false,
+              }),
+          }}
+        >
+          Thông tin của Đặt hàng sẽ không được lưu lại. Bạn có chắc chắn muốn đóng không?
+        </ModalCustom>
+      )}
+
+      {showModalOrder.show && (
+        <ModalCustom
+          show={showModalOrder.show}
+          onCloseModal={() => {
+            setShowModalOrder({
+              show: false,
+            });
+          }}
+          title={showModalOrder.title}
+          primaryBtn={{
+            text: "Xác nhận",
+            onClick: handleSubmitOrder,
+          }}
+          secondaryBtn={{
+            text: "Quay lại",
+            onClick: () =>
+              setShowModalOrder({
+                show: false,
+              }),
+          }}
+        >
+          <Invoice data={showModalOrder.data} />
+        </ModalCustom>
+      )}
     </TaoHoaDonScreenWrapper>
   );
 };

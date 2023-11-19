@@ -1,6 +1,6 @@
 import { isEmpty, isEqual, omitBy } from "lodash";
 import { NextRouter, useRouter } from "next/router";
-import { stringifyUrl } from "query-string/base";
+import { stringifyUrl } from "query-string";
 import { ParsedUrlQuery } from "querystring";
 import { useCallback, useState } from "react";
 
