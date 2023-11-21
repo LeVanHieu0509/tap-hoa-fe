@@ -105,7 +105,7 @@ export function QuanLyComponent({
                 text: "Xem chi tiết",
                 onClick: () =>
                   setShowModal({
-                    type: "fix",
+                    type: "detail",
                     show: true,
                     data: data,
                     title: `Xem chi tiết ${nameType}`,
@@ -118,7 +118,7 @@ export function QuanLyComponent({
                 text: "Xoá",
                 onClick: () =>
                   setShowModal({
-                    type: "fix",
+                    type: "delete",
                     show: true,
                     data: data,
                     title: "Bạn có chắc chắn xoá?",
@@ -224,17 +224,17 @@ export function QuanLyComponent({
             });
           }}
           title={showModal.title}
-          primaryBtn={{
-            text: "Xác nhận",
-            onClick: showModal.onConfirm,
-          }}
-          secondaryBtn={{
-            text: "Huỷ bỏ",
-            onClick: () =>
-              setShowModal({
-                show: false,
-              }),
-          }}
+          // primaryBtn={{
+          //   text: "Xác nhận",
+          //   onClick: showModal.onConfirm,
+          // }}
+          // secondaryBtn={{
+          //   text: "Huỷ bỏ",
+          //   onClick: () =>
+          //     setShowModal({
+          //       show: false,
+          //     }),
+          // }}
         >
           <ModalContent setShowModal={setShowModal} type={showModal.type} data={showModal.data} />
         </ModalCustom>

@@ -1,14 +1,17 @@
 import { ModifiedData } from "@custom-types";
 import { CreateAndUpdateProductsInput } from "@custom-types/manager";
 import { Button, Card } from "@material-tailwind/react";
-import { createProduct } from "api/manager";
+import { createProduct, getProduct } from "api/manager";
 import { Alert } from "components/alert";
 import FormInput from "components/form-input";
 import useActionApi from "hooks/use-action-api";
-import { get } from "lodash";
-import { useCallback, useMemo, useState } from "react";
+import useDebounce from "hooks/use-debounce";
+import { cloneDeep, get, isEmpty, toNumber } from "lodash";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTheme } from "styled-components";
 import { Flex } from "styles/common";
+import { formatDateRequest } from "utils";
+import { formatValue } from "utils/format-value";
 import { AddModalWrapper } from "./styles";
 interface AddModalProps {
   data?: any;
@@ -17,7 +20,7 @@ interface AddModalProps {
 
 const AddModal = ({ data, setShowModal }: AddModalProps) => {
   const theme = useTheme();
-  const [modifiedData, setModifiedData] = useState<ModifiedData<CreateAndUpdateProductsInput>>({
+  const initData: CreateAndUpdateProductsInput = {
     product_bar_code: "",
     product_code: "",
     product_name: "",
@@ -29,7 +32,11 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
     product_manufacture_date: "",
     product_expired_date: "",
     categories: 1,
-  });
+  };
+
+  const [modifiedData, setModifiedData] = useState<ModifiedData<CreateAndUpdateProductsInput>>(initData);
+  const [error, setError] = useState<any>({});
+  const debounceProductBarCode = useDebounce(modifiedData.product_bar_code, 500);
 
   const listInput: any = useMemo(
     () => [
@@ -80,7 +87,7 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
           subType: "number",
           type: "input",
           placeHolder: "Nhập số lượng sản phẩm...",
-          error: null,
+          error: error?.product_quantity,
         },
       ],
       [
@@ -137,52 +144,146 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
 
   const handleChange = useCallback(
     (name: keyof any, value: any) => {
-      console.log(name, value);
       setModifiedData((pre) => ({ ...pre, [name]: value }));
     },
     [modifiedData]
   );
-  console.log("value", modifiedData);
-  const actionGetProducts = useActionApi(createProduct);
 
-  const handleCreate = () => {
-    actionGetProducts(
-      {
-        product_bar_code: modifiedData.product_bar_code,
-        product_code: modifiedData.product_code,
-        product_name: modifiedData.product_name,
-        product_description: modifiedData.product_description,
-        product_image_url: modifiedData.product_image_url,
-        product_price_origin: modifiedData.product_price_origin,
-        product_price_sell: modifiedData.product_price_sell,
-        product_quantity: modifiedData.product_quantity,
-        product_manufacture_date: modifiedData.product_manufacture_date,
-        product_expired_date: modifiedData.product_expired_date,
-        categories: modifiedData.categories,
-      },
-      {
-        type: "global",
-        name: "",
-      }
-    )
-      .then(({ data }) => {
-        if (data.status == "1") {
-          Alert("SUCCESSFUL", data.message);
-          setShowModal({
-            show: false,
-          });
-        } else {
-          Alert("ERROR", data.message);
-        }
-      })
-      .catch((e) => {
-        console.log(e);
-        Alert("ERROR", get(e, "response.data.message"));
-      });
+  const validate = () => {
+    const cloneError = cloneDeep(error);
+
+    // validate email
+    if (!modifiedData?.categories) {
+      cloneError.categories = "Vui chọn danh mục sản phẩm!";
+    } else {
+      delete cloneError.categories;
+    }
+
+    if (toNumber(modifiedData?.product_quantity) <= 0 || isEmpty(modifiedData?.product_quantity)) {
+      cloneError.product_quantity = "Vui lòng nhập số lượng";
+    } else {
+      delete cloneError.product_quantity;
+    }
+    if (toNumber(modifiedData?.product_price_origin) < 0 || isEmpty(modifiedData?.product_price_origin)) {
+      cloneError.product_price_origin = "Vui lòng nhập giá nhập";
+    } else {
+      delete cloneError.product_price_origin;
+    }
+    if (!modifiedData?.product_price_sell || isEmpty(modifiedData?.product_price_sell)) {
+      cloneError.product_price_sell = "Vui lòng nhập giá bán!";
+    } else {
+      delete cloneError.product_price_sell;
+    }
+
+    setError(cloneError);
+    return Object.keys(cloneError).length === 0;
   };
+
+  const actionCreateProducts = useActionApi(createProduct);
+  const handleCreate = () => {
+    if (!validate()) {
+      actionCreateProducts(
+        {
+          categories: modifiedData.categories,
+          product_bar_code: modifiedData.product_bar_code,
+          product_code: modifiedData.product_code,
+          product_name: modifiedData.product_name,
+          product_description: modifiedData.product_description,
+          product_image_url: modifiedData.product_image_url,
+          product_price_origin: toNumber(modifiedData.product_price_origin),
+          product_price_sell: toNumber(modifiedData.product_price_sell),
+          product_quantity: toNumber(modifiedData.product_quantity),
+          product_manufacture_date: formatDateRequest(modifiedData.product_manufacture_date),
+          product_expired_date: formatDateRequest(modifiedData.product_expired_date),
+        },
+        {
+          type: "global",
+          name: "",
+        }
+      )
+        .then(({ data }) => {
+          if (data.status == "1") {
+            Alert("SUCCESSFUL", data.message);
+            setShowModal({
+              show: false,
+            });
+          } else {
+            Alert("ERROR", data.message);
+          }
+        })
+        .catch((e) => {
+          console.log(e);
+          Alert("ERROR", get(e, "response.data.message"));
+        });
+    }
+  };
+
+  const [barcodeDisplay, setBarcodeDisplay] = useState("Not Found Barcode");
+  let barcodeScan = "";
+
+  useEffect(() => {
+    function handleKeyDown(e) {
+      if (e.keyCode == 13 && barcodeScan.length > 3) {
+        handleScan(barcodeScan);
+        return;
+      }
+      if (e.keyCode == 16) {
+        return;
+      }
+
+      barcodeScan += e.key;
+
+      setTimeout(() => {
+        barcodeScan = "";
+      }, 100);
+      //Push Keycode to barcode scan variable
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return function cleanup() {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [barcodeDisplay]);
+
+  const handleScan = (barcodeString) => {
+    setBarcodeDisplay(barcodeString);
+  };
+
+  const actionGetProduct = useActionApi(getProduct);
+
+  useEffect(() => {
+    if (debounceProductBarCode) {
+      actionGetProduct(
+        {
+          product_bar_code: debounceProductBarCode,
+        },
+        {
+          type: "global",
+          name: "",
+        }
+      )
+        .then(({ data }) => {
+          if (data.status == "1") {
+            if (data.data.product_bar_code) {
+              setModifiedData({
+                ...data.data,
+                product_expired_date: formatValue(data.data.product_expired_date, "date"),
+                product_manufacture_date: formatValue(data.data.product_manufacture_date, "date"),
+              });
+            }
+          } else {
+            Alert("ERROR", data.message);
+          }
+        })
+        .catch((e) => e);
+    }
+  }, [debounceProductBarCode]);
 
   return (
     <AddModalWrapper>
+      <div>Quét mã vạch: {barcodeDisplay}</div>
+
       <Card color="transparent" shadow={false} className="w-full">
         <div className="mt-8 mb-2 w-full">
           <FormInput listInput={listInput} modifiedData={modifiedData} onChange={handleChange} />

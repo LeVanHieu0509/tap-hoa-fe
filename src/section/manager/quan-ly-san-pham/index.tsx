@@ -1,11 +1,11 @@
-import React, { useMemo } from "react";
-import { QuanLySanPhamModalWrapper } from "./styled";
-import AddModal from "./add-modal";
-import FixModal from "./fix-modal";
-import DeleteModal from "./delete-modal";
-import { Flex } from "styles/common";
 import { Button } from "@material-tailwind/react";
+import { useMemo } from "react";
 import { useTheme } from "styled-components";
+import { Flex } from "styles/common";
+import AddModal from "./add-modal";
+import DeleteModal from "./delete-modal";
+import FixModal from "./fix-modal";
+import { QuanLySanPhamModalWrapper } from "./styled";
 
 interface QuanLySanPhamModalProps {
   type?: string;
@@ -15,7 +15,6 @@ interface QuanLySanPhamModalProps {
 
 const QuanLySanPhamModal = ({ setShowModal, data, type }: QuanLySanPhamModalProps) => {
   const theme = useTheme();
-
   const ModalContent = useMemo(() => {
     switch (type) {
       case "add":
@@ -28,6 +27,19 @@ const QuanLySanPhamModal = ({ setShowModal, data, type }: QuanLySanPhamModalProp
         return DeleteModal;
     }
   }, [type]);
+
+  const handleConfirm = () => {
+    switch (type) {
+      case "fix":
+        console.log("fix 123");
+        break;
+      case "delete":
+        console.log("delete");
+        break;
+      default:
+        break;
+    }
+  };
 
   return (
     <QuanLySanPhamModalWrapper>
@@ -58,7 +70,7 @@ const QuanLySanPhamModal = ({ setShowModal, data, type }: QuanLySanPhamModalProp
               color: "#ffffff",
               background: theme.color.status.primary,
             }}
-            onClick={() => {}}
+            onClick={handleConfirm}
           >
             Xác nhận
           </Button>

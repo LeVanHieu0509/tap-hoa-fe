@@ -190,7 +190,7 @@ export const ScrollBarWrapper = styled.div<{
   maxHeightMobile?: string;
 }>`
   height: ${({ maxHeight }) => maxHeight};
-
+  overflow: auto;
   @media ${device.mobile} {
     height: ${({ maxHeightMobile }) => maxHeightMobile};
   }

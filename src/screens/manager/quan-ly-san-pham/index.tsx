@@ -128,7 +128,7 @@ const QuanLySanPhamScreen = ({}: QuanLySanPhamScreenProps) => {
   };
 
   const handleUpdateProduct = () => {
-    console.log("fix product");
+    console.log("fix product 123");
   };
 
   const handleDeleteProduct = () => {

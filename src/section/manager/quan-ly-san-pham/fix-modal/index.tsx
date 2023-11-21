@@ -6,7 +6,7 @@ interface FixModalProps {
 }
 
 const FixModal = ({ data }: FixModalProps) => {
-  return <FixModalWrapper>123</FixModalWrapper>;
+  return <FixModalWrapper>Fix sanr phamr</FixModalWrapper>;
 };
 
 export default FixModal;
