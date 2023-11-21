@@ -8,6 +8,7 @@ const ModalCustom = ({
   title,
   show,
   data,
+  type,
   onCloseModal,
   secondaryBtn,
   primaryBtn,
@@ -16,6 +17,7 @@ const ModalCustom = ({
   data?: any;
   show?: boolean;
   title?: string;
+  type?: string;
   onCloseModal?: () => void;
   action?: (a: any, b: any) => Promise<any>;
   secondaryBtn?: {
@@ -32,7 +34,7 @@ const ModalCustom = ({
   const theme = useTheme();
 
   return (
-    <Dialog aria-labelledby="modal-title" open={show} handler={primaryBtn.onClick}>
+    <Dialog aria-labelledby="modal-title" open={show} handler={primaryBtn && primaryBtn.onClick}>
       <DialogHeader>
         <Typography variant="h4">{title}</Typography>
       </DialogHeader>

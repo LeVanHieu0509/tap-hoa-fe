@@ -1,5 +1,9 @@
 import { IconType } from "components/icons";
 
+export type ModifiedData<T> = {
+  [key in keyof T]?: any;
+};
+
 export type Colors =
   | "blue-gray"
   | "gray"

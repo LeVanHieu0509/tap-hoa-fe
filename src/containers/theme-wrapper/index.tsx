@@ -74,6 +74,7 @@ const ThemeWrapper = ({ children, component }: ThemeWrapperProps) => {
     return () => {
       window.removeEventListener("expirestoken", listenerExpires);
     };
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [linkNotHandle]);
 

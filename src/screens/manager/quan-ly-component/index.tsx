@@ -190,7 +190,6 @@ export function QuanLyComponent({
                       show: true,
                       data: null,
                       title: `Mời bạn thêm ${nameType}!`,
-                      onConfirm: addBtn.onClick,
                     }),
                 }
               }
@@ -217,6 +216,7 @@ export function QuanLyComponent({
 
       {showModal.show && (
         <ModalCustom
+          type={showModal.type}
           show={showModal.show}
           onCloseModal={() => {
             setShowModal({
@@ -236,7 +236,7 @@ export function QuanLyComponent({
               }),
           }}
         >
-          <ModalContent type={showModal.type} data={showModal.data} />
+          <ModalContent setShowModal={setShowModal} type={showModal.type} data={showModal.data} />
         </ModalCustom>
       )}
     </div>

@@ -4,27 +4,21 @@ import { loadLocalItem } from "redux/store";
 
 const URL = `${process.env.basePath}/backend`;
 
-const data = loadLocalItem("currentUser");
-
-const { tokens, user } = data ?? {};
-
 const request = axios.create({
   baseURL: URL,
-  headers: {
-    authorization: `bearer ${tokens?.accessToken}`,
-    "user-client-id": user?.usr_id,
-  },
 });
 
 request.interceptors.request.use(
   (config) => {
+    const data = loadLocalItem("currentUser");
+    const { tokens, user } = data ?? {};
     config.headers["cache-control"] = `no-cache`;
-    // const currentUser = getCurrentUser();
-    // if (currentUser && config.method.toUpperCase() === "POST") {
-    //   const { username } = getCurrentUser();
-    //   config.headers["agentCode"] = username;
 
-    // }
+    if (tokens && config.method.toUpperCase() === "POST") {
+      config.headers["authorization"] = `bearer ${tokens.accessToken}`;
+      config.headers["user-client-id"] = user.usr_id;
+    }
+
     config.withCredentials = true;
     return config;
   },
@@ -40,7 +34,7 @@ request.interceptors.response.use(
   },
   (error) => {
     let status = get(error, "response.status", null);
-    if (status === 401) {
+    if (status === 401 || status === 403) {
       localStorage.removeItem("currentUser");
       const event = new Event("expirestoken");
       set(event, "error", error);

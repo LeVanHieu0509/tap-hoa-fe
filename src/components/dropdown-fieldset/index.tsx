@@ -33,7 +33,7 @@ interface DropDownProps {
   loading?: boolean;
   isSearch?: boolean;
   isChildren?: boolean;
-  setSearchText: any;
+  setSearchText?: any;
   children?: React.ReactNode | React.ReactNode[];
 }
 

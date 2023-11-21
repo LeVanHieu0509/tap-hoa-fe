@@ -5,9 +5,9 @@ function renderSpace(type: "margin" | "padding", prefix = "") {
   return [0, 2, 6, 8, 10, 12, 16, 20, 24, 30, 36, 40, 60]
     .map((size) =>
       ["", "-top", "-left", "-bottom", "-right"]
-        .map(
-          (dir) => `.${prefix}${type.slice(0, 1)}${dir.slice(1, 2)}-${size} { ${type}${dir}: ${size}px !important; }`
-        )
+        .map((dir) => {
+          return `.${prefix}${type.slice(0, 1)}${dir.slice(1, 2)}-${size} { ${type}${dir}: ${size}px !important; }`;
+        })
         .join("\n")
     )
     .join("\n");
