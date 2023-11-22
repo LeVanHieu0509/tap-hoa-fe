@@ -8,7 +8,6 @@ import TableMobile from "components/table-mobile";
 import { useMemo, useState } from "react";
 import QuanLyHoaDonModal from "section/manager/quan-ly-san-pham";
 import DeleteModal from "section/manager/quan-ly-san-pham/delete-modal";
-import FixModal from "section/manager/quan-ly-san-pham/fix-modal";
 import { ActionsWrapper, ScrollCustom } from "styles";
 import { formatValueTable } from "utils/format-value";
 import Actions from "../components/actions";

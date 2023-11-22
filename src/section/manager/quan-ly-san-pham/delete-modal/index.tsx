@@ -6,7 +6,7 @@ interface DeleteModalProps {
 }
 
 const DeleteModal = ({ data }: DeleteModalProps) => {
-  return <DeleteModalWrapper>123</DeleteModalWrapper>;
+  return <DeleteModalWrapper>Không thể khôi phục sản phẩm nếu như bạn đã xoá!</DeleteModalWrapper>;
 };
 
 export default DeleteModal;

@@ -1,4 +1,12 @@
-import { Button, Dialog, DialogBody, DialogFooter, DialogHeader, Typography } from "@material-tailwind/react";
+import {
+  Button,
+  Dialog,
+  DialogBody,
+  DialogFooter,
+  DialogHeader,
+  IconButton,
+  Typography,
+} from "@material-tailwind/react";
 
 import { useTheme } from "styled-components";
 import { Flex } from "styles/common";
@@ -36,7 +44,23 @@ const ModalCustom = ({
   return (
     <Dialog aria-labelledby="modal-title" open={show} handler={primaryBtn && primaryBtn.onClick}>
       <DialogHeader>
-        <Typography variant="h4">{title}</Typography>
+        <Flex justify="space-between" className="w-full">
+          <Typography variant="h4">{title}</Typography>
+          {onCloseModal && (
+            <IconButton color="blue-gray" size="sm" variant="text" onClick={onCloseModal}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+                className="h-7 w-7"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </IconButton>
+          )}
+        </Flex>
       </DialogHeader>
       <DialogBody>{children}</DialogBody>
 

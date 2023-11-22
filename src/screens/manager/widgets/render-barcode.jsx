@@ -5,34 +5,33 @@ import { Flex } from "styles/common";
 
 const BarcodeScannerComponent = dynamic(() => import("react-qr-barcode-scanner"), { ssr: false });
 
-const ManagerScreen = ({}) => {
+const ScanBarCodeScreen = ({ onChange }) => {
   const [data, setData] = React.useState("Not Found");
-  const [torchOn, setTorchOn] = React.useState(false);
 
   return (
     <div className="text-center">
       <Flex justify="center">
-        {torchOn && (
-          <BarcodeScannerComponent
-            width={500}
-            height={500}
-            torch={torchOn}
-            onUpdate={(err, result) => {
-              if (result) setData(result.text);
-              else setData("Not Found");
-            }}
-          />
-        )}
+        <BarcodeScannerComponent
+          width={500}
+          height={500}
+          torch={true}
+          onUpdate={(err, result) => {
+            if (result) {
+              setData(result.text);
+              onChange("product_bar_code", result.text);
+            } else {
+              onChange("product_bar_code", null);
+              setData("Not Found");
+            }
+          }}
+        />
       </Flex>
 
-      <p style={{ color: "white" }}>{data}</p>
-      <button style={{ color: "white" }} onClick={() => setTorchOn(!torchOn)}>
-        Switch Torch {torchOn ? "Off" : "On"}
-      </button>
+      <p style={{ color: "black" }}>{data}</p>
 
       <Barcode value="NH1234566788" />
     </div>
   );
 };
 
-export default ManagerScreen;
+export default ScanBarCodeScreen;

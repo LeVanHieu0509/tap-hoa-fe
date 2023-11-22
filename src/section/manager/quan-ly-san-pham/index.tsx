@@ -1,4 +1,7 @@
 import { Button } from "@material-tailwind/react";
+import { deleteProduct } from "api/manager";
+import { Alert } from "components/alert";
+import useActionApi from "hooks/use-action-api";
 import { useMemo } from "react";
 import { useTheme } from "styled-components";
 import { Flex } from "styles/common";
@@ -28,13 +31,33 @@ const QuanLySanPhamModal = ({ setShowModal, data, type }: QuanLySanPhamModalProp
     }
   }, [type]);
 
+  const actionDeleteProduct = useActionApi(deleteProduct);
+
   const handleConfirm = () => {
     switch (type) {
       case "fix":
-        console.log("fix 123");
+        console.log("fix 123", data);
         break;
       case "delete":
-        console.log("delete");
+        if (data) {
+          actionDeleteProduct(
+            {
+              product_code: data.product_code,
+            },
+            {
+              type: "global",
+              name: "",
+            }
+          )
+            .then(({ data }) => {
+              if (data.status == "1") {
+                Alert("SUCCESSFUL", data.message);
+              } else {
+                Alert("ERROR", data.message);
+              }
+            })
+            .catch((e) => e);
+        }
         break;
       default:
         break;
@@ -45,7 +68,7 @@ const QuanLySanPhamModal = ({ setShowModal, data, type }: QuanLySanPhamModalProp
     <QuanLySanPhamModalWrapper>
       <ModalContent setShowModal={setShowModal} data={data} />
 
-      {type !== "add" && (
+      {(type == "delete" || type == "detail") && (
         <Flex gap={16} gapMb={16} justify="flex-end">
           <Button
             disabled={false}

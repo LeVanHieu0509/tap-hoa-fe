@@ -1,7 +1,7 @@
 import { ModifiedData } from "@custom-types";
-import { CreateAndUpdateProductsInput } from "@custom-types/manager";
+import { CreateAndUpdateProductsInput, ShowModal } from "@custom-types/manager";
 import { Button, Card } from "@material-tailwind/react";
-import { createProduct, getProduct } from "api/manager";
+import { createProduct, generalAutoProduct, getProduct } from "api/manager";
 import { Alert } from "components/alert";
 import FormInput from "components/form-input";
 import useActionApi from "hooks/use-action-api";
@@ -13,6 +13,8 @@ import { Flex } from "styles/common";
 import { formatDateRequest } from "utils";
 import { formatValue } from "utils/format-value";
 import { AddModalWrapper } from "./styles";
+import ModalCustom from "components/modal-custom";
+import ScanBarCodeScreen from "screens/manager/widgets/render-barcode";
 interface AddModalProps {
   data?: any;
   setShowModal?: any;
@@ -36,7 +38,14 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
 
   const [modifiedData, setModifiedData] = useState<ModifiedData<CreateAndUpdateProductsInput>>(initData);
   const [error, setError] = useState<any>({});
+  const [barcodeDisplay, setBarcodeDisplay] = useState("Not Found Barcode");
   const debounceProductBarCode = useDebounce(modifiedData.product_bar_code, 500);
+
+  const actionCreateProducts = useActionApi(createProduct);
+  const actionGetProduct = useActionApi(getProduct);
+  const actionGeneralAutoProduct = useActionApi(generalAutoProduct);
+
+  let barcodeScan = "";
 
   const listInput: any = useMemo(
     () => [
@@ -179,9 +188,8 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
     return Object.keys(cloneError).length === 0;
   };
 
-  const actionCreateProducts = useActionApi(createProduct);
   const handleCreate = () => {
-    if (!validate()) {
+    if (validate()) {
       actionCreateProducts(
         {
           categories: modifiedData.categories,
@@ -218,9 +226,7 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
     }
   };
 
-  const [barcodeDisplay, setBarcodeDisplay] = useState("Not Found Barcode");
-  let barcodeScan = "";
-
+  //handle scan product_bar_code
   useEffect(() => {
     function handleKeyDown(e) {
       if (e.keyCode == 13 && barcodeScan.length > 3) {
@@ -250,10 +256,13 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
     setBarcodeDisplay(barcodeString);
   };
 
-  const actionGetProduct = useActionApi(getProduct);
-
+  //handle auto fill info product
   useEffect(() => {
     if (debounceProductBarCode) {
+      setShowBarCode({
+        show: false,
+      });
+
       actionGetProduct(
         {
           product_bar_code: debounceProductBarCode,
@@ -271,18 +280,59 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
                 product_expired_date: formatValue(data.data.product_expired_date, "date"),
                 product_manufacture_date: formatValue(data.data.product_manufacture_date, "date"),
               });
+            } else {
+              return {
+                status: "-1",
+                message: "NOT_FOUND_SYSTEM",
+              };
             }
           } else {
             Alert("ERROR", data.message);
           }
         })
+        .then((data) => {
+          if (data.status == "-1") {
+            actionGeneralAutoProduct(
+              {
+                product_bar_code: debounceProductBarCode,
+              },
+              {
+                type: "global",
+                name: "",
+              }
+            );
+          }
+        })
+        .then((res) => {
+          console.log("res", res);
+        })
         .catch((e) => e);
     }
   }, [debounceProductBarCode]);
 
+  const [showBarCode, setShowBarCode] = useState<ShowModal>({
+    type: null,
+    show: false,
+    data: null,
+    title: "",
+  });
+
   return (
     <AddModalWrapper>
-      <div>Quét mã vạch: {barcodeDisplay}</div>
+      <Flex justify="space-between">
+        <p>Quét mã vạch: {barcodeDisplay} </p>
+        <Button
+          disabled={false}
+          style={{
+            width: "100px",
+            color: "#ffffff",
+            background: theme.color.status.primary,
+          }}
+          onClick={() => setShowBarCode({ show: true })}
+        >
+          Quét mã
+        </Button>
+      </Flex>
 
       <Card color="transparent" shadow={false} className="w-full">
         <div className="mt-8 mb-2 w-full">
@@ -319,6 +369,32 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
           </Button>
         </Flex>
       </Card>
+
+      {showBarCode.show && (
+        <ModalCustom
+          type={showBarCode.type}
+          show={showBarCode.show}
+          onCloseModal={() => {
+            setShowBarCode({
+              show: false,
+            });
+          }}
+          title={showBarCode.title}
+          // primaryBtn={{
+          //   text: "Xác nhận",
+          //   onClick: showModal.onConfirm,
+          // }}
+          // secondaryBtn={{
+          //   text: "Huỷ bỏ",
+          //   onClick: () =>
+          //     setShowModal({
+          //       show: false,
+          //     }),
+          // }}
+        >
+          <ScanBarCodeScreen onChange={handleChange} />
+        </ModalCustom>
+      )}
     </AddModalWrapper>
   );
 };

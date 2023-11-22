@@ -46,6 +46,10 @@ export const deleteProduct = (cancelToken: CancelToken, body: DeleteProductInput
   return request.post<ResponseFormat<any>>("/products/delete-product", body, { cancelToken });
 };
 
+export const generalAutoProduct = (cancelToken: CancelToken, body: GetProductInput) => {
+  return request.post<ResponseFormat<GetProductOutput>>("/products/general-auto-product", body, { cancelToken });
+};
+
 // ---Cart---//
 export const addNewCarts = (cancelToken: CancelToken, body: AddNewCartsInput) => {
   return request.post<ResponseFormat<AddNewCartsOutput>>("/carts/add-new-carts", body, { cancelToken });
