@@ -42,7 +42,7 @@ export const ButtonStyle: any = css<ButtonStyleProps>`
   text-align: center;
 
   border-radius: 4px;
-  color: #ffffff;
+  /* color: #ffffff; */
   cursor: pointer;
   transition: 0.3s all ease-in-out;
 

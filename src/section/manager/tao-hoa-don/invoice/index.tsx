@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { formatNumberTwoString, getDateTo } from "utils";
 import { formatCurrency } from "utils/format-value";
 import { InvoiceWrapper } from "./styles";
+import { get } from "lodash";
 
 interface InvoiceProps {
   data?: any;
@@ -40,7 +41,7 @@ const Invoice = ({ data }: InvoiceProps) => {
             Alert("ERROR", data.message);
           }
         })
-        .catch((e) => e);
+        .catch((e) => console.log(get(e, "response.data.message")));
     }
   }, [data]);
 

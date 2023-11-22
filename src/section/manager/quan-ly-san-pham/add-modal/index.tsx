@@ -4,17 +4,19 @@ import { Button, Card } from "@material-tailwind/react";
 import { createProduct, generalAutoProduct, getProduct } from "api/manager";
 import { Alert } from "components/alert";
 import FormInput from "components/form-input";
+import ModalCustom from "components/modal-custom";
 import useActionApi from "hooks/use-action-api";
 import useDebounce from "hooks/use-debounce";
 import { cloneDeep, get, isEmpty, toNumber } from "lodash";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useDispatch } from "react-redux";
+import { rootAction } from "redux/reducers/root-reducer";
+import ScanBarCodeScreen from "screens/manager/widgets/render-barcode";
 import { useTheme } from "styled-components";
 import { Flex } from "styles/common";
 import { formatDateRequest } from "utils";
 import { formatValue } from "utils/format-value";
 import { AddModalWrapper } from "./styles";
-import ModalCustom from "components/modal-custom";
-import ScanBarCodeScreen from "screens/manager/widgets/render-barcode";
 interface AddModalProps {
   data?: any;
   setShowModal?: any;
@@ -33,12 +35,22 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
     product_quantity: null,
     product_manufacture_date: "",
     product_expired_date: "",
-    categories: 1,
+    categories: null,
   };
 
   const [modifiedData, setModifiedData] = useState<ModifiedData<CreateAndUpdateProductsInput>>(initData);
+  const dispatch = useDispatch();
+
   const [error, setError] = useState<any>({});
+  const [disabled, setDisabled] = useState<any>({});
   const [barcodeDisplay, setBarcodeDisplay] = useState("Not Found Barcode");
+  const [showBarCode, setShowBarCode] = useState<ShowModal>({
+    type: null,
+    show: false,
+    data: null,
+    title: "",
+  });
+
   const debounceProductBarCode = useDebounce(modifiedData.product_bar_code, 500);
 
   const actionCreateProducts = useActionApi(createProduct);
@@ -57,6 +69,7 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
           note: "",
           subType: "text",
           type: "input",
+          disabled: disabled?.product_code,
         },
         {
           label: "Mã vạch",
@@ -66,6 +79,7 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
           type: "input",
           placeHolder: "Nhập hoặc quét",
           error: null,
+          disabled: disabled?.product_bar_code,
         },
       ],
       [
@@ -76,6 +90,7 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
           note: "",
           subType: "input",
           type: "input",
+          disabled: disabled?.product_name,
         },
       ],
       [
@@ -86,8 +101,9 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
           subType: "number",
           type: "select",
           placeHolder: "Min 300",
-          listDropdown: [{ value: 1, key: "sản phẩm" }],
+          listDropdown: [{ value: "1", key: "sản phẩm" }],
           error: null,
+          disabled: disabled?.categories,
         },
         {
           label: "Số lượng",
@@ -97,18 +113,10 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
           type: "input",
           placeHolder: "Nhập số lượng sản phẩm...",
           error: error?.product_quantity,
+          disabled: disabled?.product_quantity,
         },
       ],
       [
-        {
-          label: "Giá bán",
-          placeHolder: "Nhập vào đây!",
-          name: "product_price_sell",
-          note: "",
-          subType: "input",
-          type: "input",
-          format: "money",
-        },
         {
           label: "Giá vốn",
           placeHolder: "Nhập vào đây!",
@@ -117,6 +125,17 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
           subType: "input",
           type: "input",
           format: "money",
+          disabled: disabled?.product_price_origin,
+        },
+        {
+          label: "Giá bán",
+          placeHolder: "Nhập vào đây!",
+          name: "product_price_sell",
+          note: "",
+          subType: "input",
+          type: "input",
+          format: "money",
+          disabled: disabled?.product_price_sell,
         },
       ],
       [
@@ -126,7 +145,8 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
           name: "product_manufacture_date",
           note: "",
           subType: "input",
-          type: "input",
+          type: "inputDate",
+          disabled: disabled?.product_manufacture_date,
         },
         {
           label: "Ngày hết hạn",
@@ -134,7 +154,8 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
           name: "product_expired_date",
           note: "",
           subType: "input",
-          type: "input",
+          type: "inputDate",
+          disabled: disabled?.product_expired_date,
         },
       ],
       [
@@ -189,41 +210,40 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
   };
 
   const handleCreate = () => {
-    if (validate()) {
-      actionCreateProducts(
-        {
-          categories: modifiedData.categories,
-          product_bar_code: modifiedData.product_bar_code,
-          product_code: modifiedData.product_code,
-          product_name: modifiedData.product_name,
-          product_description: modifiedData.product_description,
-          product_image_url: modifiedData.product_image_url,
-          product_price_origin: toNumber(modifiedData.product_price_origin),
-          product_price_sell: toNumber(modifiedData.product_price_sell),
-          product_quantity: toNumber(modifiedData.product_quantity),
-          product_manufacture_date: formatDateRequest(modifiedData.product_manufacture_date),
-          product_expired_date: formatDateRequest(modifiedData.product_expired_date),
-        },
-        {
-          type: "global",
-          name: "",
+    actionCreateProducts(
+      {
+        categories: toNumber(modifiedData.categories),
+        product_bar_code: modifiedData.product_bar_code,
+        product_code: modifiedData.product_code,
+        product_name: modifiedData.product_name,
+        product_description: modifiedData.product_description,
+        product_image_url: modifiedData.product_image_url,
+        product_price_origin: toNumber(modifiedData.product_price_origin),
+        product_price_sell: toNumber(modifiedData.product_price_sell),
+        product_quantity: toNumber(modifiedData.product_quantity),
+        product_manufacture_date: formatDateRequest(modifiedData.product_manufacture_date),
+        product_expired_date: formatDateRequest(modifiedData.product_expired_date),
+      },
+      {
+        type: "global",
+        name: "",
+      }
+    )
+      .then(({ data }) => {
+        if (data.status == "1") {
+          Alert("SUCCESSFUL", data.message);
+          setShowModal({
+            show: false,
+          });
+
+          dispatch(rootAction.setReloading(true));
+        } else {
+          Alert("ERROR", data.message);
         }
-      )
-        .then(({ data }) => {
-          if (data.status == "1") {
-            Alert("SUCCESSFUL", data.message);
-            setShowModal({
-              show: false,
-            });
-          } else {
-            Alert("ERROR", data.message);
-          }
-        })
-        .catch((e) => {
-          console.log(e);
-          Alert("ERROR", get(e, "response.data.message"));
-        });
-    }
+      })
+      .catch((e) => {
+        console.log(get(e, "response.data.message"));
+      });
   };
 
   //handle scan product_bar_code
@@ -254,6 +274,7 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
 
   const handleScan = (barcodeString) => {
     setBarcodeDisplay(barcodeString);
+    handleChange("product_bar_code", barcodeString);
   };
 
   //handle auto fill info product
@@ -275,10 +296,21 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
         .then(({ data }) => {
           if (data.status == "1") {
             if (data.data.product_bar_code) {
+              // sản phẩm đã có trong kho
+
               setModifiedData({
                 ...data.data,
+                categories: String(data.data.categories.id),
                 product_expired_date: formatValue(data.data.product_expired_date, "date"),
                 product_manufacture_date: formatValue(data.data.product_manufacture_date, "date"),
+              });
+
+              setDisabled({
+                product_price_origin: true,
+                product_price_sell: true,
+                product_code: true,
+                product_name: true,
+                categories: true,
               });
             } else {
               return {
@@ -292,6 +324,7 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
         })
         .then((data) => {
           if (data.status == "-1") {
+            //sản phẩm chưa có trong kho thì sẽ phải nhập từ đầu trừ name ra nếu như có mã vạch.
             actionGeneralAutoProduct(
               {
                 product_bar_code: debounceProductBarCode,
@@ -300,31 +333,54 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
                 type: "global",
                 name: "",
               }
-            );
+            ).then(({ data }) => {
+              // Nếu như crawl được data thì mới filter vào
+              if (data.data?.product_name) {
+                handleChange("product_name", data.data?.product_name);
+                handleChange("product_image_url", data.data?.product_image_url);
+                handleChange("product_code", "");
+                handleChange("product_quantity", null);
+                handleChange("product_price_origin", null);
+                handleChange("product_price_sell", null);
+                handleChange("product_manufacture_date", null);
+                handleChange("product_expired_date", "");
+                handleChange("product_description", "");
+                handleChange("categories", "");
+
+                setDisabled({
+                  product_code: true,
+                  product_name: false,
+                  categories: false,
+                });
+              } else {
+                handleChange("product_name", "");
+                handleChange("product_image_url", "");
+
+                setDisabled({
+                  product_code: false,
+                  product_name: false,
+                  categories: false,
+                });
+              }
+            });
           }
         })
-        .then((res) => {
-          console.log("res", res);
-        })
-        .catch((e) => e);
+
+        .catch((e) => console.log(get(e, "response.data.message")));
     }
   }, [debounceProductBarCode]);
 
-  const [showBarCode, setShowBarCode] = useState<ShowModal>({
-    type: null,
-    show: false,
-    data: null,
-    title: "",
-  });
+  // const disabledBtn = useMemo(() => Object.values(error).findIndex((item) => item) > -1, [modifiedData]);
 
   return (
     <AddModalWrapper>
       <Flex justify="space-between">
         <p>Quét mã vạch: {barcodeDisplay} </p>
+
         <Button
           disabled={false}
           style={{
-            width: "100px",
+            minWidth: "120px",
             color: "#ffffff",
             background: theme.color.status.primary,
           }}
@@ -348,7 +404,7 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
               })
             }
             style={{
-              width: "100px",
+              minWidth: "120px",
               color: "#ffffff",
               background: theme.color.status.red,
             }}
@@ -359,7 +415,7 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
           <Button
             disabled={false}
             style={{
-              width: "100px",
+              minWidth: "120px",
               color: "#ffffff",
               background: theme.color.status.primary,
             }}
@@ -374,12 +430,13 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
         <ModalCustom
           type={showBarCode.type}
           show={showBarCode.show}
+          title={showBarCode.title}
           onCloseModal={() => {
             setShowBarCode({
               show: false,
             });
           }}
-          title={showBarCode.title}
+
           // primaryBtn={{
           //   text: "Xác nhận",
           //   onClick: showModal.onConfirm,

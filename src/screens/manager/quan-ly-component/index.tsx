@@ -6,7 +6,6 @@ import ModalCustom from "components/modal-custom";
 import Table from "components/table";
 import TableMobile from "components/table-mobile";
 import { useMemo, useState } from "react";
-import QuanLyHoaDonModal from "section/manager/quan-ly-san-pham";
 import DeleteModal from "section/manager/quan-ly-san-pham/delete-modal";
 import { ActionsWrapper, ScrollCustom } from "styles";
 import { formatValueTable } from "utils/format-value";
@@ -14,6 +13,9 @@ import Actions from "../components/actions";
 import QuanLySanPhamModal from "section/manager/quan-ly-san-pham";
 import QuanLyThanhToanModal from "section/manager/quan-ly-thanh-toan";
 import QuanLyNhanVienModal from "section/manager/quan-ly-nhan-vien";
+import QuanLyHoaDonModal from "section/manager/quan-ly-hoa-don";
+import { rootAction } from "redux/reducers/root-reducer";
+import { useDispatch } from "react-redux";
 
 interface QuanLyComponent {
   isSelectAll?: boolean;
@@ -70,6 +72,7 @@ export function QuanLyComponent({
   updateBtn,
   customBtn,
 }: QuanLyComponent) {
+  const dispatch = useDispatch();
   const [multiSelect, setMultiSelect] = useState([]);
   const [showModal, setShowModal] = useState<ShowModal>({
     type: null,
@@ -95,7 +98,6 @@ export function QuanLyComponent({
                     show: true,
                     data: data,
                     title: `Sửa ${nameType}`,
-                    onConfirm: updateBtn.onClick,
                   }),
               }
             }
@@ -108,7 +110,6 @@ export function QuanLyComponent({
                     show: true,
                     data: data,
                     title: `Xem chi tiết ${nameType}`,
-                    onConfirm: detailBtn.onClick,
                   }),
               }
             }
@@ -121,7 +122,6 @@ export function QuanLyComponent({
                     show: true,
                     data: data,
                     title: "Bạn có chắc chắn xoá?",
-                    onConfirm: deleteBtn.onClick,
                   }),
               }
             }
@@ -192,9 +192,11 @@ export function QuanLyComponent({
                     }),
                 }
               }
-              refreshBtn={{
+              customBtn={{
                 text: "Làm mới 🔄",
-                onClick: () => {},
+                onClick: () => {
+                  dispatch(rootAction.setReloading(true));
+                },
               }}
             />
           </ActionsWrapper>

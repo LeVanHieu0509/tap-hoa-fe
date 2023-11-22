@@ -10,6 +10,7 @@ import {
 
 import { useTheme } from "styled-components";
 import { Flex } from "styles/common";
+import { DialogWrapper } from "./styled";
 
 const ModalCustom = ({
   children,
@@ -42,60 +43,70 @@ const ModalCustom = ({
   const theme = useTheme();
 
   return (
-    <Dialog aria-labelledby="modal-title" open={show} handler={primaryBtn && primaryBtn.onClick}>
-      <DialogHeader>
-        <Flex justify="space-between" className="w-full">
-          <Typography variant="h4">{title}</Typography>
-          {onCloseModal && (
-            <IconButton color="blue-gray" size="sm" variant="text" onClick={onCloseModal}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-                className="h-7 w-7"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </IconButton>
-          )}
-        </Flex>
-      </DialogHeader>
-      <DialogBody>{children}</DialogBody>
-
-      {secondaryBtn || primaryBtn ? (
-        <DialogFooter>
-          <Flex gap={16} gapMb={16}>
-            {secondaryBtn ? (
-              <Button
-                disabled={secondaryBtn?.disable}
-                onClick={secondaryBtn?.onClick}
-                style={{
-                  width: "100px",
-                  color: "#ffffff",
-                  background: theme.color.status.red,
-                }}
-              >
-                {secondaryBtn?.text}
-              </Button>
-            ) : null}
-            {primaryBtn ? (
-              <Button
-                disabled={primaryBtn?.disable}
-                style={{
-                  width: "100px",
-                  color: "#ffffff",
-                  background: theme.color.status.primary,
-                }}
-                onClick={primaryBtn?.onClick}
-              >
-                {primaryBtn?.text}
-              </Button>
-            ) : null}
+    <Dialog
+      className="overflow-auto relative"
+      aria-labelledby="modal-title"
+      open={show}
+      handler={primaryBtn && primaryBtn.onClick}
+      dismiss={{
+        ancestorScroll: true,
+      }}
+    >
+      <DialogWrapper>
+        <DialogHeader>
+          <Flex justify="space-between" className="w-full">
+            <Typography variant="h4">{title}</Typography>
+            {onCloseModal && (
+              <IconButton color="blue-gray" size="sm" variant="text" onClick={onCloseModal}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  className="h-7 w-7"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </IconButton>
+            )}
           </Flex>
-        </DialogFooter>
-      ) : null}
+        </DialogHeader>
+        <DialogBody>{children}</DialogBody>
+
+        {secondaryBtn || primaryBtn ? (
+          <DialogFooter>
+            <Flex gap={16} gapMb={16}>
+              {secondaryBtn ? (
+                <Button
+                  disabled={secondaryBtn?.disable}
+                  onClick={secondaryBtn?.onClick}
+                  style={{
+                    width: "100px",
+                    color: "#ffffff",
+                    background: theme.color.status.red,
+                  }}
+                >
+                  {secondaryBtn?.text}
+                </Button>
+              ) : null}
+              {primaryBtn ? (
+                <Button
+                  disabled={primaryBtn?.disable}
+                  style={{
+                    width: "100px",
+                    color: "#ffffff",
+                    background: theme.color.status.primary,
+                  }}
+                  onClick={primaryBtn?.onClick}
+                >
+                  {primaryBtn?.text}
+                </Button>
+              ) : null}
+            </Flex>
+          </DialogFooter>
+        ) : null}
+      </DialogWrapper>
     </Dialog>
   );
 };

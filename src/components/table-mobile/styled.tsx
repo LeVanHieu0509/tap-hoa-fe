@@ -36,7 +36,8 @@ export const HeaderItem = styled.div`
   justify-content: space-between;
   align-items: center;
 
-  background: #e87722;
+  background: ${({ theme }) => theme.color.status.primary};
+
   border-radius: 16px 16px 0px 0px;
 
   h6 {

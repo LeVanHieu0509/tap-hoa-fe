@@ -9,6 +9,9 @@ import AddModal from "./add-modal";
 import DeleteModal from "./delete-modal";
 import FixModal from "./fix-modal";
 import { QuanLySanPhamModalWrapper } from "./styled";
+import { get } from "lodash";
+import { rootAction } from "redux/reducers/root-reducer";
+import { useDispatch } from "react-redux";
 
 interface QuanLySanPhamModalProps {
   type?: string;
@@ -18,6 +21,10 @@ interface QuanLySanPhamModalProps {
 
 const QuanLySanPhamModal = ({ setShowModal, data, type }: QuanLySanPhamModalProps) => {
   const theme = useTheme();
+  const dispatch = useDispatch();
+
+  const actionDeleteProduct = useActionApi(deleteProduct);
+
   const ModalContent = useMemo(() => {
     switch (type) {
       case "add":
@@ -31,13 +38,8 @@ const QuanLySanPhamModal = ({ setShowModal, data, type }: QuanLySanPhamModalProp
     }
   }, [type]);
 
-  const actionDeleteProduct = useActionApi(deleteProduct);
-
   const handleConfirm = () => {
     switch (type) {
-      case "fix":
-        console.log("fix 123", data);
-        break;
       case "delete":
         if (data) {
           actionDeleteProduct(
@@ -52,11 +54,13 @@ const QuanLySanPhamModal = ({ setShowModal, data, type }: QuanLySanPhamModalProp
             .then(({ data }) => {
               if (data.status == "1") {
                 Alert("SUCCESSFUL", data.message);
+                setShowModal({ show: false });
+                dispatch(rootAction.setReloading(true));
               } else {
                 Alert("ERROR", data.message);
               }
             })
-            .catch((e) => e);
+            .catch((e) => console.log(get(e, "response.data.message")));
         }
         break;
       default:

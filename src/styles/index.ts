@@ -146,9 +146,7 @@ interface FieldSetProp {
 export const FieldSet = styled.fieldset<FieldSetProp>`
   padding: 0;
   margin: 0;
-  border: 1px solid
-    ${({ active, error, theme }) =>
-      error ? theme.color.status.red : active ? theme.color.status.primary : theme.color.status.gray2};
+  border: 1px solid ${({ active, error, theme }) => (error ? theme.color.status.red : "#ccc")};
 
   border-radius: 4px;
   position: relative;

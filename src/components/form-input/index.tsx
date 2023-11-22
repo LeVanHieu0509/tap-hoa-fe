@@ -3,6 +3,7 @@ import { FormContainer, FormWrapper } from "./styled";
 import { Input, Option, Select, Textarea } from "@material-tailwind/react";
 import DropDown from "components/dropdown-fieldset";
 import { formatCurrency } from "utils/format-value";
+import DateInput from "components/date-picker/input";
 
 interface FormProps {
   listInput: any;
@@ -21,6 +22,7 @@ const FormInput = ({ listInput, modifiedData, onChange }: FormProps) => {
                 {col.type == "input" ? (
                   <div>
                     <Input
+                      disabled={col.disabled}
                       label={col.label}
                       crossOrigin
                       size="lg"
@@ -28,7 +30,7 @@ const FormInput = ({ listInput, modifiedData, onChange }: FormProps) => {
                       labelProps={{
                         className: " ml-4 before:content-none after:content-none",
                       }}
-                      value={modifiedData[col.name]}
+                      value={modifiedData[col.name] ?? ""}
                       onChange={(e) => onChange(col.name, e.target.value)}
                       type={col.subType}
                       placeholder={col.placeHolder}
@@ -62,11 +64,12 @@ const FormInput = ({ listInput, modifiedData, onChange }: FormProps) => {
 
                 {col.type == "select" ? (
                   <Select
+                    // disabled={col.disabled}
                     labelProps={{
                       className: " ml-4  before:content-none after:content-none",
                     }}
                     className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
-                    value={col.listDropdown.find((item: any) => item.key === modifiedData[col.name])?.value}
+                    value={col.listDropdown.find((item: any) => item.value == modifiedData[col.name])?.value}
                     onChange={(e) => onChange(col.name, e)}
                     variant="outlined"
                     label={col.label}
@@ -85,6 +88,17 @@ const FormInput = ({ listInput, modifiedData, onChange }: FormProps) => {
                     onChange={(e) => onChange(col.name, e)}
                     list={col.listDropdown}
                     value={col.listDropdown.find((item: any) => item.key === modifiedData[col.name])?.value}
+                  />
+                ) : null}
+
+                {col.type == "inputDate" ? (
+                  <DateInput
+                    placeholder={col.label}
+                    required
+                    disabled={col.disabled}
+                    value={modifiedData[col.name]}
+                    onChange={(e) => onChange(col.name, e)}
+                    error={col.error}
                   />
                 ) : null}
               </Col>

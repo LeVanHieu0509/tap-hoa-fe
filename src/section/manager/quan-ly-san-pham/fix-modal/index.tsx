@@ -12,6 +12,8 @@ import { formatValue } from "utils/format-value";
 import { Alert } from "components/alert";
 import { get, toNumber } from "lodash";
 import { formatDateRequest } from "utils";
+import { rootAction } from "redux/reducers/root-reducer";
+import { useDispatch } from "react-redux";
 
 interface FixModalProps {
   data: any;
@@ -20,6 +22,8 @@ interface FixModalProps {
 
 const FixModal = ({ setShowModal, data }: FixModalProps) => {
   const theme = useTheme();
+  const dispatch = useDispatch();
+
   const initData: CreateAndUpdateProductsInput = {
     product_bar_code: "",
     product_code: "",
@@ -202,19 +206,19 @@ const FixModal = ({ setShowModal, data }: FixModalProps) => {
             setShowModal({
               show: false,
             });
+            dispatch(rootAction.setReloading(true));
           } else {
             Alert("ERROR", data.message);
           }
         })
         .catch((e) => {
-          Alert("ERROR", get(e, "response.data.message"));
+          console.log(get(e, "response.data.message"));
         });
     }
   };
 
   return (
     <FixModalWrapper>
-      {" "}
       <Card color="transparent" shadow={false} className="w-full">
         <div className="mt-8 mb-2 w-full">
           <FormInput listInput={listInput} modifiedData={modifiedData} onChange={handleChange} />

@@ -1,4 +1,3 @@
-import { CURRENT_USER } from "./../../@constants/index";
 import { LoadingKey } from "@custom-types/loading";
 import { createSlice } from "@reduxjs/toolkit";
 import { isBoolean, pickBy } from "lodash";
@@ -7,7 +6,7 @@ interface RootState {
   loading: LoadingKey;
   initialized: boolean;
   accessToken?: string;
-  headerHeight: number;
+  reLoading: boolean;
   currentUser?: {
     user: {
       usr_id: number;
@@ -26,7 +25,7 @@ const initialState: RootState = {
   loading: {},
   initialized: false,
   accessToken: null,
-  headerHeight: 91,
+  reLoading: false,
   currentUser: null,
   orderCarts: [],
   cacheData: null,
@@ -63,8 +62,8 @@ const rootSlice = createSlice({
     setCacheData: (state, actions) => {
       state.cacheData = actions.payload;
     },
-    setHeaderHeight: (state, actions) => {
-      state.headerHeight = actions.payload;
+    setReloading: (state, actions) => {
+      state.reLoading = actions.payload;
     },
   },
 });

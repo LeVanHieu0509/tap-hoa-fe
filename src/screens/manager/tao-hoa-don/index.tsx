@@ -9,7 +9,7 @@ import ModalCustom from "components/modal-custom";
 import useActionApi from "hooks/use-action-api";
 import useInitialized from "hooks/use-initialized";
 import { useAppSelector } from "hooks/use-redux";
-import { pick } from "lodash";
+import { get, pick } from "lodash";
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { rootAction } from "redux/reducers/root-reducer";
@@ -106,7 +106,7 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
             Alert("ERROR", data.message);
           }
         })
-        .catch((e) => console.log(e));
+        .catch((e) => console.log(get(e, "response.data.message")));
     }
   }, [reLoading]);
 
@@ -136,7 +136,7 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
             Alert("ERROR", data.message);
           }
         })
-        .catch((e) => e);
+        .catch((e) => console.log(get(e, "response.data.message")));
     }
   }, [currentUser, reLoading]);
 
@@ -169,7 +169,7 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
           Alert("ERROR", data.message);
         }
       })
-      .catch((e) => e);
+      .catch((e) => console.log(get(e, "response.data.message")));
   };
 
   const handleSaveDraffOrder = async (type) => {
@@ -211,7 +211,7 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
             Alert("ERROR", data.message);
           }
         })
-        .catch((e) => e);
+        .catch((e) => console.log(get(e, "response.data.message")));
     } else {
       Alert("WARNING", "Vui lòng chọn hoá đơn trước khi lưu!");
     }
@@ -238,7 +238,7 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
               Alert("ERROR", data.message);
             }
           })
-          .catch((e) => e);
+          .catch((e) => console.log(get(e, "response.data.message")));
       } else {
         dispatch(rootAction.setOrderCarts(newOrderCarts));
       }
@@ -362,14 +362,14 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
           }
         })
         .catch((e) => {
-          Alert("ERROR", e);
+          console.log(get(e, "response.data.message"));
         });
     }
   };
 
   return (
     <TaoHoaDonScreenWrapper>
-      <Flex justify="space-between" style={{ position: "sticky", top: 100 }}>
+      <Flex align="center" justify="space-between" style={{ position: "sticky", top: 100 }}>
         <Flex className="" style={{ width: 400 }}>
           <DropDown
             setSearchText={setSearchText}

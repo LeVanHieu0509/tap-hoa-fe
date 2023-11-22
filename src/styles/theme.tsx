@@ -30,7 +30,7 @@ export const LightTheme: DefaultTheme = {
       loadingBackground: "rgb(255, 255, 255, 0.2)",
     },
     status: {
-      primary: "#E87722",
+      primary: "#0097A9",
       primary_5: "#FEF9F4",
       primary_10: "#FFF4EE",
       primary_15: "#FFECDE",

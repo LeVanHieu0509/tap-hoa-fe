@@ -2,6 +2,7 @@ import { Button, Card, CardBody, CardFooter, CardHeader, Checkbox, Input, Typogr
 import { onLogin } from "api/auth";
 import { Alert } from "components/alert";
 import useActionApi from "hooks/use-action-api";
+import { get } from "lodash";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -40,7 +41,7 @@ export function SignIn() {
           Alert("ERROR", data.message);
         }
       })
-      .catch((e) => e);
+      .catch((e) => console.log(get(e, "response.data.message")));
   };
 
   useEffect(() => {

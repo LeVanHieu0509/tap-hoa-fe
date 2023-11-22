@@ -155,15 +155,6 @@ const style = css`
     appearance: none;
   }
 
-  input,
-  textarea {
-    font-size: 16px;
-    line-height: 24px;
-    ::placeholder {
-      color: ${({ theme }) => theme.color.input.placeholder};
-    }
-  }
-
   label {
     font-size: 13px;
     line-height: 18px;

@@ -5,7 +5,7 @@ export const DropDownWrapper = styled.div`
   width: 100%;
   height: 100%;
   position: relative;
-  .changeColor {
+  /* .changeColor {
     border-color: ${({ theme }) => theme.color.status.primary};
 
     border-radius: 4px 4px 0px 0px;
@@ -17,7 +17,7 @@ export const DropDownWrapper = styled.div`
     :hover {
       border-color: ${({ theme }) => theme.color.status.primary};
     }
-  }
+  } */
 
   .view-jobs {
     position: absolute;
@@ -47,8 +47,8 @@ export const DropDownFiled = styled.div<{
   cursor: pointer;
   border: 1px solid
     ${({ active, error, theme }) =>
-      error ? theme.color.status.red : active ? theme.color.status.primary : theme.color.status.gray2};
-
+      error ? theme.color.status.red : active ? theme.color.status.primary : theme.color.status.grey};
+  border-radius: 10px;
   svg {
     position: absolute;
     top: 50%;
@@ -98,6 +98,16 @@ export const DropDownFiled = styled.div<{
     color: ${({ theme }) => theme.color.status.gray1_50};
     &.value {
       color: ${({ theme }) => theme.color.text.body};
+    }
+  }
+
+  input {
+    border: none;
+    box-shadow: none;
+    :focus {
+      border: none;
+      outline: none;
+      box-shadow: none;
     }
   }
 `;

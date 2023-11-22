@@ -43,6 +43,7 @@ export interface GetProductOutput {
   product_quantity: number;
   product_manufacture_date: string;
   product_expired_date: string;
+  categories: CategoriesOutput;
   createdAt: string;
   updatedAt: string;
 }
@@ -67,6 +68,11 @@ export interface GetProductsOutput {
   total: number;
 }
 
+export interface CategoriesOutput {
+  id: number;
+  image: string;
+  title: string;
+}
 export interface CreateAndUpdateProductsInput {
   product_bar_code: string;
   product_code: string;
@@ -132,7 +138,7 @@ export interface GetAllCartOutput {
 export interface GetCartsOutput {
   id?: number;
   cart_state?: string;
-  cart_products?: CartProducts[];
+  cart_products?: string;
   cart_count_product?: number;
   createdAt?: string;
   updatedAt?: string;

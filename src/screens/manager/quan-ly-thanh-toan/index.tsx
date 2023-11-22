@@ -6,6 +6,7 @@ import useActionApi from "hooks/use-action-api";
 import { useEffect, useMemo, useState } from "react";
 import QuanLyComponent from "../quan-ly-component";
 import { QuanLyThanhToanScreenWrapper } from "./styled";
+import { get } from "lodash";
 
 interface QuanLyThanhToanScreenProps {}
 
@@ -45,6 +46,7 @@ const QuanLyThanhToanScreen = ({}: QuanLyThanhToanScreenProps) => {
     () =>
       lists.map((item) => {
         return {
+          id: item.id,
           product_code: item.id,
           total_price: item.total_price,
           status: item.status,
@@ -76,7 +78,7 @@ const QuanLyThanhToanScreen = ({}: QuanLyThanhToanScreenProps) => {
           Alert("ERROR", data.message);
         }
       })
-      .catch((e) => Alert("ERROR", e.message));
+      .catch((e) => console.log(get(e, "response.data.message")));
   }, []);
 
   const handleDetailProduct = () => {

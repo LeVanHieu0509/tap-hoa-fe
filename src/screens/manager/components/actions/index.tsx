@@ -117,7 +117,7 @@ const Actions = ({ data, refreshBtn, successBtn, warringBtn, errorBtn, customBtn
             disabled={customBtn?.disabled}
             onClick={() => customBtn?.onClick(data)}
             size={customBtn?.size ?? "sm"}
-            color="light-blue"
+            color="green"
           >
             {customBtn?.text}
           </Button>

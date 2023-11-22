@@ -1,9 +1,11 @@
 import { TableConfig } from "@custom-types/config-table";
-import { GetCartsOutput } from "@custom-types/manager";
+import { GetCartsOutput, GetProductOutput } from "@custom-types/manager";
 import { getAllCarts } from "api/manager";
 import { Alert } from "components/alert";
 import useActionApi from "hooks/use-action-api";
+import { get } from "lodash";
 import { useEffect, useMemo, useState } from "react";
+import { formatCurrency } from "utils/format-value";
 import QuanLyComponent from "../quan-ly-component";
 import { QuanLyHoaDonScreenWrapper } from "./styled";
 
@@ -24,7 +26,7 @@ const tableConfig: TableConfig[] = [
     show: true,
   },
   {
-    key: "product_name",
+    key: "totalMoney",
     label: "Tổng tiền",
     type: "string",
     show: true,
@@ -53,10 +55,10 @@ const QuanLyHoaDonScreen = ({}: QuanLyHoaDonScreenProps) => {
       {
         limit: "",
         sortOrder: "",
-        sortBy: "",
+        sortBy: "desc",
         page: "",
         filter: {
-          carts_state: "active",
+          cart_state: "",
         },
         select: null,
       },
@@ -72,7 +74,7 @@ const QuanLyHoaDonScreen = ({}: QuanLyHoaDonScreenProps) => {
           Alert("ERROR", data.message);
         }
       })
-      .catch((e) => Alert("ERROR", e.message));
+      .catch((e) => console.log(get(e, "response.data.message")));
   }, []);
 
   const handleDetailProduct = () => {
@@ -96,6 +98,11 @@ const QuanLyHoaDonScreen = ({}: QuanLyHoaDonScreenProps) => {
           cart_state: item.cart_state,
           createdAt: item.createdAt,
           updatedAt: item.updatedAt,
+          totalMoney: formatCurrency(
+            JSON.parse(item.cart_products).reduce((accumulator: GetProductOutput, currentValue) => {
+              return currentValue.product_price_sell + accumulator;
+            }, 0)
+          ),
         };
       }),
     [lists]
