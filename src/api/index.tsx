@@ -34,7 +34,7 @@ request.interceptors.response.use(
   },
   (error) => {
     let status = get(error, "response.status", null);
-    if (status === 401) {
+    if (status === 401 || status === 404) {
       localStorage.removeItem("currentUser");
       const event = new Event("expirestoken");
       set(event, "error", error);
