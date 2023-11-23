@@ -17,7 +17,7 @@ const App = ({ Component, pageProps }: AppProps) => {
   useEffect(() => {
     if (process.browser) {
       moment.tz.setDefault("Asia/Ho_Chi_Minh");
-      console.log(`version-sma: #${version.build} (${version.date})`);
+      console.log(`version-tap-hoa: #${version.build} (${version.date})`);
       const listener = () => {
         let vh = window.innerHeight;
         document.documentElement.style.setProperty("--vh", `${vh}px`);
