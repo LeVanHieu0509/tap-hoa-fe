@@ -6,7 +6,7 @@ export function DashboardScreen() {
   return (
     <div className="mt-12">
       <CardStatistics />
-      <ChartOverview />
+      {/* <ChartOverview /> */}
       <ProductOverview />
     </div>
   );

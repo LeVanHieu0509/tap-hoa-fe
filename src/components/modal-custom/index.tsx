@@ -55,7 +55,7 @@ const ModalCustom = ({
       <DialogWrapper>
         <DialogHeader>
           <Flex justify="space-between" className="w-full">
-            <Typography variant="h4">{title}</Typography>
+            <Typography variant="h6">{title}</Typography>
             {onCloseModal && (
               <IconButton color="blue-gray" size="sm" variant="text" onClick={onCloseModal}>
                 <svg
