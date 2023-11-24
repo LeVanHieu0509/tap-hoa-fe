@@ -48,7 +48,6 @@ const ThemeWrapper = ({ children, component }: ThemeWrapperProps) => {
   }, []);
 
   //handle expired token
-
   useEffect(() => {
     const currentUser = loadLocalItem("currentUser");
     const orderCarts = loadLocalItem("orderCarts");
@@ -83,13 +82,22 @@ const ThemeWrapper = ({ children, component }: ThemeWrapperProps) => {
     router.replace("/auth/sign-in");
   };
 
+  useEffect(() => {
+    const currentUser = loadLocalItem("currentUser");
+    if (!currentUser.tokens) {
+      router.replace("/auth/sign-in");
+    }
+  }, []);
+
   return (
     <ThemeProvider theme={LightTheme}>
       <Head>
         <link rel="icon" href={`${process.env.basePath}/favicon.ico`} />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        {/* <meta name="theme-color" content={LightTheme.color.text.body} /> */}
-        <meta name="description" content="E-Letter" />
+        <meta
+          name="description"
+          content="Là cửa hàng chuyên phân phối các mặt hàng tiêu dùng, thực phẩm, Tạp hoá JUN BF mang trong mình sứ mệnh cung cấp đến tay người tiêu dùng các sản phẩm sạch, có nguồn gốc xuất xứ rõ ràng, chất lượng tốt nhất với giá cả cạnh tranh nhất."
+        />
         <title>TẠP HOÁ JUN BF</title>
       </Head>
       {children}

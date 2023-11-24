@@ -1,4 +1,5 @@
 import axios from "axios";
+import { Alert } from "components/alert";
 import { get, set } from "lodash";
 import { loadLocalItem, removeLocalItem } from "redux/store";
 
@@ -33,14 +34,19 @@ request.interceptors.response.use(
     return response;
   },
   (error) => {
+    let status = get(error, "response.status", null);
     let code = get(error, "response.data.code", null);
     let message = get(error, "response.data.message", null);
 
     if (code === 500 && message == "jwt expired") {
       removeLocalItem("currentUser");
+      removeLocalItem("orderCarts");
+      removeLocalItem("cacheData");
       const event = new Event("expirestoken");
       set(event, "error", error);
       window.dispatchEvent(event);
+    } else if (status == 401) {
+      window.location.href = "/auth/sign-in";
     }
     throw error;
   }

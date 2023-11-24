@@ -375,11 +375,10 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
     [modifiedData]
   );
 
-  console.log(disabledBtn);
   return (
     <AddModalWrapper>
-      <Flex justify="space-between">
-        <p>Quét mã vạch: {barcodeDisplay}</p>
+      <Flex justify="flex-end" className="mb-10">
+        {/* <p>Quét mã vạch: {barcodeDisplay}</p> */}
 
         <Button
           disabled={false}

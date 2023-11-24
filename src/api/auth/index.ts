@@ -1,4 +1,4 @@
-import { ChangePasswordInput, ForgotPasswordInput, LoginInput, LoginOutPut } from "@custom-types/login";
+import { ForgotPasswordInput, LoginInput, LoginOutPut, LogoutInput } from "@custom-types/login";
 import { SignUpInput, SignUpOutput } from "@custom-types/manager";
 import request from "api";
 import { CancelToken } from "axios";
@@ -19,6 +19,6 @@ export const refreshToken = (body: ForgotPasswordInput) => {
   return request.post("/user/refresh-token", body);
 };
 
-export const logout = (body: ChangePasswordInput) => {
-  return request.post("/user/logout", body);
+export const logout = (cancelToken: CancelToken, body: LogoutInput) => {
+  return request.post("/user/logout", body, { cancelToken });
 };

@@ -1,7 +1,7 @@
 module.exports = {
-  basePath: "/grocery-shop",
+  basePath: "",
   env: {
-    basePath: "/grocery-shop",
+    basePath: "",
   },
   publicRuntimeConfig: {
     site: {

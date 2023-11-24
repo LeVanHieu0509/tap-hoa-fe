@@ -1,5 +1,13 @@
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { Button, IconButton, Typography } from "@material-tailwind/react";
+import { logout } from "api/auth";
+import { getCategories } from "api/manager";
+import useActionApi from "hooks/use-action-api";
+import { useAppSelector } from "hooks/use-redux";
+import { useRouter } from "next/router";
+import { useDispatch } from "react-redux";
+import { rootAction } from "redux/reducers/root-reducer";
+import { removeLocalItem } from "redux/store";
 import {
   setOpenConfigurator,
   setSidenavColor,
@@ -34,8 +42,15 @@ function formatNumber(number, decPlaces) {
 }
 
 export function Configurator() {
+  const router = useRouter();
+  const dispatchRedux = useDispatch();
+
   const [controller, dispatch] = useMaterialTailwindController();
   const { openConfigurator, sidenavColor, sidenavType, fixedNavbar } = controller;
+
+  const { currentUser } = useAppSelector((state) => state.rootReducer);
+
+  const actionLogout = useActionApi(logout);
 
   const sidenavColors = {
     blue: "from-blue-400 to-blue-600",
@@ -46,6 +61,25 @@ export function Configurator() {
     pink: "from-pink-400 to-pink-600",
   };
 
+  const handleLogout = () => {
+    actionLogout(
+      { refreshToken: currentUser.tokens.refreshToken },
+      {
+        type: "global",
+        name: "",
+      }
+    )
+      .then(({ data }) => {
+        if (data.status == "1") {
+          removeLocalItem("currentUser");
+          removeLocalItem("orderCarts");
+          removeLocalItem("cacheData");
+
+          router.push("/auth/sign-in");
+        }
+      })
+      .catch((e) => e);
+  };
   return (
     <aside
       className={` fixed top-0 right-0 z-50 h-screen w-96 bg-white px-2.5 shadow-lg transition-transform duration-300 ${
@@ -118,11 +152,9 @@ export function Configurator() {
         <div className="mb-12 w-full">
           <hr />
           <div className="my-8 flex flex-col gap-4">
-            <a href="https://www.material-tailwind.com/blocks/react?rel=mtdr" target="_black">
-              <Button variant="filled" color="blue-gray" fullWidth>
-                Đăng xuất
-              </Button>
-            </a>
+            <Button variant="filled" color="blue-gray" fullWidth onClick={handleLogout}>
+              Đăng xuất
+            </Button>
           </div>
         </div>
       </FlexColumn>

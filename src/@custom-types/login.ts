@@ -46,3 +46,7 @@ export interface ChangePasswordInput {
   password: string;
   newPassword: string;
 }
+
+export interface LogoutInput {
+  refreshToken: string;
+}

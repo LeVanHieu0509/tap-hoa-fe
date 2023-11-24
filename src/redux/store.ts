@@ -42,10 +42,7 @@ export const loadLocalItem = (key: string) => {
 };
 
 export const removeLocalItem = (key: string) => {
-  if (typeof localStorage !== "undefined") {
-    return localStorage.removeItem(`state:${p.name}:${key}`);
-  }
-  return null;
+  return localStorage.removeItem(`state:${p.name}:${key}`);
 };
 
 export const setLocalItem = (key: string, data: any) => {
