@@ -13,7 +13,6 @@ const ScanBarCodeScreen = ({ onChange }) => {
         <p style={{ color: "black" }}>{data}</p>
 
         <BarcodeScannerComponent
-          videoConstraints={{ autoGainControl: true }}
           width={400}
           height={400}
           torch={true}
