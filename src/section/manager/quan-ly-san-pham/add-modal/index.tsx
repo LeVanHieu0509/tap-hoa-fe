@@ -1,13 +1,13 @@
 import { ModifiedData } from "@custom-types";
 import { CreateAndUpdateProductsInput, ShowModal } from "@custom-types/manager";
 import { Button, Card } from "@material-tailwind/react";
-import { createProduct, generalAutoProduct, getProduct } from "api/manager";
+import { createProduct, generalAutoProduct, getCategories, getProduct } from "api/manager";
 import { Alert } from "components/alert";
 import FormInput from "components/form-input";
 import ModalCustom from "components/modal-custom";
 import useActionApi from "hooks/use-action-api";
 import useDebounce from "hooks/use-debounce";
-import { cloneDeep, get, isEmpty, toNumber } from "lodash";
+import { get, isNil, pick, toNumber } from "lodash";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { rootAction } from "redux/reducers/root-reducer";
@@ -24,6 +24,8 @@ interface AddModalProps {
 
 const AddModal = ({ data, setShowModal }: AddModalProps) => {
   const theme = useTheme();
+  const dispatch = useDispatch();
+
   const initData: CreateAndUpdateProductsInput = {
     product_bar_code: "",
     product_code: "",
@@ -38,12 +40,10 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
     categories: null,
   };
 
-  const [modifiedData, setModifiedData] = useState<ModifiedData<CreateAndUpdateProductsInput>>(initData);
-  const dispatch = useDispatch();
-
-  const [error, setError] = useState<any>({});
+  const [categories, setCategories] = useState<any>([]);
   const [disabled, setDisabled] = useState<any>({});
   const [barcodeDisplay, setBarcodeDisplay] = useState("Not Found Barcode");
+  const [modifiedData, setModifiedData] = useState<ModifiedData<CreateAndUpdateProductsInput>>(initData);
   const [showBarCode, setShowBarCode] = useState<ShowModal>({
     type: null,
     show: false,
@@ -55,6 +55,8 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
 
   const actionCreateProducts = useActionApi(createProduct);
   const actionGetProduct = useActionApi(getProduct);
+  const actionGetCategories = useActionApi(getCategories);
+
   const actionGeneralAutoProduct = useActionApi(generalAutoProduct);
 
   let barcodeScan = "";
@@ -101,7 +103,7 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
           subType: "number",
           type: "select",
           placeHolder: "Min 300",
-          listDropdown: [{ value: "1", key: "sản phẩm" }],
+          listDropdown: categories?.map((item) => ({ value: item.id.toString(), key: item.title })) ?? [],
           error: null,
           disabled: disabled?.categories,
         },
@@ -112,7 +114,7 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
           subType: "number",
           type: "input",
           placeHolder: "Nhập số lượng sản phẩm...",
-          error: error?.product_quantity,
+          error: null,
           disabled: disabled?.product_quantity,
         },
       ],
@@ -122,7 +124,7 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
           placeHolder: "Nhập vào đây!",
           name: "product_price_origin",
           note: "",
-          subType: "input",
+          subType: "number",
           type: "input",
           format: "money",
           disabled: disabled?.product_price_origin,
@@ -132,7 +134,7 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
           placeHolder: "Nhập vào đây!",
           name: "product_price_sell",
           note: "",
-          subType: "input",
+          subType: "number",
           type: "input",
           format: "money",
           disabled: disabled?.product_price_sell,
@@ -169,8 +171,22 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
         },
       ],
     ],
-    [modifiedData]
+    [modifiedData, categories]
   );
+
+  //get categories
+  useEffect(() => {
+    actionGetCategories({
+      type: "global",
+      name: "",
+    })
+      .then(({ data }) => {
+        if (data.status == "1") {
+          setCategories(data.data);
+        }
+      })
+      .catch((e) => e);
+  }, []);
 
   const handleChange = useCallback(
     (name: keyof any, value: any) => {
@@ -178,36 +194,6 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
     },
     [modifiedData]
   );
-
-  const validate = () => {
-    const cloneError = cloneDeep(error);
-
-    // validate email
-    if (!modifiedData?.categories) {
-      cloneError.categories = "Vui chọn danh mục sản phẩm!";
-    } else {
-      delete cloneError.categories;
-    }
-
-    if (toNumber(modifiedData?.product_quantity) <= 0 || isEmpty(modifiedData?.product_quantity)) {
-      cloneError.product_quantity = "Vui lòng nhập số lượng";
-    } else {
-      delete cloneError.product_quantity;
-    }
-    if (toNumber(modifiedData?.product_price_origin) < 0 || isEmpty(modifiedData?.product_price_origin)) {
-      cloneError.product_price_origin = "Vui lòng nhập giá nhập";
-    } else {
-      delete cloneError.product_price_origin;
-    }
-    if (!modifiedData?.product_price_sell || isEmpty(modifiedData?.product_price_sell)) {
-      cloneError.product_price_sell = "Vui lòng nhập giá bán!";
-    } else {
-      delete cloneError.product_price_sell;
-    }
-
-    setError(cloneError);
-    return Object.keys(cloneError).length === 0;
-  };
 
   const handleCreate = () => {
     actionCreateProducts(
@@ -300,6 +286,7 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
 
               setModifiedData({
                 ...data.data,
+                product_quantity: null,
                 categories: String(data.data.categories.id),
                 product_expired_date: formatValue(data.data.product_expired_date, "date"),
                 product_manufacture_date: formatValue(data.data.product_manufacture_date, "date"),
@@ -309,6 +296,7 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
                 product_price_origin: true,
                 product_price_sell: true,
                 product_code: true,
+                product_bar_code: true,
                 product_name: true,
                 categories: true,
               });
@@ -357,6 +345,7 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
                 handleChange("product_image_url", "");
 
                 setDisabled({
+                  product_bar_code: false,
                   product_code: false,
                   product_name: false,
                   categories: false,
@@ -370,12 +359,27 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
     }
   }, [debounceProductBarCode]);
 
-  // const disabledBtn = useMemo(() => Object.values(error).findIndex((item) => item) > -1, [modifiedData]);
+  const disabledBtn = useMemo(
+    () =>
+      Object.values(
+        pick(modifiedData, [
+          "categories",
+          "product_name",
+          "product_quantity",
+          "product_price_sell",
+          "product_price_origin",
+          "product_expired_date",
+          "product_manufacture_date",
+        ])
+      ).some((item) => item == "" || isNil(item)),
+    [modifiedData]
+  );
 
+  console.log(disabledBtn);
   return (
     <AddModalWrapper>
       <Flex justify="space-between">
-        <p>Quét mã vạch: {barcodeDisplay} </p>
+        <p>Quét mã vạch: {barcodeDisplay}</p>
 
         <Button
           disabled={false}
@@ -413,7 +417,7 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
           </Button>
 
           <Button
-            disabled={false}
+            disabled={disabledBtn}
             style={{
               minWidth: "120px",
               color: "#ffffff",

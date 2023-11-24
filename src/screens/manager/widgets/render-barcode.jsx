@@ -1,35 +1,35 @@
 import dynamic from "next/dynamic";
 import React from "react";
-import Barcode from "react-barcode";
-import { Flex } from "styles/common";
+import { FlexColumn } from "styles/common";
 
 const BarcodeScannerComponent = dynamic(() => import("react-qr-barcode-scanner"), { ssr: false });
 
 const ScanBarCodeScreen = ({ onChange }) => {
-  const [data, setData] = React.useState("Not Found");
+  const [data, setData] = React.useState("Không tìm thấy!");
 
   return (
     <div className="text-center">
-      <Flex justify="center">
+      <FlexColumn justify="center" align="center">
+        <p style={{ color: "black" }}>{data}</p>
+
         <BarcodeScannerComponent
-          width={500}
-          height={500}
+          videoConstraints={{ autoGainControl: true }}
+          width={400}
+          height={400}
           torch={true}
           onUpdate={(err, result) => {
             if (result) {
-              setData(result.text);
+              setData(`Quét thành công: ${result.text}`);
               onChange("product_bar_code", result.text);
             } else {
               onChange("product_bar_code", null);
-              setData("Not Found");
+              setData("Mã vạch: Không tìm thấy!");
             }
           }}
         />
-      </Flex>
+      </FlexColumn>
 
-      <p style={{ color: "black" }}>{data}</p>
-
-      <Barcode value="NH1234566788" />
+      {/* <Barcode value="NH1234566788" /> */}
     </div>
   );
 };

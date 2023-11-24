@@ -50,6 +50,10 @@ export const generalAutoProduct = (cancelToken: CancelToken, body: GetProductInp
   return request.post<ResponseFormat<GetProductOutput>>("/products/general-auto-product", body, { cancelToken });
 };
 
+export const getCategories = (cancelToken: CancelToken) => {
+  return request.post<ResponseFormat<any>>("/categories/get-categories", { cancelToken });
+};
+
 // ---Cart---//
 export const addNewCarts = (cancelToken: CancelToken, body: AddNewCartsInput) => {
   return request.post<ResponseFormat<AddNewCartsOutput>>("/carts/add-new-carts", body, { cancelToken });
