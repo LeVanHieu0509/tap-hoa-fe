@@ -28,7 +28,7 @@ export const StyleCamera = styled.div`
 
   #interactive.viewport canvas.drawingBuffer,
   video.drawingBuffer {
-    width: 100%;
-    height: 300px;
+    /* width: 100%;
+    height: 300px; */
   }
 `;
