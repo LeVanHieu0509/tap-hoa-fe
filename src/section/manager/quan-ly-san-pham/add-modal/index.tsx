@@ -16,7 +16,10 @@ import { useTheme } from "styled-components";
 import { Flex } from "styles/common";
 import { formatDateRequest } from "utils";
 import { formatValue } from "utils/format-value";
-import { AddModalWrapper } from "./styles";
+import { AddModalWrapper, StyleCamera } from "./styles";
+import BarcodeScanner from "screens/manager/widgets/bar-code-scanner";
+import BarcodeScannerCustom from "screens/manager/widgets/bar-code-scanner";
+import Scanner from "screens/manager/widgets/render-bar";
 interface AddModalProps {
   data?: any;
   setShowModal?: any;
@@ -386,6 +389,13 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
     [modifiedData]
   );
 
+  const [camera, setCamera] = useState(false);
+  const [result, setResult] = useState(null);
+
+  const onDetected = (result) => {
+    setResult(result);
+  };
+
   return (
     <AddModalWrapper>
       <Flex justify="flex-end" className="mb-10">
@@ -463,7 +473,14 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
           //     }),
           // }}
         >
-          <ScanBarCodeScreen onChange={handleChange} />
+          <StyleCamera style={{ height: "500px" }}>
+            {" "}
+            {/* <BarcodeScannerCustom /> */}
+            <p>{result ? result : "Scanning..."}</p>
+            <button onClick={() => setCamera(!camera)}>{camera ? "Stop" : "Start"}</button>
+            <div className="container">{camera && <Scanner onDetected={onDetected} />}</div>
+          </StyleCamera>
+          {/* <ScanBarCodeScreen onChange={handleChange} /> */}
         </ModalCustom>
       )}
     </AddModalWrapper>
