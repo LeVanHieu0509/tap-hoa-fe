@@ -8,12 +8,15 @@ import { useEffect, useMemo, useState } from "react";
 import { formatCurrency } from "utils/format-value";
 import QuanLyComponent from "../quan-ly-component";
 import { QuanLyHoaDonScreenWrapper } from "./styled";
+import { useAppSelector } from "hooks/use-redux";
+import { useDispatch } from "react-redux";
+import { rootAction } from "redux/reducers/root-reducer";
 
 interface QuanLyHoaDonScreenProps {}
 
 const tableConfig: TableConfig[] = [
   {
-    key: "id",
+    key: "cart_code",
     label: "Mã hoá đơn",
     type: "string",
     primary: true,
@@ -46,54 +49,52 @@ const tableConfig: TableConfig[] = [
 ];
 
 const QuanLyHoaDonScreen = ({}: QuanLyHoaDonScreenProps) => {
+  const dispatch = useDispatch();
   const [lists, setLists] = useState<GetCartsOutput[]>([]);
+  const { reLoading, currentUser } = useAppSelector((r) => r.rootReducer);
 
   const actionGetAllCarts = useActionApi(getAllCarts);
 
   useEffect(() => {
-    actionGetAllCarts(
-      {
-        limit: "",
-        sortOrder: "",
-        sortBy: "desc",
-        page: "",
-        filter: {
-          cart_state: "",
+    if (reLoading || currentUser) {
+      actionGetAllCarts(
+        {
+          limit: "",
+          sortOrder: "DESC",
+          // sortOrder: "ASC",
+          sortBy: "createdAt",
+          page: "",
+          filter: {
+            cart_state: "",
+          },
+          select: null,
         },
-        select: null,
-      },
-      {
-        type: "global",
-        name: "",
-      }
-    )
-      .then(({ data }) => {
-        if (data.status == "1") {
-          setLists(data.data.products);
-        } else {
-          Alert("ERROR", data.message);
+        {
+          type: "global",
+          name: "",
         }
-      })
-      .catch((e) => console.log(get(e, "response.data.message")));
-  }, []);
+      )
+        .then(({ data }) => {
+          if (data.status == "1") {
+            setLists(data.data.products);
+            dispatch(rootAction.setReloading(false));
+          } else {
+            Alert("ERROR", data.message);
+          }
+        })
+        .catch((e) => console.log(get(e, "response.data.message")));
+    }
+  }, [reLoading, currentUser]);
 
   const handleDetailProduct = () => {
     console.log("add product");
-  };
-
-  const handleUpdateProduct = () => {
-    console.log("fix product");
-  };
-
-  const handleDeleteProduct = () => {
-    console.log("delete product");
   };
 
   const listFormat = useMemo(
     () =>
       lists?.map((item) => {
         return {
-          id: item.id,
+          cart_code: item.cart_code,
           cart_products: item.cart_products,
           cart_state: item.cart_state,
           createdAt: item.createdAt,
@@ -116,12 +117,6 @@ const QuanLyHoaDonScreen = ({}: QuanLyHoaDonScreenProps) => {
         listFormat={listFormat}
         detailBtn={{
           onclick: handleDetailProduct,
-        }}
-        updateBtn={{
-          onclick: handleUpdateProduct,
-        }}
-        deleteBtn={{
-          onclick: handleDeleteProduct,
         }}
       />
     </QuanLyHoaDonScreenWrapper>

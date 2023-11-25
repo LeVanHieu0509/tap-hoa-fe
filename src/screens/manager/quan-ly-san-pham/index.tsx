@@ -89,8 +89,9 @@ const QuanLySanPhamScreen = ({}: QuanLySanPhamScreenProps) => {
       actionGetProducts(
         {
           limit: "",
-          sortOrder: "",
-          sortBy: "",
+          sortOrder: "DESC",
+          // sortOrder: "ASC",
+          sortBy: "createdAt",
           page: "",
           filter: {},
           select: null,

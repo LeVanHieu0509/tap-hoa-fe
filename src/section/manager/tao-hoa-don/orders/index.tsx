@@ -1,14 +1,17 @@
 import { GetProductOutput } from "@custom-types/manager";
 import { useAppSelector } from "hooks/use-redux";
-import { cloneDeep } from "lodash";
-import { useState } from "react";
+import { cloneDeep, get } from "lodash";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { rootAction } from "redux/reducers/root-reducer";
 import { Flex, FlexColumn } from "styles/common";
 import { getKeyCart } from "utils/cart";
 import CartItem from "./cart-item";
-import { ListOrdersWrapper } from "./styled";
+import { ListOrdersWrapper, TableContent, TableHeader } from "./styled";
 import { Button } from "@material-tailwind/react";
+import useActionApi from "hooks/use-action-api";
+import { getProducts } from "api/manager";
+import { Alert } from "components/alert";
 
 interface ListOrdersProps {
   currentKeyOrder: string;
@@ -113,6 +116,37 @@ const ListOrders = ({ onSaveCart, currentKeyOrder, lists, onClose }: ListOrdersP
       dispatch(rootAction.setOrderCarts(newOrderCarts));
     }
   };
+  const actionGetProducts = useActionApi(getProducts);
+  const [listsProducts, setListProducts] = useState<GetProductOutput[]>();
+
+  // gọi api products
+  useEffect(() => {
+    actionGetProducts(
+      {
+        limit: "",
+        sortOrder: "DESC",
+        // sortOrder: "ASC",
+        sortBy: "createdAt",
+        page: "",
+        filter: {},
+        select: null,
+        priceMin: null,
+        priceMax: null,
+      },
+      {
+        type: "local",
+        name: "getProductsLoading",
+      }
+    )
+      .then(({ data }) => {
+        if (data.status == "1") {
+          setListProducts(data.data.products);
+        } else {
+          Alert("ERROR", data.message);
+        }
+      })
+      .catch((e) => console.log(get(e, "response.data.message")));
+  }, []);
 
   return (
     <ListOrdersWrapper>
@@ -125,28 +159,32 @@ const ListOrders = ({ onSaveCart, currentKeyOrder, lists, onClose }: ListOrdersP
                   Lưu tạm
                 </Button>
               </Flex>
-              <div className="flex mt-10 mb-5">
-                <h3 className="font-semibold text-gray-600 text-xs uppercase w-2/5">Tên sản phẩm</h3>
-                <h3 className="font-semibold text-gray-600 text-xs uppercase w-1/5">Mã code</h3>
-                <h3 className="font-semibold text-gray-600 text-xs uppercase w-1/5">Số lượng</h3>
-                <h3 className="font-semibold text-gray-600 text-xs uppercase w-1/5 ">Giá</h3>
-                <h3 className="font-semibold  text-gray-600 text-xs uppercase w-1/5">Tổng</h3>
-              </div>
 
               <FlexColumn className="w-full" gap={16} gapMb={16}>
-                {lists?.map((item, index) => (
-                  <CartItem
-                    quantity={quantity}
-                    setQuantity={setQuantity}
-                    onChange={handleChangeValue}
-                    index={index + 1}
-                    key={item.product_code}
-                    item={item}
-                    onClose={onClose}
-                    onIncrease={handleIncreaseProduct}
-                    onDecrease={handleDecreaseProduct}
-                  />
-                ))}
+                <TableHeader className="flex mt-10 w-full hide-mobile">
+                  <h3 className="font-semibold text-gray-600 text-xs uppercase w-2/5">Tên sản phẩm</h3>
+                  <h3 className="font-semibold text-gray-600 text-xs uppercase w-1/5">Mã code</h3>
+                  <h3 className="font-semibold text-gray-600 text-xs uppercase w-1/5">Số lượng</h3>
+                  <h3 className="font-semibold text-gray-600 text-xs uppercase w-1/5 ">Giá</h3>
+                  <h3 className="font-semibold  text-gray-600 text-xs uppercase w-1/5">Tổng</h3>
+                </TableHeader>
+
+                <TableContent className="w-full mt-5 flex-col">
+                  {lists?.map((item, index) => (
+                    <CartItem
+                      listsProducts={listsProducts}
+                      quantity={quantity}
+                      setQuantity={setQuantity}
+                      onChange={handleChangeValue}
+                      index={index + 1}
+                      key={item.product_code}
+                      item={item}
+                      onClose={onClose}
+                      onIncrease={handleIncreaseProduct}
+                      onDecrease={handleDecreaseProduct}
+                    />
+                  ))}
+                </TableContent>
               </FlexColumn>
             </div>
           </div>

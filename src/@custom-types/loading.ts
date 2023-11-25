@@ -6,6 +6,7 @@ export type LoadingName =
   | "loadingActionUpdateCarts"
   | "loadingSubmitOrder"
   | "loadingCreateCart"
+  | "getProductsLoading"
   | "";
 
 export interface LoadingProps {

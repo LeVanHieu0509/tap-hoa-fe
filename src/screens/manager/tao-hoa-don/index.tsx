@@ -1,11 +1,12 @@
 import { GetCartsOutput, GetProductOutput, ShowModal } from "@custom-types/manager";
 import { PlusIcon } from "@heroicons/react/24/outline";
-import { Button, ButtonGroup, Spinner } from "@material-tailwind/react";
+import { Button, Spinner } from "@material-tailwind/react";
 import { addNewCarts, checkoutConfirm, deleteCarts, getAllCarts, getProducts, updateCarts } from "api/manager";
 import { Alert } from "components/alert";
 import DropDown from "components/dropdown-fieldset";
 import IconClose from "components/icons/source/close";
 import ModalCustom from "components/modal-custom";
+import CardSlide from "components/slide";
 import useActionApi from "hooks/use-action-api";
 import useInitialized from "hooks/use-initialized";
 import { useAppSelector } from "hooks/use-redux";
@@ -16,9 +17,19 @@ import { rootAction } from "redux/reducers/root-reducer";
 import CardItem from "section/manager/tao-hoa-don/card";
 import Invoice from "section/manager/tao-hoa-don/invoice";
 import TabsOrder from "section/manager/tao-hoa-don/tab-orders";
-import { Flex } from "styles/common";
 import { convertKeyCart, getKeyCart } from "utils/cart";
-import { ListProductsWrapper, TaoHoaDonScreenWrapper } from "./styled";
+import {
+  ButtonCartWrapper,
+  CardInsuranceItemWrapper,
+  DropdownWrapper,
+  HeaderWrapper,
+  ListProductsWrapper,
+  SlideWrapper,
+  TaoHoaDonScreenWrapper,
+} from "./styled";
+import useWindowResize from "hooks/use-window-resize";
+import useDebounce from "hooks/use-debounce";
+import Empty from "components/empty";
 
 interface TaoHoaDonScreenProps {}
 
@@ -37,6 +48,8 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
   const [listsProducts, setListProducts] = useState<GetProductOutput[]>();
   const [currentKeyOrder, setCurrentKeyOrder] = useState<any>(null);
   const [searchText, setSearchText] = useState("");
+  const size = useWindowResize();
+  const debounceSearchText = useDebounce(searchText, 500);
 
   const [showModal, setShowModal] = useState<ShowModal>({
     type: null,
@@ -56,7 +69,7 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
     orderCarts,
     currentUser,
     cacheData,
-    loading: { loadingCreateCart },
+    loading: { loadingCreateCart, getProductsLoading },
   } = useAppSelector((r) => r.rootReducer);
 
   const actionGetProducts = useActionApi(getProducts);
@@ -66,17 +79,20 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
   const actionUpdateCarts = useActionApi(updateCarts);
 
   const actionCheckoutConfirm = useActionApi(checkoutConfirm);
+  useEffect(() => {
+    if (cacheData?.cart) {
+      setCurrentKeyOrder(cacheData?.cart?.currentKeyOrder);
+    }
+  }, [cacheData?.cart]);
 
   useInitialized(() => {
-    // if (cacheData?.cart) {
-    //   setCurrentKeyOrder(cacheData?.cart?.currentKeyOrder);
-    // }
     if (currentUser || reLoading) {
       actionGetAllCarts(
         {
           limit: "",
-          sortOrder: "",
-          sortBy: "",
+          sortOrder: "DESC",
+          // sortOrder: "ASC",
+          sortBy: "createdAt",
           page: "",
           filter: {
             cart_state: "active",
@@ -112,12 +128,14 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
 
   // gọi api products
   useEffect(() => {
-    if (currentUser || reLoading) {
+    if (currentUser || reLoading || debounceSearchText) {
       actionGetProducts(
         {
+          searchText: debounceSearchText,
           limit: "",
-          sortOrder: "",
-          sortBy: "",
+          sortOrder: "DESC",
+          // sortOrder: "ASC",
+          sortBy: "createdAt",
           page: "",
           filter: {},
           select: null,
@@ -125,8 +143,8 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
           priceMax: null,
         },
         {
-          type: "global",
-          name: "",
+          type: "local",
+          name: "getProductsLoading",
         }
       )
         .then(({ data }) => {
@@ -138,7 +156,7 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
         })
         .catch((e) => console.log(get(e, "response.data.message")));
     }
-  }, [currentUser, reLoading]);
+  }, [currentUser, reLoading, debounceSearchText]);
 
   // Lấy ra product trong hoá đơn hiện tại mà user chọn
   const dataProductInCartCurrent: any = useMemo(() => {
@@ -146,30 +164,34 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
   }, [currentKeyOrder, orderCarts]);
 
   const handleAddCart = () => {
-    actionAddNewCarts(
-      {
-        products: [],
-      },
-      {
-        type: "local",
-        name: "loadingCreateCart",
-      }
-    )
-      .then(({ data }) => {
-        if (data.status == "1") {
-          const newCart = {
-            [`hoa-don-${data.data.id}`]: {
-              id: data.data.id,
-              products: [],
-            },
-          };
-          setCurrentKeyOrder(`hoa-don-${data.data.id}`);
-          dispatch(rootAction.setOrderCarts(orderCarts ? [...orderCarts, newCart] : [newCart]));
-        } else {
-          Alert("ERROR", data.message);
+    if (orderCarts.length < 5) {
+      actionAddNewCarts(
+        {
+          products: [],
+        },
+        {
+          type: "local",
+          name: "loadingCreateCart",
         }
-      })
-      .catch((e) => console.log(get(e, "response.data.message")));
+      )
+        .then(({ data }) => {
+          if (data.status == "1") {
+            const newCart = {
+              [`hoa-don-${data.data.id}`]: {
+                id: data.data.id,
+                products: [],
+              },
+            };
+            setCurrentKeyOrder(`hoa-don-${data.data.id}`);
+            dispatch(rootAction.setOrderCarts(orderCarts ? [...orderCarts, newCart] : [newCart]));
+          } else {
+            Alert("ERROR", data.message);
+          }
+        })
+        .catch((e) => console.log(get(e, "response.data.message")));
+    } else {
+      Alert("WARNING", "Bạn chỉ được tạo tối đa 5 Hoá đơn");
+    }
   };
 
   const handleSaveDraffOrder = async (type) => {
@@ -234,6 +256,14 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
           .then(({ data }) => {
             if (data.status == "1") {
               dispatch(rootAction.setOrderCarts(newOrderCarts));
+
+              dispatch(
+                rootAction.setCacheData({
+                  cart: {
+                    currentKeyOrder: null,
+                  },
+                })
+              );
             } else {
               Alert("ERROR", data.message);
             }
@@ -249,7 +279,16 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
     }
   };
 
-  const handleAddItemToCart = ({ product_code, product_name, product_price_sell }: GetProductOutput) => {
+  const handleAddItemToCart = ({
+    product_code,
+    product_name,
+    product_price_sell,
+    product_quantity,
+  }: GetProductOutput) => {
+    if (product_quantity == 0) {
+      Alert("WARNING", `Sản phẩm ${product_code} đã hết hàng! Vui lòng chọn sản phẩm khác`);
+      return;
+    }
     if (dataProductInCartCurrent && currentKeyOrder && orderCarts.length > 0) {
       const newProduct = {
         product_code,
@@ -357,6 +396,14 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
 
             dispatch(rootAction.setOrderCarts([...newOrderCarts]));
             setReloading(true);
+
+            dispatch(
+              rootAction.setCacheData({
+                cart: {
+                  currentKeyOrder: null,
+                },
+              })
+            );
           } else {
             Alert("ERROR", data.message);
           }
@@ -367,15 +414,50 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
     }
   };
 
+  //handle scan product_bar_code
+  let barcodeScan = "";
+  const [barcodeDisplay, setBarcodeDisplay] = useState("");
+
+  const handleScan = (barcodeString) => {
+    setBarcodeDisplay(barcodeString);
+    const productCurrent = listsProducts && listsProducts.find((i) => i.product_bar_code == barcodeString);
+    handleAddItemToCart(productCurrent);
+  };
+
+  useEffect(() => {
+    function handleKeyDown(e) {
+      if (e.keyCode == 13 && barcodeScan.length > 3) {
+        handleScan(barcodeScan);
+        return;
+      }
+      if (e.keyCode == 16) {
+        return;
+      }
+
+      barcodeScan += e.key;
+
+      setTimeout(() => {
+        barcodeScan = "";
+      }, 100);
+      //Push Keycode to barcode scan variable
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return function cleanup() {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [barcodeDisplay]);
+
   return (
     <TaoHoaDonScreenWrapper>
-      <Flex align="center" justify="space-between" style={{ position: "sticky", top: 100 }}>
-        <Flex className="" style={{ width: 400 }}>
+      <HeaderWrapper gapMb={16} align="center" justify="space-between" style={{ position: "sticky", top: 100 }}>
+        <DropdownWrapper className="">
           <DropDown
             setSearchText={setSearchText}
             isChildren
             list={[]}
-            loading={false}
+            loading={Boolean(getProductsLoading)}
             value={"null"}
             onChange={(e, o) => {}}
             isSearch
@@ -384,51 +466,57 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
               {listsProducts?.map((item: GetProductOutput) => (
                 <CardItem onClick={handleAddItemToCart} item={item} key={item.product_code} />
               ))}
+
+              {listsProducts?.length === 0 && <Empty text="Không có dữ liệu" />}
             </ListProductsWrapper>
           </DropDown>
-        </Flex>
+        </DropdownWrapper>
 
-        <Flex gap={16} gapMb={8} align="center" justify="flex-end">
-          <ButtonGroup size="sm" className="flex w-max flex-row gap-4 " color="teal">
-            {orderCarts?.length > 0 &&
-              orderCarts?.map((item) => (
-                <Button
-                  style={{ background: getKeyCart(item) == currentKeyOrder && "#e87722" }}
-                  onClick={() => {
-                    setCurrentKeyOrder(getKeyCart(item));
+        <ButtonCartWrapper gap={16} gapMb={8} align="center" justify="flex-end">
+          <SlideWrapper>
+            <CardSlide col={size.width > 786 ? 4 : 2} showButton={true} length={orderCarts.length}>
+              {orderCarts.map((item, index) => (
+                <CardInsuranceItemWrapper col={size.width > 786 ? 5 : 2} key={index}>
+                  <Button
+                    color="green"
+                    style={{ background: getKeyCart(item) == currentKeyOrder && "#E87722" }}
+                    onClick={() => {
+                      setCurrentKeyOrder(getKeyCart(item));
 
-                    dispatch(
-                      rootAction.setCacheData({
-                        cart: {
-                          currentKeyOrder: getKeyCart(item),
-                        },
-                      })
-                    );
-                  }}
-                  key={item.value}
-                  className="flex items-center gap-3 "
-                >
-                  <span className="mr-2">{convertKeyCart(item)}</span>
-                  <span
-                    onClick={() =>
-                      setShowModal({
-                        show: true,
-                        data: item,
-                        title: `Đóng đặt hàng ${convertKeyCart(item)}`,
-                      })
-                    }
+                      dispatch(
+                        rootAction.setCacheData({
+                          cart: {
+                            currentKeyOrder: getKeyCart(item),
+                          },
+                        })
+                      );
+                    }}
+                    key={item.value}
+                    className="flex items-center p-8 w-full flex justify-between align-center"
                   >
-                    <IconClose color="white" />
-                  </span>
-                </Button>
+                    <span className="mr-2">{convertKeyCart(item)}</span>
+                    <span
+                      onClick={() =>
+                        setShowModal({
+                          show: true,
+                          data: item,
+                          title: `Đóng đặt hàng ${convertKeyCart(item)}`,
+                        })
+                      }
+                    >
+                      <IconClose color="white" />
+                    </span>
+                  </Button>
+                </CardInsuranceItemWrapper>
               ))}
-          </ButtonGroup>
+            </CardSlide>
+          </SlideWrapper>
 
           <Button disabled={Boolean(loadingCreateCart)} color="green" onClick={() => handleAddCart()}>
             {loadingCreateCart ? <Spinner className="h-4 w-4" /> : <PlusIcon height={14} width={14} />}
           </Button>
-        </Flex>
-      </Flex>
+        </ButtonCartWrapper>
+      </HeaderWrapper>
 
       <TabsOrder
         onSaveCart={handleSaveDraffOrder}

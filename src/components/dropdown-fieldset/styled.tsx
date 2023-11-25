@@ -38,7 +38,7 @@ export const DropDownFiled = styled.div<{
 }>`
   align-items: center;
   border-radius: 4px;
-  height: ${({ size }) => (size == "sm" ? 40 : size == "lg" ? 60 : 50)}px;
+  height: ${({ size }) => (size == "sm" ? 40 : size == "lg" ? 60 : 40)}px;
   position: relative;
 
   transition: all 0.3s ease-in-out;
@@ -118,7 +118,7 @@ export const ListWrapper = styled.div`
   left: 0px;
   width: 100%;
   z-index: 1200;
-  max-height: 300px;
+  max-height: 400px;
   overflow: auto;
   border: 1px solid #dbdfe1;
   box-shadow: 0px 16px 30px rgba(132, 156, 152, 0.2);

@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { device } from "styles/media";
 
 export const ListOrdersWrapper = styled.div`
   display: flex;
@@ -16,4 +17,11 @@ export const CartItemWrapper = styled.div`
   input {
     width: 50px;
   }
+`;
+
+export const TableHeader = styled.div``;
+
+export const TableContent = styled.div`
+  display: flex;
+  gap: 16px;
 `;

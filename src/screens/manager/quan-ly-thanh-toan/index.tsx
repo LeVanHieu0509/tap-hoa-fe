@@ -7,13 +7,23 @@ import { useEffect, useMemo, useState } from "react";
 import QuanLyComponent from "../quan-ly-component";
 import { QuanLyThanhToanScreenWrapper } from "./styled";
 import { get } from "lodash";
+import { useAppSelector } from "hooks/use-redux";
+import { useDispatch } from "react-redux";
+import { rootAction } from "redux/reducers/root-reducer";
 
 interface QuanLyThanhToanScreenProps {}
 
 const tableConfig: TableConfig[] = [
   {
-    key: "id",
+    key: "bills_code",
     label: "Mã thanh toán",
+    type: "string",
+    primary: true,
+    show: true,
+  },
+  {
+    key: "cart_code",
+    label: "Mã hoá đơn",
     type: "string",
     primary: true,
     show: true,
@@ -31,6 +41,12 @@ const tableConfig: TableConfig[] = [
     show: true,
   },
   {
+    key: "createdAt",
+    label: "Ngày thanh toán",
+    type: "date",
+    show: true,
+  },
+  {
     key: "button",
     label: "Chức năng",
     type: "status",
@@ -39,15 +55,18 @@ const tableConfig: TableConfig[] = [
 ];
 
 const QuanLyThanhToanScreen = ({}: QuanLyThanhToanScreenProps) => {
+  const dispatch = useDispatch();
   const [lists, setLists] = useState<BillData[]>([]);
+
+  const { reLoading, currentUser } = useAppSelector((r) => r.rootReducer);
 
   const actionGetBills = useActionApi(getBills);
   const listFormat = useMemo(
     () =>
       lists.map((item) => {
         return {
-          id: item.id,
-          product_code: item.id,
+          bills_code: item.bills_code,
+          cart_code: item.cart.cart_code,
           total_price: item.total_price,
           status: item.status,
           createdAt: item.createdAt,
@@ -57,40 +76,36 @@ const QuanLyThanhToanScreen = ({}: QuanLyThanhToanScreenProps) => {
   );
 
   useEffect(() => {
-    actionGetBills(
-      {
-        limit: "",
-        sortOrder: "",
-        sortBy: "",
-        page: "",
-        filter: {},
-        select: null,
-      },
-      {
-        type: "global",
-        name: "",
-      }
-    )
-      .then(({ data }) => {
-        if (data.status == "1") {
-          setLists(data.data.products);
-        } else {
-          Alert("ERROR", data.message);
+    if (reLoading || currentUser) {
+      actionGetBills(
+        {
+          limit: "",
+          sortOrder: "DESC",
+          // sortOrder: "ASC",
+          sortBy: "createdAt",
+          page: "",
+          filter: {},
+          select: null,
+        },
+        {
+          type: "global",
+          name: "",
         }
-      })
-      .catch((e) => console.log(get(e, "response.data.message")));
-  }, []);
+      )
+        .then(({ data }) => {
+          if (data.status == "1") {
+            setLists(data.data.products);
+            dispatch(rootAction.setReloading(false));
+          } else {
+            Alert("ERROR", data.message);
+          }
+        })
+        .catch((e) => console.log(get(e, "response.data.message")));
+    }
+  }, [reLoading, currentUser]);
 
   const handleDetailProduct = () => {
     console.log("add product");
-  };
-
-  const handleUpdateProduct = () => {
-    console.log("fix product");
-  };
-
-  const handleDeleteProduct = () => {
-    console.log("delete product");
   };
 
   return (

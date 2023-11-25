@@ -3,7 +3,7 @@ import styled from "styled-components";
 export default function Empty({ text }: { text: string }) {
   return (
     <Wrap>
-      <img src={`${process.env.basePath}/img/empty.svg`} alt="Empty" />
+      {/* <img src={`${process.env.basePath}/img/empty.svg`} alt="Empty" /> */}
       <p>{text}</p>
     </Wrap>
   );

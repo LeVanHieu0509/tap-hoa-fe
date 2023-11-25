@@ -7,6 +7,7 @@ import React, { KeyboardEvent, useEffect, useRef, useState } from "react";
 import { Label } from "styles/input-styled";
 import { removeVietnameseTones } from "utils";
 import { DropDownFiled, DropDownWrapper, Error, List, ListWrapper } from "./styled";
+import { Flex } from "styles/common";
 
 interface Option {
   value: string;
@@ -204,40 +205,43 @@ function DropDown({
         disabled={disabled}
         error={!!error}
       >
-        {loading ? (
-          <PulseLoader loading />
-        ) : (
-          <>
-            {title && (
-              <Label
-                focus={focusButton}
-                required={required}
-                type={"dropdown"}
-                haveValue={autoComplete || (!isEmpty(`${value}`) && !isNil(value)) || isFocus}
-              >
-                {title}
-                {required && <span className="red-color">*</span>}
-              </Label>
-            )}
-            {isSearch ? (
-              <input
-                style={{ padding: "12px 16px", width: "100%" }}
-                value={isFocus ? searchKey : selectedLabel}
-                onChange={(e) => {
-                  setSearchKey(e.target.value);
-                  setSearchText(e.target.value);
-                }}
-                // placeholder={selectedLabel.toString()}
-                onFocus={() => setFocus(true)}
-                onBlur={() => {
-                  setFocus(false);
-                }}
-              />
-            ) : (
-              <p className={value ? "value" : null}>{selectedLabel}</p>
-            )}
-          </>
-        )}
+        {/* {loading ? (
+          <Flex className="w-full h-full" justify="center" align="center">
+            <PulseLoader loading />
+          </Flex>
+        ) : ( */}
+        <>
+          {title && (
+            <Label
+              focus={focusButton}
+              required={required}
+              type={"dropdown"}
+              haveValue={autoComplete || (!isEmpty(`${value}`) && !isNil(value)) || isFocus}
+            >
+              {title}
+              {required && <span className="red-color">*</span>}
+            </Label>
+          )}
+          {isSearch ? (
+            <input
+              placeholder="Tìm kiếm sản phẩm ở đây..."
+              style={{ padding: "7px 10px", width: "100%" }}
+              value={isFocus ? searchKey : selectedLabel}
+              onChange={(e) => {
+                setSearchKey(e.target.value);
+                setSearchText(e.target.value);
+              }}
+              // placeholder={selectedLabel.toString()}
+              onFocus={() => setFocus(true)}
+              onBlur={() => {
+                setFocus(false);
+              }}
+            />
+          ) : (
+            <p className={value ? "value" : null}>{selectedLabel}</p>
+          )}
+        </>
+        {/* )} */}
         <Icons icon="search-input" size={12} color={`${disabled ? "#ADADAD" : "#E87722"}`} />
         {typeof error === "string" && <Error>{error}</Error>}
       </DropDownFiled>

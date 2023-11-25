@@ -31,21 +31,21 @@ export interface GetProductInput {
 }
 
 export interface GetProductOutput {
-  id: number;
-  product_code: string;
-  product_bar_code: string;
-  product_name: string;
-  product_description: string;
-  product_image_url: string;
-  product_price_origin: number;
-  product_price_sell: number;
-  product_slug: string;
-  product_quantity: number;
-  product_manufacture_date: string;
-  product_expired_date: string;
-  categories: CategoriesOutput;
-  createdAt: string;
-  updatedAt: string;
+  id?: number;
+  product_code?: string;
+  product_bar_code?: string;
+  product_name?: string;
+  product_description?: string;
+  product_image_url?: string;
+  product_price_origin?: number;
+  product_price_sell?: number;
+  product_slug?: string;
+  product_quantity?: number;
+  product_manufacture_date?: string;
+  product_expired_date?: string;
+  categories?: CategoriesOutput;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface DeleteProductInput {
@@ -53,6 +53,7 @@ export interface DeleteProductInput {
 }
 
 export interface GetAllListInput {
+  searchText?: string;
   limit: string;
   sortOrder: string;
   sortBy: string;
@@ -142,6 +143,7 @@ export interface GetCartsOutput {
   cart_count_product?: number;
   createdAt?: string;
   updatedAt?: string;
+  cart_code?: string;
 }
 
 // ---------- checkout ---------- //
@@ -170,10 +172,12 @@ export interface BillData {
   total_price: number;
   total_customer_price: string;
   total_refund_price: string;
-  status: "success";
+  status: string;
   cart_products: CartProductCheckout[];
   createdAt: string;
   updatedAt: string;
+  bills_code: string;
+  cart: GetCartsOutput;
 }
 export interface GetBillsOutput {
   products: BillData[];

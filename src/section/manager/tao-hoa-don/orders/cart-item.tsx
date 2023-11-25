@@ -1,5 +1,9 @@
 import { GetProductOutput } from "@custom-types/manager";
+import { Tooltip } from "@material-tailwind/react";
+import IconError from "components/icons/source/error-icon";
+import { useMemo } from "react";
 import { ButtonIcon } from "styles/buttons";
+import { Flex } from "styles/common";
 import { formatCurrency } from "utils/format-value";
 import { CartItemWrapper } from "./styled";
 
@@ -23,32 +27,52 @@ interface CartItemProps {
   onChange: (data: string, quantity: any) => void;
   setQuantity: any;
   quantity: string;
+  listsProducts: GetProductOutput[];
 }
 
-const CartItem = ({ onIncrease, onDecrease, item, index, onClose, onChange, quantity, setQuantity }: CartItemProps) => {
+const CartItem = ({
+  onIncrease,
+  onDecrease,
+  item,
+  index,
+  onClose,
+  onChange,
+  quantity,
+  setQuantity,
+  listsProducts,
+}: CartItemProps) => {
+  const productCurrent = useMemo(
+    () => listsProducts && listsProducts.find((i) => i.product_code == item.product_code),
+    [item]
+  );
+
   return (
-    <CartItemWrapper className="w-full shadow-md rounded-xl hover:bg-gray-100 hover:rounded-xl py-3 px-3">
-      <div className="w-full z-10">
+    <CartItemWrapper className=" w-full shadow-md rounded-xl hover:bg-gray-100 hover:rounded-xl py-3 px-3">
+      <div className="w-full z-10  hide-mobile">
         <div className="flex items-center">
           <div className="flex w-2/5">
-            <div className=" flex-grow">
-              <span className="font-bold text-sm mb-2">{`${index}, ${item.product_name}`}</span>
-            </div>
+            <span className="font-bold text-sm mb-2">{`${index}, ${item.product_name}`}</span>
           </div>
-
           <div className="flex w-1/5">
-            <div className="flex flex-col justify-between flex-grow">
-              <span className="font-bold text-sm mb-2">{` ${item.product_code}`}</span>
-            </div>
+            <span className="font-bold text-sm mb-2">{` ${item.product_code}`}</span>
           </div>
 
-          <div className="flex  w-1/5 items-center">
+          <div className="flex  w-1/5 items-center relative">
+            {productCurrent?.product_quantity < item?.product_quantity ? (
+              <Tooltip content={`Số lượng tồn: ${productCurrent.product_quantity}`}>
+                <div className="absolute -left-7">
+                  <ButtonIcon>
+                    <IconError />
+                  </ButtonIcon>
+                </div>
+              </Tooltip>
+            ) : null}
+
             <ButtonIcon onClick={() => onDecrease(item.product_code, item.product_quantity)}>
               <svg className="fill-current text-gray-600 w-3" viewBox="0 0 448 512">
                 <path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" />
               </svg>
             </ButtonIcon>
-
             <div className="">
               <input
                 onChange={(e) => onChange(item.product_code, Number(e.target.value))}
@@ -58,22 +82,73 @@ const CartItem = ({ onIncrease, onDecrease, item, index, onClose, onChange, quan
                 value={item.product_quantity}
               />
             </div>
-
             <ButtonIcon onClick={() => onIncrease(item.product_code, item.product_quantity)}>
               <svg className="fill-current text-gray-600 w-3 items-center" viewBox="0 0 448 512">
                 <path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" />
               </svg>
             </ButtonIcon>
           </div>
-
           <span className=" w-1/5 font-semibold text-sm">{formatCurrency(item.product_price_sell)}</span>
           <span className=" w-1/6 font-semibold text-sm">
             {formatCurrency(item.product_price_sell * item.product_quantity)}
           </span>
-
           <ButtonIcon color="white" className="" onClick={() => onClose(item.product_code)}>
             <TrashIcon />
           </ButtonIcon>
+        </div>
+      </div>
+
+      <div className="w-full z-10  hide-desktop">
+        <div className=" items-center">
+          <div className="flex justify-between  ">
+            <span className="font-bold text-sm mb-2">{`${index}, ${item.product_name}`}</span>
+            <ButtonIcon color="white" className="mt-2" onClick={() => onClose(item.product_code)}>
+              <TrashIcon />
+            </ButtonIcon>
+          </div>
+
+          <div className="flex ">
+            <span className=" text-sm mb-2">{` ${item.product_code}`}</span>
+          </div>
+          <div className="flex justify-between  items-center">
+            <Flex>
+              <span className="  font-semibold text-sm">{formatCurrency(item.product_price_sell)}</span>
+            </Flex>
+
+            <div className="flex  items-center relative">
+              {productCurrent?.product_quantity < item?.product_quantity ? (
+                <Tooltip content={`Số lượng tồn: ${productCurrent.product_quantity}`}>
+                  <div className="absolute -left-7">
+                    <ButtonIcon>
+                      <IconError />
+                    </ButtonIcon>
+                  </div>
+                </Tooltip>
+              ) : null}
+
+              <ButtonIcon onClick={() => onDecrease(item.product_code, item.product_quantity)}>
+                <svg className="fill-current text-gray-600 w-3" viewBox="0 0 448 512">
+                  <path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" />
+                </svg>
+              </ButtonIcon>
+
+              <div className="">
+                <input
+                  onChange={(e) => onChange(item.product_code, Number(e.target.value))}
+                  className="mx-2 border text-center "
+                  type="text"
+                  defaultValue="0"
+                  value={item.product_quantity}
+                />
+              </div>
+
+              <ButtonIcon onClick={() => onIncrease(item.product_code, item.product_quantity)}>
+                <svg className="fill-current text-gray-600 w-3 items-center" viewBox="0 0 448 512">
+                  <path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" />
+                </svg>
+              </ButtonIcon>
+            </div>
+          </div>
         </div>
       </div>
     </CartItemWrapper>

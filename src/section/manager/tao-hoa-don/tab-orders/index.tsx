@@ -30,6 +30,7 @@ const TabsOrder = ({
             onClose={handleRemoveItemCarts}
           />
         </ContentLeft>
+
         <ContentRight>
           <Checkout onReview={onReview} lists={dataCurrentOrder} />
         </ContentRight>

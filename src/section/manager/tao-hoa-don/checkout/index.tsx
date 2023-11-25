@@ -4,7 +4,7 @@ import { useAppSelector } from "hooks/use-redux";
 import { sum } from "lodash";
 import { useMemo } from "react";
 import { formatCurrency } from "utils/format-value";
-import { CheckoutWrapper } from "./styles";
+import { CheckoutWrapper, TotalWrapper } from "./styles";
 
 interface CheckoutProps {
   lists?: any;
@@ -27,13 +27,13 @@ const Checkout = ({ lists, onReview }: CheckoutProps) => {
   return (
     <CheckoutWrapper>
       <div id="summary" className="w-1/4 px-8 py-10 w-full">
-        <h1 className="font-semibold text-2xl border-b pb-8">Tổng hoá đơn</h1>
+        <h1 className="hide-mobile font-semibold text-2xl border-b pb-8">Tổng hoá đơn</h1>
 
         <div className=" mt-8">
-          <div className="flex font-semibold justify-between py-6 text-sm uppercase">
+          <TotalWrapper className="flex font-semibold justify-between py-6 text-sm uppercase">
             <span>Tổng đơn hàng</span>
             <span>{formatCurrency(sum(listPrice))}</span>
-          </div>
+          </TotalWrapper>
 
           <Button
             disabled={sum(listPrice) <= 0 && true}
