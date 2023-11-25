@@ -11,15 +11,12 @@ import { get, isNil, pick, toNumber } from "lodash";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { rootAction } from "redux/reducers/root-reducer";
-import ScanBarCodeScreen from "screens/manager/widgets/render-barcode";
+import Scanner from "screens/manager/widgets/render-bar";
 import { useTheme } from "styled-components";
 import { Flex } from "styles/common";
 import { formatDateRequest } from "utils";
 import { formatValue } from "utils/format-value";
 import { AddModalWrapper, StyleCamera } from "./styles";
-import BarcodeScanner from "screens/manager/widgets/bar-code-scanner";
-import BarcodeScannerCustom from "screens/manager/widgets/bar-code-scanner";
-import Scanner from "screens/manager/widgets/render-bar";
 interface AddModalProps {
   data?: any;
   setShowModal?: any;
