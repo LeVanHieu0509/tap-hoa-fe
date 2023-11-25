@@ -27,8 +27,6 @@ const ScanBarCodeScreen = ({ onChange }) => {
           }}
         />
       </FlexColumn>
-
-      {/* <Barcode value="NH1234566788" /> */}
     </div>
   );
 };

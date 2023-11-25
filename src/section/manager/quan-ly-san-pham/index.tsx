@@ -12,6 +12,7 @@ import { QuanLySanPhamModalWrapper } from "./styled";
 import { get } from "lodash";
 import { rootAction } from "redux/reducers/root-reducer";
 import { useDispatch } from "react-redux";
+import DownloadModal from "./download-modal";
 
 interface QuanLySanPhamModalProps {
   type?: string;
@@ -22,11 +23,14 @@ interface QuanLySanPhamModalProps {
 const QuanLySanPhamModal = ({ setShowModal, data, type }: QuanLySanPhamModalProps) => {
   const theme = useTheme();
   const dispatch = useDispatch();
-
+  let textButton = "Xác nhận";
   const actionDeleteProduct = useActionApi(deleteProduct);
 
   const ModalContent = useMemo(() => {
     switch (type) {
+      case "download":
+        textButton = "In mã";
+        return DownloadModal;
       case "add":
         return AddModal;
       case "fix":
@@ -40,6 +44,9 @@ const QuanLySanPhamModal = ({ setShowModal, data, type }: QuanLySanPhamModalProp
 
   const handleConfirm = () => {
     switch (type) {
+      case "download":
+        Alert("SUCCESSFUL", "Bạn đã in thành công");
+        break;
       case "delete":
         if (data) {
           actionDeleteProduct(
@@ -72,7 +79,7 @@ const QuanLySanPhamModal = ({ setShowModal, data, type }: QuanLySanPhamModalProp
     <QuanLySanPhamModalWrapper>
       <ModalContent setShowModal={setShowModal} data={data} />
 
-      {(type == "delete" || type == "detail") && (
+      {(type == "delete" || type == "detail" || type == "download") && (
         <Flex gap={16} gapMb={16} justify="flex-end">
           <Button
             disabled={false}
@@ -99,7 +106,7 @@ const QuanLySanPhamModal = ({ setShowModal, data, type }: QuanLySanPhamModalProp
             }}
             onClick={handleConfirm}
           >
-            Xác nhận
+            {textButton}
           </Button>
         </Flex>
       )}

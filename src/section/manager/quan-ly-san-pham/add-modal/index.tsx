@@ -189,8 +189,19 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
   }, []);
 
   const handleChange = useCallback(
-    (name: keyof any, value: any) => {
+    (name: keyof CreateAndUpdateProductsInput, value: any) => {
       setModifiedData((pre) => ({ ...pre, [name]: value }));
+
+      if (name == "product_code" && value !== "") {
+        //gen ra mã vạch trùng với mã hàng
+        setDisabled({
+          product_bar_code: true,
+        });
+      } else {
+        setDisabled({
+          product_bar_code: false,
+        });
+      }
     },
     [modifiedData]
   );

@@ -1,6 +1,6 @@
 // ------------------- APP ------------------------ //
 export interface ShowModal {
-  type?: "add" | "fix" | "delete" | "detail";
+  type?: "add" | "fix" | "delete" | "detail" | "download";
   show: boolean;
   data?: any;
   title?: string;
@@ -46,6 +46,7 @@ export interface GetProductOutput {
   categories?: CategoriesOutput;
   createdAt?: string;
   updatedAt?: string;
+  is_gen_product_bar_code?: number;
 }
 
 export interface DeleteProductInput {

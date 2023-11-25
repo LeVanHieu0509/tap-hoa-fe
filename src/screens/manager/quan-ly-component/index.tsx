@@ -59,6 +59,12 @@ interface QuanLyComponent {
     disabled?: boolean;
     size?: "sm" | "md" | "lg";
   };
+  downloadBtn?: {
+    text?: string;
+    onClick?: (value?: any) => void;
+    disabled?: boolean;
+    size?: "sm" | "md" | "lg";
+  };
 }
 
 export function QuanLyComponent({
@@ -71,6 +77,7 @@ export function QuanLyComponent({
   deleteBtn,
   updateBtn,
   customBtn,
+  downloadBtn,
 }: QuanLyComponent) {
   const dispatch = useDispatch();
   const [multiSelect, setMultiSelect] = useState([]);
@@ -84,6 +91,7 @@ export function QuanLyComponent({
   const nameType = useMemo(() => listMappingTopic.find((item) => item.key == type).value, [type]);
 
   const formatValueRequest = (data: any, config: TableConfig) => {
+    console.log(data);
     switch (config.key) {
       case "button":
         return (
@@ -122,6 +130,19 @@ export function QuanLyComponent({
                     show: true,
                     data: data,
                     title: "Bạn có chắc chắn xoá?",
+                  }),
+              }
+            }
+            warringBtn={
+              downloadBtn &&
+              data.is_gen_product_bar_code && {
+                text: "Tải Mã",
+                onClick: () =>
+                  setShowModal({
+                    type: "download",
+                    show: true,
+                    data: data,
+                    title: "Mời bạn tải mã vạch!",
                   }),
               }
             }

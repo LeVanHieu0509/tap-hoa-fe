@@ -84,7 +84,7 @@ const Actions = ({ data, refreshBtn, successBtn, warringBtn, errorBtn, customBtn
             disabled={warringBtn?.disabled}
             onClick={() => warringBtn?.onClick(data)}
             size={warringBtn?.size ?? "sm"}
-            color="yellow"
+            color="deep-purple"
             style={{
               color: "#ffffff",
             }}
