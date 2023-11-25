@@ -19,8 +19,8 @@ export const StyleCamera = styled.div`
 
   #interactive.viewport canvas,
   video {
-    width: 100%;
-    height: 300px;
+    /* width: 100%;s
+    height: 300px; */
     position: absolute;
     top: 0;
     left: 0;
