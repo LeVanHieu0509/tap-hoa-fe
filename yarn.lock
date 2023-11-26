@@ -2668,6 +2668,16 @@ dlv@^1.1.3:
   resolved "https://registry.yarnpkg.com/dlv/-/dlv-1.1.3.tgz#5c198a8a11453596e751494d49874bc7732f2e79"
   integrity sha512-+HlytyjlPKnIG8XuRG8WvmBP8xs8P71y+SKKS6ZXWoEgLuePxtDoUEiH7WkdePWrQ5JBpE6aoVqfZfJUQkjXwA==
 
+dm-fabric@^5.1.17:
+  version "5.1.17"
+  resolved "https://registry.yarnpkg.com/dm-fabric/-/dm-fabric-5.1.17.tgz#64d898470229765c8d23cb8b3fe2df0595749d0c"
+  integrity sha512-YouI4F+svfqTi3FM9fKG8ZqtdygzLbAzaA53QfekreLvJRqaHhCplk+2EF+cgMmuO5kY62m2Pm0pBqqV/sc5Vg==
+
+dm-howler@^2.2.4:
+  version "2.2.4"
+  resolved "https://registry.yarnpkg.com/dm-howler/-/dm-howler-2.2.4.tgz#29e10ed86f6eff16f85e116eb3f394e1e668a77a"
+  integrity sha512-h+iDEP/cyALeqWNtGdZZRwm3buSwaG26wzF6fCUGhvkF/yxYoWb8F/v7qN+urqdZw3wotZGO/01rDlzOxJUUGw==
+
 doctrine@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/doctrine/-/doctrine-2.1.0.tgz#5cd01fc101621b42c4cd7f5d1a66243716d3f39d"
@@ -2686,6 +2696,22 @@ dom-walk@^0.1.0:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/dom-walk/-/dom-walk-0.1.2.tgz#0c548bef048f4d1f2a97249002236060daa3fd84"
   integrity sha512-6QvTW9mrGeIegrFXdtQi9pk7O/nSK6lSdXW2eqUspN5LWD7UTji2Fqw5V2YLjBpHEoU9Xl/eUWNpDeZvoyOv2w==
+
+dynamsoft-camera-enhancer@^3.3.8:
+  version "3.3.8"
+  resolved "https://registry.yarnpkg.com/dynamsoft-camera-enhancer/-/dynamsoft-camera-enhancer-3.3.8.tgz#768cf2d7bebb9f804474ea67acf1c83e052bc482"
+  integrity sha512-wUqJ8v8yra7AGSwacT+V0UorbMoqmBQt/HbDrlxtHKqHiYbOrX6P+4famo1cosyAWooVzr3OLNKKr/2hpEiLnQ==
+  dependencies:
+    dm-fabric "^5.1.17"
+    mutable-promise "^1.1.13"
+
+dynamsoft-javascript-barcode@^9.3.1, dynamsoft-javascript-barcode@^9.6.31:
+  version "9.6.31"
+  resolved "https://registry.yarnpkg.com/dynamsoft-javascript-barcode/-/dynamsoft-javascript-barcode-9.6.31.tgz#2d23e7e7c846671748b6fcaf434c45759b1aa7be"
+  integrity sha512-32v13EefTWeRdpUr6dbcoMPC2TttCRSdKb2JCrprIQzp6jCp2UNBpxRynoSUU9cgLVZnvk+ZJAur+djLfdyH9Q==
+  dependencies:
+    dm-howler "^2.2.4"
+    dynamsoft-camera-enhancer "^3.3.8"
 
 ecc-jsbn@~0.1.1:
   version "0.1.2"
@@ -4231,6 +4257,11 @@ ms@^2.1.1:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.3.tgz#574c8138ce1d2b5861f0b44579dbadd60c6615b2"
   integrity sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==
 
+mutable-promise@^1.1.13:
+  version "1.1.13"
+  resolved "https://registry.yarnpkg.com/mutable-promise/-/mutable-promise-1.1.13.tgz#50b303fdaed1a51c1a33853ab2be510e41c197e7"
+  integrity sha512-2NzvKW97ZG2C7Z6H80+fWD/0kG5FOycAptsplCoyx5rrjA8Ix5b9PgqDHxecgQFCm+646uZpt71rQLRrBkL3JA==
+
 mz@^2.7.0:
   version "2.7.0"
   resolved "https://registry.yarnpkg.com/mz/-/mz-2.7.0.tgz#95008057a56cafadc2bc63dde7f9ff6955948e32"
@@ -4792,6 +4823,14 @@ react-apexcharts@^1.4.1:
   dependencies:
     prop-types "^15.8.1"
 
+react-barcode-qrcode-scanner@^0.1.3:
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/react-barcode-qrcode-scanner/-/react-barcode-qrcode-scanner-0.1.3.tgz#874e66d2acf2ab7b06baec8e4e12893ed7b77ae6"
+  integrity sha512-F6nBRtAR333mZ9HbivquYCFtM7YrpnecFohVB/cNiLLd7gy3mKP3gnhzn+P6odWrMvh9Btc1MhESkUf91b8fsw==
+  dependencies:
+    dynamsoft-javascript-barcode "^9.3.1"
+    react-vision-camera "^1.0.1"
+
 react-barcode@^1.4.6:
   version "1.4.6"
   resolved "https://registry.yarnpkg.com/react-barcode/-/react-barcode-1.4.6.tgz#a2ffd8717d1b7df6b482872f1692020c235463a0"
@@ -4895,6 +4934,11 @@ react-toastify@^9.1.3:
   integrity sha512-fPfb8ghtn/XMxw3LkxQBk3IyagNpF/LIKjOBflbexr2AWxAH1MJgvnESwEwBn9liLFXgTKWgBSdZpw9m4OTHTg==
   dependencies:
     clsx "^1.1.1"
+
+react-vision-camera@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/react-vision-camera/-/react-vision-camera-1.0.1.tgz#6a17a4fcda7de1ac9d8267d916982ce0453621f0"
+  integrity sha512-235lxAkZlu5O7b5AQidt8k+gJfPrCdLY4bhCYNx6EXkZDbap9mhlYbiCsit9mMLECBlnMNVTmLqlg6aphiuvpA==
 
 react-webcam@^5.0.1:
   version "5.2.4"

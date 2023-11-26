@@ -15,7 +15,7 @@ const ScanBarCodeScreen = ({ onChange }) => {
         <BarcodeScannerComponent
           width={400}
           height={400}
-          torch={true}
+          torch={false}
           onUpdate={(err, result) => {
             if (result) {
               setData(`Quét thành công: ${result.text}`);

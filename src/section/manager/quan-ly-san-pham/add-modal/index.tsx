@@ -11,12 +11,14 @@ import { get, isNil, pick, toNumber } from "lodash";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { rootAction } from "redux/reducers/root-reducer";
-import Scanner from "screens/manager/widgets/render-bar";
 import { useTheme } from "styled-components";
 import { Flex } from "styles/common";
 import { formatDateRequest } from "utils";
 import { formatValue } from "utils/format-value";
-import { AddModalWrapper, StyleCamera } from "./styles";
+import { AddModalWrapper } from "./styles";
+import BarcodeScanner from "components/bar-code";
+import ScanBarCodeScreen from "screens/manager/widgets/render-barcode";
+import { BarcodeScannerCustom } from "screens/manager/widgets/render-bar";
 interface AddModalProps {
   data?: any;
   setShowModal?: any;
@@ -470,14 +472,15 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
           //     }),
           // }}
         >
-          <StyleCamera style={{ height: "500px" }}>
-            {" "}
-            {/* <BarcodeScannerCustom /> */}
+          {/* <BarcodeScanner /> */}
+          {/* <StyleCamera style={{ height: "500px" }}>
+      
             <p>{result ? result : "Scanning..."}</p>
             <button onClick={() => setCamera(!camera)}>{camera ? "Stop" : "Start"}</button>
             <div className="container">{camera && <Scanner onDetected={onDetected} />}</div>
-          </StyleCamera>
+          </StyleCamera> */}{" "}
           {/* <ScanBarCodeScreen onChange={handleChange} /> */}
+          <BarcodeScannerCustom />
         </ModalCustom>
       )}
     </AddModalWrapper>
