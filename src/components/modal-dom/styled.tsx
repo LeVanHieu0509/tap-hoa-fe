@@ -9,7 +9,7 @@ export const WrapperModal = styled.div`
   bottom: 0;
   right: 0;
   max-height: 100vh;
-  z-index: 110000;
+  z-index: 1100;
   background: rgba(0, 0, 0, 0.6);
   overflow: auto;
   display: flex;

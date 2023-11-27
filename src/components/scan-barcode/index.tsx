@@ -1,8 +1,10 @@
 import React, { useEffect } from "react";
 import { ScanBarCodeWrapper } from "./styled";
-import { initCamera } from "components/portal-scan/js";
-
-interface ScanBarCodeProps {}
+import { initCamera } from "./js";
+interface ScanBarCodeProps {
+  onChange: any;
+  setCamera: any;
+}
 
 declare global {
   namespace JSX {
@@ -21,23 +23,26 @@ declare global {
 
 const canUseDOM = !!(typeof window !== "undefined" && window.document && window.document.createElement);
 
-const ScanBarCode = ({}: ScanBarCodeProps) => {
+const ScanBarCode = ({ onChange, setCamera }: ScanBarCodeProps) => {
   useEffect(() => {
+    const callback = (value) => {
+      onChange("product_bar_code", value);
+    };
     if (!canUseDOM) {
       return null;
     } else {
-      initCamera();
+      initCamera(callback);
     }
   }, [canUseDOM]);
 
   return (
     <ScanBarCodeWrapper>
       <>
-        <noscript>
+        <noscript style={{ display: "none" }}>
           &lt;div class="noscript"&gt; JavaScript is required to properly view this site. &lt;/div&gt;
         </noscript>
         <div className="global-actions" id="globalActions">
-          <button id="historyBtn" title="History">
+          <button style={{ display: "none" }} id="historyBtn" title="History">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width={16}
@@ -94,7 +99,7 @@ const ScanBarCode = ({}: ScanBarCodeProps) => {
         </dialog>
         <dialog id="settingsDialog" className="modal settings-modal">
           <header>
-            Settings
+            Cài đặt
             <form method="dialog">
               <button type="submit">
                 <svg
@@ -113,29 +118,28 @@ const ScanBarCode = ({}: ScanBarCodeProps) => {
           </header>
           <form name="settings-form" autoComplete="false">
             <fieldset name="barcode-found-settings">
-              <legend>When barcode is found...</legend>
               <ul>
                 <li>
                   <label>
-                    <input type="checkbox" name="beep" /> Beep
+                    <input type="checkbox" name="beep" /> Bật âm thanh
                   </label>
                 </li>
                 <li>
                   <label>
-                    <input type="checkbox" name="vibrate" /> Vibrate (mobile)
+                    <input type="checkbox" name="vibrate" /> Bật chế độ rung (mobile)
                   </label>
                 </li>
-                <li>
+                <li style={{ display: "none" }}>
                   <label>
                     <input type="checkbox" name="openWebPage" /> Open web pages automatically
                   </label>
                 </li>
-                <li>
+                <li style={{ display: "none" }}>
                   <label>
                     <input type="checkbox" name="openWebPageSameTab" /> Open web pages in the same tab
                   </label>
                 </li>
-                <li>
+                <li style={{ display: "none" }}>
                   <label>
                     <input type="checkbox" name="addToHistory" /> Add to history
                   </label>
@@ -144,7 +148,7 @@ const ScanBarCode = ({}: ScanBarCodeProps) => {
             </fieldset>
           </form>
         </dialog>
-        <header className="site-header">
+        <header className="site-header" style={{ display: "none" }}>
           <svg
             version="1.1"
             xmlns="http://www.w3.org/2000/svg"
@@ -303,7 +307,7 @@ const ScanBarCode = ({}: ScanBarCodeProps) => {
                       >
                         <path d="M1.5 1a.5.5 0 0 0-.5.5v3a.5.5 0 0 1-1 0v-3A1.5 1.5 0 0 1 1.5 0h3a.5.5 0 0 1 0 1h-3zM11 .5a.5.5 0 0 1 .5-.5h3A1.5 1.5 0 0 1 16 1.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 1-.5-.5zM.5 11a.5.5 0 0 1 .5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 1 0 1h-3A1.5 1.5 0 0 1 0 14.5v-3a.5.5 0 0 1 .5-.5zm15 0a.5.5 0 0 1 .5.5v3a1.5 1.5 0 0 1-1.5 1.5h-3a.5.5 0 0 1 0-1h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 1 .5-.5zM3 4.5a.5.5 0 0 1 1 0v7a.5.5 0 0 1-1 0v-7zm2 0a.5.5 0 0 1 1 0v7a.5.5 0 0 1-1 0v-7zm2 0a.5.5 0 0 1 1 0v7a.5.5 0 0 1-1 0v-7zm2 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-7zm3 0a.5.5 0 0 1 1 0v7a.5.5 0 0 1-1 0v-7z" />
                       </svg>
-                      Click to scan another barcode.
+                      Click vào đây để quét mã vạch/ QR Code
                     </button>
                     <span slot="capture-button" />
                     <span slot="facing-mode-button-content" title="Switch camera">
@@ -408,7 +412,7 @@ const ScanBarCode = ({}: ScanBarCodeProps) => {
                 </div>
               </div>
               <div id="scanInstructions" className="scan-instructions">
-                <p>Align Barcode/QR Code in the center of the frame.</p>
+                <p>Vui lòng đặt Barcode/QR Code ở giữa khung hình</p>
               </div>
               <dialog id="cameraResults" className="results">
                 <div className="results__actions">
@@ -513,8 +517,8 @@ const ScanBarCode = ({}: ScanBarCodeProps) => {
             </a-tab-panel>
           </a-tab-group>
         </div>
-        <p className="supported-formats" id="supportedFormats" />
-        <footer>
+        <p style={{ display: "none" }} className="supported-formats" id="supportedFormats" />
+        <footer style={{ display: "none" }}>
           <p>
             Licensed under{" "}
             <a href="https://georapbox.mit-license.org/@2022" target="_blank" rel="noopener">

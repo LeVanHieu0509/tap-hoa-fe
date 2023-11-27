@@ -7,8 +7,8 @@ import { CapturePhoto } from "@georapbox/capture-photo-element/dist/capture-phot
 import { getHistory, setHistory, getSettings, setSettings } from "./services/storage.js";
 import "./custom-clipboard-copy.js";
 
-export const initCamera = async () => {
-  const NO_BARCODE_DETECTED = "No barcode detected";
+export const initCamera = async (callback) => {
+  const NO_BARCODE_DETECTED = "Không tìm thấy mã nào. Vui lòng thử lại!";
   const ACCEPTED_MIME_TYPES = [
     "image/jpg",
     "image/jpeg",
@@ -355,7 +355,7 @@ export const initCamera = async () => {
     resultItem.className = "results__item";
     resultItem.classList.toggle("results__item--no-barcode", value === NO_BARCODE_DETECTED);
     resultItem.textContent = value;
-
+    callback(resultItem.textContent);
     resultDialog.insertBefore(resultItem, resultDialog.querySelector(".results__actions"));
 
     const clipboarCopyEl = resultDialog.querySelector("clipboard-copy");

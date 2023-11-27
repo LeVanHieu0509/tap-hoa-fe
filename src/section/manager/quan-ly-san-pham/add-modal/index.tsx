@@ -4,21 +4,20 @@ import { Button, Card } from "@material-tailwind/react";
 import { createProduct, generalAutoProduct, getCategories, getProduct } from "api/manager";
 import { Alert } from "components/alert";
 import FormInput from "components/form-input";
-import ModalCustom from "components/modal-custom";
+import Modal from "components/modal-dom";
 import useActionApi from "hooks/use-action-api";
 import useDebounce from "hooks/use-debounce";
 import { get, isNil, pick, toNumber } from "lodash";
+import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { rootAction } from "redux/reducers/root-reducer";
 import { useTheme } from "styled-components";
+import { ButtonPrimary, ButtonSecondary } from "styles/buttons";
 import { Flex } from "styles/common";
 import { formatDateRequest } from "utils";
 import { formatValue } from "utils/format-value";
 import { AddModalWrapper } from "./styles";
-import { ButtonPrimary } from "styles/buttons";
-import Modal from "components/modal-dom";
-import dynamic from "next/dynamic";
 interface AddModalProps {
   data?: any;
   setShowModal?: any;
@@ -86,6 +85,7 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
           placeHolder: "Nhập hoặc quét",
           error: null,
           disabled: disabled?.product_bar_code,
+          onClick: () => setShowBarCode({ show: true, title: "Quét mã ở đây" }),
         },
       ],
       [
@@ -190,7 +190,7 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
         }
       })
       .catch((e) => e);
-  }, []);
+  }, [showBarCode]);
 
   const handleChange = useCallback(
     (name: keyof CreateAndUpdateProductsInput, value: any) => {
@@ -318,7 +318,7 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
             } else {
               return {
                 status: "-1",
-                message: "NOT_FOUND_SYSTEM",
+                message: "Không tìm thấy",
               };
             }
           } else {
@@ -348,7 +348,7 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
                 handleChange("product_manufacture_date", null);
                 handleChange("product_expired_date", "");
                 handleChange("product_description", "");
-                handleChange("categories", "");
+                handleChange("categories", null);
 
                 setDisabled({
                   product_code: true,
@@ -365,6 +365,8 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
                   product_name: false,
                   categories: false,
                 });
+
+                Alert("WARNING", "Không lấy được tên sản phẩm, vui lòng nhập vào!");
               }
             });
           }
@@ -391,36 +393,29 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
   );
 
   const [camera, setCamera] = useState(false);
-  const [result, setResult] = useState(null);
-
-  const onDetected = (result) => {
-    setResult(result);
-  };
 
   return (
     <AddModalWrapper>
-      <Flex justify="flex-end" className="mb-10">
-        {/* <p>Quét mã vạch: {barcodeDisplay}</p> */}
-
-        <Button
-          disabled={false}
-          style={{
-            minWidth: "120px",
-            color: "#ffffff",
-            background: theme.color.status.primary,
-          }}
-          onClick={() => setShowBarCode({ show: true, title: "Quét mã ở đây" })}
-        >
-          Quét mã
-        </Button>
-      </Flex>
-
       <Card color="transparent" shadow={false} className="w-full">
         <div className="mt-8 mb-2 w-full">
           <FormInput listInput={listInput} modifiedData={modifiedData} onChange={handleChange} />
         </div>
 
         <Flex gap={16} gapMb={16} justify="flex-end">
+          <Button
+            disabled={false}
+            onClick={() => {
+              setModifiedData(initData);
+              setDisabled({});
+            }}
+            style={{
+              minWidth: "120px",
+              color: "#ffffff",
+              background: theme.color.status.waring,
+            }}
+          >
+            Reset
+          </Button>
           <Button
             disabled={false}
             onClick={() =>
@@ -460,11 +455,24 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
             });
           }}
           title={showBarCode.title}
-          size="lg"
+          size="md"
           sizeMobile="full"
-          actions={<ButtonPrimary onClick={showBarCode.onConfirm}>Xác nhận</ButtonPrimary>}
+          actions={
+            <>
+              <ButtonSecondary
+                onClick={() =>
+                  setShowBarCode({
+                    show: false,
+                  })
+                }
+              >
+                Quay về
+              </ButtonSecondary>
+              <ButtonPrimary onClick={showBarCode.onConfirm}>Xác nhận</ButtonPrimary>
+            </>
+          }
         >
-          <ScanBarCode />
+          <ScanBarCode setCamera={setCamera} onChange={handleChange} />
         </Modal>
       )}
     </AddModalWrapper>

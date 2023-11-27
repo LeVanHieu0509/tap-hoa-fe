@@ -2,20 +2,20 @@ import { listMappingTopic } from "@constants";
 import { DataTable, TableConfig } from "@custom-types/config-table";
 import { ShowModal } from "@custom-types/manager";
 import { Card, CardBody } from "@material-tailwind/react";
-import ModalCustom from "components/modal-custom";
+import Modal from "components/modal-dom";
 import Table from "components/table";
 import TableMobile from "components/table-mobile";
 import { useMemo, useState } from "react";
+import { useDispatch } from "react-redux";
+import { rootAction } from "redux/reducers/root-reducer";
+import QuanLyHoaDonModal from "section/manager/quan-ly-hoa-don";
+import QuanLyNhanVienModal from "section/manager/quan-ly-nhan-vien";
+import QuanLySanPhamModal from "section/manager/quan-ly-san-pham";
 import DeleteModal from "section/manager/quan-ly-san-pham/delete-modal";
+import QuanLyThanhToanModal from "section/manager/quan-ly-thanh-toan";
 import { ActionsWrapper, ScrollCustom } from "styles";
 import { formatValueTable } from "utils/format-value";
 import Actions from "../components/actions";
-import QuanLySanPhamModal from "section/manager/quan-ly-san-pham";
-import QuanLyThanhToanModal from "section/manager/quan-ly-thanh-toan";
-import QuanLyNhanVienModal from "section/manager/quan-ly-nhan-vien";
-import QuanLyHoaDonModal from "section/manager/quan-ly-hoa-don";
-import { rootAction } from "redux/reducers/root-reducer";
-import { useDispatch } from "react-redux";
 
 interface QuanLyComponent {
   isSelectAll?: boolean;
@@ -237,29 +237,19 @@ export function QuanLyComponent({
       </Card>
 
       {showModal.show && (
-        <ModalCustom
-          type={showModal.type}
-          show={showModal.show}
-          onCloseModal={() => {
+        <Modal
+          showModal={showModal.show}
+          onClose={() => {
             setShowModal({
               show: false,
             });
           }}
           title={showModal.title}
-          // primaryBtn={{
-          //   text: "Xác nhận",
-          //   onClick: showModal.onConfirm,
-          // }}
-          // secondaryBtn={{
-          //   text: "Huỷ bỏ",
-          //   onClick: () =>
-          //     setShowModal({
-          //       show: false,
-          //     }),
-          // }}
+          size="md"
+          sizeMobile="full"
         >
           <ModalContent setShowModal={setShowModal} type={showModal.type} data={showModal.data} />
-        </ModalCustom>
+        </Modal>
       )}
     </div>
   );

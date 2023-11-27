@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { device } from "styles/media";
 
 export const ScanBarCodeWrapper = styled.div`
   /* position: fixed;
@@ -392,12 +393,17 @@ export const ScanBarCodeWrapper = styled.div`
 
   .global-actions {
     position: absolute;
-    top: 8px;
-    right: 8px;
+    top: 16px;
+    right: 80px;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
+
+    @media ${device.mobile} {
+      top: 8px;
+      right: 60px;
+    }
   }
 
   .global-actions button {
