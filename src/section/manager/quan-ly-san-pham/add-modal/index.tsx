@@ -16,13 +16,15 @@ import { Flex } from "styles/common";
 import { formatDateRequest } from "utils";
 import { formatValue } from "utils/format-value";
 import { AddModalWrapper } from "./styles";
-import BarcodeScanner from "components/bar-code";
-import ScanBarCodeScreen from "screens/manager/widgets/render-barcode";
-import { BarcodeScannerCustom } from "screens/manager/widgets/render-bar";
+import { ButtonPrimary } from "styles/buttons";
+import Modal from "components/modal-dom";
+import dynamic from "next/dynamic";
 interface AddModalProps {
   data?: any;
   setShowModal?: any;
 }
+
+const ScanBarCode = dynamic(() => import("components/scan-barcode"), { ssr: false });
 
 const AddModal = ({ data, setShowModal }: AddModalProps) => {
   const theme = useTheme();
@@ -407,7 +409,7 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
             color: "#ffffff",
             background: theme.color.status.primary,
           }}
-          onClick={() => setShowBarCode({ show: true })}
+          onClick={() => setShowBarCode({ show: true, title: "Quét mã ở đây" })}
         >
           Quét mã
         </Button>
@@ -450,38 +452,20 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
       </Card>
 
       {showBarCode.show && (
-        <ModalCustom
-          type={showBarCode.type}
-          show={showBarCode.show}
-          title={showBarCode.title}
-          onCloseModal={() => {
+        <Modal
+          showModal={showBarCode.show}
+          onClose={() => {
             setShowBarCode({
               show: false,
             });
           }}
-
-          // primaryBtn={{
-          //   text: "Xác nhận",
-          //   onClick: showModal.onConfirm,
-          // }}
-          // secondaryBtn={{
-          //   text: "Huỷ bỏ",
-          //   onClick: () =>
-          //     setShowModal({
-          //       show: false,
-          //     }),
-          // }}
+          title={showBarCode.title}
+          size="lg"
+          sizeMobile="full"
+          actions={<ButtonPrimary onClick={showBarCode.onConfirm}>Xác nhận</ButtonPrimary>}
         >
-          {/* <BarcodeScanner /> */}
-          {/* <StyleCamera style={{ height: "500px" }}>
-      
-            <p>{result ? result : "Scanning..."}</p>
-            <button onClick={() => setCamera(!camera)}>{camera ? "Stop" : "Start"}</button>
-            <div className="container">{camera && <Scanner onDetected={onDetected} />}</div>
-          </StyleCamera> */}{" "}
-          {/* <ScanBarCodeScreen onChange={handleChange} /> */}
-          <BarcodeScannerCustom />
-        </ModalCustom>
+          <ScanBarCode />
+        </Modal>
       )}
     </AddModalWrapper>
   );

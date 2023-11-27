@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { device } from "styles/media";
 
 export const ListOrdersWrapper = styled.div`
   display: flex;
