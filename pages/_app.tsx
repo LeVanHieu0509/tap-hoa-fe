@@ -4,7 +4,7 @@ import { ThemeProvider } from "@material-tailwind/react";
 import moment from "moment-timezone";
 import { useEffect } from "react";
 import { Provider } from "react-redux";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import { MaterialTailwindControllerProvider } from "screens/manager/context";
 import ThemeWrapper from "../src/containers/theme-wrapper";
 import { store } from "../src/redux/store";
@@ -12,20 +12,37 @@ import "../src/styles/global.css";
 import { GlobalStyle } from "../src/styles/globals";
 import { default as version } from "../version.json";
 import RootAppLoading from "components/root-app-loading";
+import useWindowResize from "hooks/use-window-resize";
+import { useRouter } from "next/router";
 
 const App = ({ Component, pageProps }: AppProps) => {
+  const size = useWindowResize();
+  const router = useRouter();
   useEffect(() => {
-    if (process.browser) {
+    const handleRouteChange = () => {
+      toast.dismiss();
+    };
+
+    router.events.on("routeChangeStart", handleRouteChange);
+
+    // If the component is unmounted, unsubscribe
+    // from the event with the `off` method:
+    return () => {
+      router.events.off("routeChangeStart", handleRouteChange);
+    };
+  }, [router]);
+
+  useEffect(() => {
+    if (window) {
       moment.tz.setDefault("Asia/Ho_Chi_Minh");
-      console.log(`version-tap-hoa: #${version.build} (${version.date})`);
-      const listener = () => {
-        let vh = window.innerHeight;
-        document.documentElement.style.setProperty("--vh", `${vh}px`);
-      };
-      listener();
-      window.addEventListener("resize", listener);
+      console.log(`version-cube: #${version.build} (${version.date})`);
     }
   }, []);
+
+  useEffect(() => {
+    let vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty("--vh", `${vh}px`);
+  }, [size?.height]);
 
   return (
     <Provider store={store}>

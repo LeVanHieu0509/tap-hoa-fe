@@ -8,7 +8,7 @@ export const WrapperModal = styled.div`
   left: 0;
   bottom: 0;
   right: 0;
-  max-height: 100vh;
+  max-height: calc(100 * var(--vh));
   z-index: 1100;
   background: rgba(0, 0, 0, 0.6);
   overflow: auto;
