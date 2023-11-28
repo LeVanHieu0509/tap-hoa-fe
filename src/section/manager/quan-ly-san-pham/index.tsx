@@ -2,7 +2,7 @@ import { Button } from "@material-tailwind/react";
 import { deleteProduct } from "api/manager";
 import { Alert } from "components/alert";
 import useActionApi from "hooks/use-action-api";
-import { useMemo } from "react";
+import { Dispatch, SetStateAction, useMemo } from "react";
 import { useTheme } from "styled-components";
 import { Flex } from "styles/common";
 import AddModal from "./add-modal";
@@ -13,11 +13,12 @@ import { get } from "lodash";
 import { rootAction } from "redux/reducers/root-reducer";
 import { useDispatch } from "react-redux";
 import DownloadModal from "./download-modal";
+import { ShowModal } from "@custom-types/manager";
 
 interface QuanLySanPhamModalProps {
   type?: string;
   data?: any;
-  setShowModal?: any;
+  setShowModal?: Dispatch<SetStateAction<ShowModal>>;
 }
 
 const QuanLySanPhamModal = ({ setShowModal, data, type }: QuanLySanPhamModalProps) => {
