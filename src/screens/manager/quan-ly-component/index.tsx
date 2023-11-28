@@ -16,6 +16,7 @@ import QuanLyThanhToanModal from "section/manager/quan-ly-thanh-toan";
 import { ActionsWrapper, ScrollCustom } from "styles";
 import { formatValueTable } from "utils/format-value";
 import Actions from "../components/actions";
+import TaoHoaDonModal from "section/manager/tao-hoa-don";
 
 interface QuanLyComponent {
   isSelectAll?: boolean;
@@ -179,7 +180,7 @@ export function QuanLyComponent({
       case "quan-ly-nhan-vien":
         return QuanLyNhanVienModal;
       case "tao-hoa-don":
-        return DeleteModal;
+        return TaoHoaDonModal;
     }
   }, [showModal.type]);
 
