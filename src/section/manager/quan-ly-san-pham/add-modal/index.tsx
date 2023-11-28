@@ -1,7 +1,7 @@
 import { ModifiedData } from "@custom-types";
-import { CreateAndUpdateProductsInput, ShowModal } from "@custom-types/manager";
+import { CategoriesOutput, CreateAndUpdateProductsInput, ShowModal } from "@custom-types/manager";
 import { Button, Card } from "@material-tailwind/react";
-import { createProduct, generalAutoProduct, getCategories, getProduct } from "api/manager";
+import { createProduct, generalAutoProduct, getProduct } from "api/manager";
 import { Alert } from "components/alert";
 import FormInput from "components/form-input";
 import Modal from "components/modal-dom";
@@ -13,7 +13,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { rootAction } from "redux/reducers/root-reducer";
 import { useTheme } from "styled-components";
-import { ButtonPrimary, ButtonSecondary } from "styles/buttons";
+import { ButtonSecondary } from "styles/buttons";
 import { Flex } from "styles/common";
 import { formatDateRequest } from "utils";
 import { formatValue } from "utils/format-value";
@@ -21,11 +21,12 @@ import { AddModalWrapper, ResetWrapper } from "./styles";
 interface AddModalProps {
   data?: any;
   setShowModal?: any;
+  categories?: CategoriesOutput[];
 }
 
 const ScanBarCode = dynamic(() => import("components/scan-barcode"), { ssr: false });
 
-const AddModal = ({ data, setShowModal }: AddModalProps) => {
+const AddModal = ({ data, setShowModal, categories }: AddModalProps) => {
   const theme = useTheme();
   const dispatch = useDispatch();
 
@@ -43,7 +44,6 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
     categories: null,
   };
 
-  const [categories, setCategories] = useState<any>([]);
   const [disabled, setDisabled] = useState<any>({});
   const [barcodeDisplay, setBarcodeDisplay] = useState("Not Found Barcode");
   const [modifiedData, setModifiedData] = useState<ModifiedData<CreateAndUpdateProductsInput>>(initData);
@@ -58,11 +58,15 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
 
   const actionCreateProducts = useActionApi(createProduct);
   const actionGetProduct = useActionApi(getProduct);
-  const actionGetCategories = useActionApi(getCategories);
 
   const actionGeneralAutoProduct = useActionApi(generalAutoProduct);
 
   let barcodeScan = "";
+
+  const listDropdownCate = useMemo(
+    () => categories?.map((item) => ({ value: item.id.toString(), key: item.title })),
+    [categories]
+  );
 
   const listInput: any = useMemo(
     () => [
@@ -107,7 +111,7 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
           subType: "number",
           type: "select",
           placeHolder: "Min 300",
-          listDropdown: categories?.map((item) => ({ value: item.id.toString(), key: item.title })) ?? [],
+          listDropdown: listDropdownCate ?? [],
           error: null,
           disabled: disabled?.categories,
         },
@@ -175,22 +179,8 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
         },
       ],
     ],
-    [modifiedData, categories]
+    [modifiedData, categories, debounceProductBarCode]
   );
-
-  //get categories
-  useEffect(() => {
-    actionGetCategories({
-      type: "global",
-      name: "",
-    })
-      .then(({ data }) => {
-        if (data.status == "1") {
-          setCategories(data.data);
-        }
-      })
-      .catch((e) => e);
-  }, [showBarCode]);
 
   const handleChange = useCallback(
     (name: keyof CreateAndUpdateProductsInput, value: any) => {
@@ -202,9 +192,15 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
           product_bar_code: true,
         });
       } else {
-        setDisabled({
-          product_bar_code: false,
-        });
+        if (name == "product_code" && value == "") {
+          setDisabled({
+            product_bar_code: false,
+          });
+        } else {
+          setDisabled({
+            ...disabled,
+          });
+        }
       }
     },
     [modifiedData]
@@ -298,11 +294,10 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
           if (data.status == "1") {
             if (data.data.product_bar_code) {
               // sản phẩm đã có trong kho
-
               setModifiedData({
                 ...data.data,
                 product_quantity: null,
-                categories: String(data.data.categories.id),
+                categories: data.data.categories.id.toString(),
                 product_expired_date: formatValue(data.data.product_expired_date, "date"),
                 product_manufacture_date: formatValue(data.data.product_manufacture_date, "date"),
               });

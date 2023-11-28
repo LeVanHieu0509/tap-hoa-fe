@@ -1,8 +1,8 @@
 import { Button } from "@material-tailwind/react";
-import { deleteProduct } from "api/manager";
+import { deleteProduct, getCategories } from "api/manager";
 import { Alert } from "components/alert";
 import useActionApi from "hooks/use-action-api";
-import { Dispatch, SetStateAction, useMemo } from "react";
+import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 import { useTheme } from "styled-components";
 import { Flex } from "styles/common";
 import AddModal from "./add-modal";
@@ -13,7 +13,7 @@ import { get } from "lodash";
 import { rootAction } from "redux/reducers/root-reducer";
 import { useDispatch } from "react-redux";
 import DownloadModal from "./download-modal";
-import { ShowModal } from "@custom-types/manager";
+import { CategoriesOutput, ShowModal } from "@custom-types/manager";
 
 interface QuanLySanPhamModalProps {
   type?: string;
@@ -24,8 +24,27 @@ interface QuanLySanPhamModalProps {
 const QuanLySanPhamModal = ({ setShowModal, data, type }: QuanLySanPhamModalProps) => {
   const theme = useTheme();
   const dispatch = useDispatch();
+
+  const [categories, setCategories] = useState<CategoriesOutput[]>([]);
+
   let textButton = "Xác nhận";
+
   const actionDeleteProduct = useActionApi(deleteProduct);
+  const actionGetCategories = useActionApi(getCategories);
+
+  //get categories
+  useEffect(() => {
+    actionGetCategories({
+      type: "global",
+      name: "",
+    })
+      .then(({ data }) => {
+        if (data.status == "1") {
+          setCategories(data.data);
+        }
+      })
+      .catch((e) => e);
+  }, []);
 
   const ModalContent = useMemo(() => {
     switch (type) {
@@ -78,10 +97,10 @@ const QuanLySanPhamModal = ({ setShowModal, data, type }: QuanLySanPhamModalProp
 
   return (
     <QuanLySanPhamModalWrapper>
-      <ModalContent setShowModal={setShowModal} data={data} />
+      <ModalContent setShowModal={setShowModal} data={data} categories={categories} />
 
       {(type == "delete" || type == "detail" || type == "download") && (
-        <Flex gap={16} gapMb={16} justify="flex-end">
+        <Flex className="mt-24" gap={16} gapMb={16} justify="flex-end">
           <Button
             disabled={false}
             onClick={() =>
@@ -90,7 +109,7 @@ const QuanLySanPhamModal = ({ setShowModal, data, type }: QuanLySanPhamModalProp
               })
             }
             style={{
-              width: "100px",
+              width: "140px",
               color: "#ffffff",
               background: theme.color.status.red,
             }}
@@ -101,7 +120,7 @@ const QuanLySanPhamModal = ({ setShowModal, data, type }: QuanLySanPhamModalProp
           <Button
             disabled={false}
             style={{
-              width: "100px",
+              width: "140px",
               color: "#ffffff",
               background: theme.color.status.primary,
             }}

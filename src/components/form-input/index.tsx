@@ -84,13 +84,13 @@ const FormInput = ({ listInput, modifiedData, onChange }: FormProps) => {
                       className: " ml-4  before:content-none after:content-none",
                     }}
                     className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
-                    value={col.listDropdown.find((item: any) => item.value == modifiedData[col.name])?.title}
+                    value={col.listDropdown.find((item: any) => item.value == modifiedData[col.name])?.value}
                     onChange={(e) => onChange(col.name, e)}
                     variant="outlined"
                     label={col.label}
                   >
-                    {col.listDropdown.map((item, key) => (
-                      <Option className="py-2" key={key} value={item.value}>
+                    {col.listDropdown.map((item) => (
+                      <Option className="py-2" key={item.value} value={item.value}>
                         {item.key}
                       </Option>
                     ))}

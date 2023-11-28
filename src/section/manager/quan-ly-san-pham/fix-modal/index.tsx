@@ -233,7 +233,7 @@ const FixModal = ({ setShowModal, data }: FixModalProps) => {
               })
             }
             style={{
-              width: "100px",
+              width: "140px",
               color: "#ffffff",
               background: theme.color.status.red,
             }}
@@ -244,7 +244,7 @@ const FixModal = ({ setShowModal, data }: FixModalProps) => {
           <Button
             disabled={false}
             style={{
-              width: "100px",
+              width: "140px",
               color: "#ffffff",
               background: theme.color.status.primary,
             }}

@@ -82,7 +82,7 @@ const ModalCustom = ({
                   disabled={secondaryBtn?.disable}
                   onClick={secondaryBtn?.onClick}
                   style={{
-                    width: "100px",
+                    width: "140px",
                     color: "#ffffff",
                     background: theme.color.status.red,
                   }}
@@ -94,7 +94,7 @@ const ModalCustom = ({
                 <Button
                   disabled={primaryBtn?.disable}
                   style={{
-                    width: "100px",
+                    width: "140px",
                     color: "#ffffff",
                     background: theme.color.status.primary,
                   }}
