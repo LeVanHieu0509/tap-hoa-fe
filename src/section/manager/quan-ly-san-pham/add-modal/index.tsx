@@ -469,7 +469,6 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
               >
                 Quay về
               </ButtonSecondary>
-              <ButtonPrimary onClick={showBarCode.onConfirm}>Xác nhận</ButtonPrimary>
             </>
           }
         >
