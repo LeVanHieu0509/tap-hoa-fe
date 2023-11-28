@@ -40,7 +40,7 @@ export const ButtonStyle: any = css<ButtonStyleProps>`
   font-size: 16px;
   line-height: 125%;
   text-align: center;
-
+  color: #ffffff;
   border-radius: 4px;
   /* color: #ffffff; */
   cursor: pointer;

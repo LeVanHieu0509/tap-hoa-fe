@@ -1,7 +1,10 @@
 import styled from "styled-components";
+import { Flex } from "styles/common";
+import { device } from "styles/media";
 
 export const AddModalWrapper = styled.div`
   width: 100%;
+  position: relative;
 `;
 
 export const StyleCamera = styled.div`
@@ -30,5 +33,18 @@ export const StyleCamera = styled.div`
   video.drawingBuffer {
     /* width: 100%;
     height: 300px; */
+  }
+`;
+
+export const ResetWrapper = styled(Flex)`
+  top: -40px;
+  right: 0;
+
+  button {
+    padding: 4px 8px;
+  }
+
+  @media ${device.mobile} {
+    top: -45px;
   }
 `;

@@ -3,7 +3,6 @@ import { ScanBarCodeWrapper } from "./styled";
 import { initCamera } from "./js";
 interface ScanBarCodeProps {
   onChange: any;
-  setCamera: any;
 }
 
 declare global {
@@ -23,7 +22,7 @@ declare global {
 
 const canUseDOM = !!(typeof window !== "undefined" && window.document && window.document.createElement);
 
-const ScanBarCode = ({ onChange, setCamera }: ScanBarCodeProps) => {
+const ScanBarCode = ({ onChange }: ScanBarCodeProps) => {
   useEffect(() => {
     const callback = (value) => {
       onChange("product_bar_code", value);

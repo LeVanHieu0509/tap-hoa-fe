@@ -17,7 +17,7 @@ import { ButtonPrimary, ButtonSecondary } from "styles/buttons";
 import { Flex } from "styles/common";
 import { formatDateRequest } from "utils";
 import { formatValue } from "utils/format-value";
-import { AddModalWrapper } from "./styles";
+import { AddModalWrapper, ResetWrapper } from "./styles";
 interface AddModalProps {
   data?: any;
   setShowModal?: any;
@@ -392,30 +392,31 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
     [modifiedData]
   );
 
-  const [camera, setCamera] = useState(false);
-
   return (
     <AddModalWrapper>
+      <ResetWrapper className="mb-10 absolute " justify="flex-end">
+        <Button
+          size="sm"
+          disabled={false}
+          onClick={() => {
+            setModifiedData(initData);
+            setDisabled({});
+          }}
+          style={{
+            color: "#ffffff",
+            background: theme.color.status.blue,
+          }}
+        >
+          Reset
+        </Button>
+      </ResetWrapper>
+
       <Card color="transparent" shadow={false} className="w-full">
         <div className="mt-8 mb-2 w-full">
           <FormInput listInput={listInput} modifiedData={modifiedData} onChange={handleChange} />
         </div>
 
         <Flex gap={16} gapMb={16} justify="flex-end">
-          <Button
-            disabled={false}
-            onClick={() => {
-              setModifiedData(initData);
-              setDisabled({});
-            }}
-            style={{
-              minWidth: "120px",
-              color: "#ffffff",
-              background: theme.color.status.waring,
-            }}
-          >
-            Reset
-          </Button>
           <Button
             disabled={false}
             onClick={() =>
@@ -472,7 +473,7 @@ const AddModal = ({ data, setShowModal }: AddModalProps) => {
             </>
           }
         >
-          <ScanBarCode setCamera={setCamera} onChange={handleChange} />
+          <ScanBarCode onChange={handleChange} />
         </Modal>
       )}
     </AddModalWrapper>
