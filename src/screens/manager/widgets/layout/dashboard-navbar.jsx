@@ -36,9 +36,9 @@ export function DashboardNavbar() {
       fullWidth
       blurred={fixedNavbar}
     >
-      <div className="flex flex-col-reverse justify-between gap-6 md:flex-row md:items-center">
+      <div className="flex flex-col-reverse justify-between gap-2 md:flex-row md:items-center">
         <div className="capitalize">
-          <Breadcrumbs className={`bg-transparent p-0 transition-all mb-24 ${fixedNavbar ? "mt-2" : ""}`}>
+          <Breadcrumbs className={`bg-transparent p-0 transition-all ${fixedNavbar ? "mt-2" : ""}`}>
             <Link href={`/${layout}`}>
               <Typography
                 variant="small"
@@ -54,7 +54,7 @@ export function DashboardNavbar() {
             </Typography>
           </Breadcrumbs>
 
-          <Typography variant="h6" color="blue-gray" className="mb-16">
+          <Typography variant="h6" color="blue-gray" className="mb-16 hide-mobile">
             {namePage}
           </Typography>
         </div>

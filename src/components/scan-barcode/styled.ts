@@ -1,7 +1,9 @@
+import { set } from "lodash";
 import styled from "styled-components";
 import { device } from "styles/media";
 
-export const ScanBarCodeWrapper = styled.div`
+export const ScanBarCodeWrapper = styled.div<{ hide?: boolean }>`
+  width: 100%;
   *,
   *:before,
   *:after {
@@ -300,21 +302,24 @@ export const ScanBarCodeWrapper = styled.div`
     position: relative;
     display: flex;
     justify-content: center;
-    margin: 0 auto 1.5rem auto;
     overflow: hidden;
     border: var(--capture-border-width) solid var(--border);
     border-radius: var(--capture-border-radius);
     background-color: var(--background-alt);
+
+    ${({ hide }) => (hide ? "height:145px" : null)}
   }
 
   capture-photo::part(video) {
     width: 100%;
-    height: calc(100% - 10px);
+    height: calc(100%);
     border-radius: var(--video-border-radius);
+
+    ${({ hide }) => (hide ? "object-fit: cover" : null)}
   }
 
   capture-photo[loading]::part(video) {
-    background-image: url(../assets/icons/spinner-dark.svg);
+    background-image: url(${process.env.basePath}/img/spinner-dark.svg);
     background-size: 60px;
     background-position: center center;
     background-repeat: no-repeat;
@@ -540,6 +545,10 @@ export const ScanBarCodeWrapper = styled.div`
     display: none;
   }
 
+  .tab-group__panels {
+    padding: 0 !important;
+  }
+
   a-tab-group::part(tabs) {
     background-color: var(--background);
     border-radius: var(--border-radius);
@@ -599,7 +608,7 @@ export const ScanBarCodeWrapper = styled.div`
     }
 
     capture-photo[loading]::part(video) {
-      background-image: url(../assets/icons/spinner-light.svg);
+      background-image: url(${process.env.basePath}/img/spinner-light.svg);
     }
 
     .dropzone {

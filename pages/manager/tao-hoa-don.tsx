@@ -15,11 +15,8 @@ const ManagerPage = ({}: ManagerPageProps) => {
 
       <div className="p-4 xl:ml-80">
         <div className="w-full">
-          <Header />
+          <Header type="tao-hoa-don" className="w-full" />
           <TaoHoaDonScreen />
-          <div className="hide-mobile">
-            <Footer />
-          </div>
         </div>
       </div>
     </div>

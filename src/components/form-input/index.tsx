@@ -12,6 +12,7 @@ interface FormProps {
 }
 
 const FormInput = ({ listInput, modifiedData, onChange }: FormProps) => {
+  console.log("modifiedData", modifiedData);
   return (
     <FormWrapper>
       <FormContainer>
@@ -84,7 +85,11 @@ const FormInput = ({ listInput, modifiedData, onChange }: FormProps) => {
                       className: " ml-4  before:content-none after:content-none",
                     }}
                     className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
-                    value={col.listDropdown.find((item: any) => item.value == modifiedData[col.name])?.value}
+                    selected={(element) =>
+                      element
+                        ? element
+                        : col.listDropdown.find((item: any) => item.value == modifiedData[col.name])?.key
+                    }
                     onChange={(e) => onChange(col.name, e)}
                     variant="outlined"
                     label={col.label}

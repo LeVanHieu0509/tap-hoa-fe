@@ -49,9 +49,9 @@ const activeCss = css`
 `;
 
 export const SlideWrapper = styled.div`
-  width: 100%;
+  /* width: 100%;
 
   @media ${device.mobile} {
     width: 80%;
-  }
+  } */
 `;

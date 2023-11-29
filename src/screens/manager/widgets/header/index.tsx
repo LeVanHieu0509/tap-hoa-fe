@@ -5,24 +5,14 @@ import { Configurator, DashboardNavbar } from "../layout";
 
 interface HeaderProps {
   className?: string;
+  type?: string;
 }
 
-const Header = ({ className }: HeaderProps) => {
-  const [dispatch] = useMaterialTailwindController();
-
+const Header = ({ type, className }: HeaderProps) => {
   return (
-    <div className="w-full">
+    <div className={className}>
       <DashboardNavbar />
       <Configurator />
-      <IconButton
-        size="lg"
-        color="white"
-        className="fixed bottom-8 right-8 z-40 rounded-full shadow-blue-gray-900/10"
-        ripple={false}
-        onClick={() => setOpenConfigurator(dispatch, true)}
-      >
-        <Cog6ToothIcon className="h-5 w-5" />
-      </IconButton>
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import Empty from "components/empty";
+import Empty from "components/empty-cart";
 import Icons from "components/icons";
 import PulseLoader from "components/loading/pulse-loader";
 import useClickAway from "hooks/use-click-away";
@@ -224,7 +224,7 @@ function DropDown({
           )}
           {isSearch ? (
             <input
-              placeholder="Tìm kiếm sản phẩm ở đây..."
+              placeholder="Nhập tên, mã vạch, hoặc mã code..."
               style={{ padding: "7px 10px", width: "100%" }}
               value={isFocus ? searchKey : selectedLabel}
               onChange={(e) => {

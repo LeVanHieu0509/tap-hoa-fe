@@ -364,6 +364,14 @@ const style = css`
     font-size: 1.8em;
   }
 
+  .height-250 {
+    height: 250px;
+  }
+
+  .height-200 {
+    height: 200px;
+  }
+
   .Toastify__toast-container {
     z-index: 100000;
   }

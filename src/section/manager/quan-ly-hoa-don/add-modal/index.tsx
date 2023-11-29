@@ -6,7 +6,7 @@ interface AddModalProps {
 }
 
 const AddModal = ({ data }: AddModalProps) => {
-  return <AddModalWrapper>123</AddModalWrapper>;
+  return <AddModalWrapper></AddModalWrapper>;
 };
 
 export default AddModal;

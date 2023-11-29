@@ -1,9 +1,7 @@
-import { Dispatch, SetStateAction, useMemo } from "react";
-import AddModal from "./add-modal";
-import DeleteModal from "./delete-modal";
-import FixModal from "./fix-modal";
-import { QuanLyThanhToanModalWrapper } from "./styled";
 import { ShowModal } from "@custom-types/manager";
+import { Dispatch, SetStateAction, useMemo } from "react";
+import DetailModal from "./detail-modal";
+import { QuanLyThanhToanModalWrapper } from "./styled";
 
 interface QuanLyThanhToanModalProps {
   type?: string;
@@ -14,14 +12,8 @@ interface QuanLyThanhToanModalProps {
 const QuanLyThanhToanModal = ({ data, type }: QuanLyThanhToanModalProps) => {
   const ModalContent = useMemo(() => {
     switch (type) {
-      case "add":
-        return AddModal;
-      case "fix":
-        return FixModal;
-      case "delete":
-        return DeleteModal;
       case "detail":
-        return DeleteModal;
+        return DetailModal;
     }
   }, [type]);
 

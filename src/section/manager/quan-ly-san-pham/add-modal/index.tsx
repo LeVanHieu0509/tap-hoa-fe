@@ -64,7 +64,7 @@ const AddModal = ({ data, setShowModal, categories }: AddModalProps) => {
   let barcodeScan = "";
 
   const listDropdownCate = useMemo(
-    () => categories?.map((item) => ({ value: item.id.toString(), key: item.title })),
+    () => categories?.map((item) => ({ key: item.title, value: item.id.toString() })),
     [categories]
   );
 

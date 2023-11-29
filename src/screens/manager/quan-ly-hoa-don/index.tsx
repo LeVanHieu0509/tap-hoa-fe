@@ -23,6 +23,12 @@ const tableConfig: TableConfig[] = [
     show: true,
   },
   {
+    key: "usr_name",
+    label: "Người tạo",
+    type: "string",
+    show: true,
+  },
+  {
     key: "cart_state",
     label: "Trạng thái hoá đơn",
     type: "string",
@@ -94,6 +100,7 @@ const QuanLyHoaDonScreen = ({}: QuanLyHoaDonScreenProps) => {
     () =>
       lists?.map((item) => {
         return {
+          usr_name: item.user.usr_name,
           cart_code: item.cart_code,
           cart_products: item.cart_products,
           cart_state: item.cart_state,

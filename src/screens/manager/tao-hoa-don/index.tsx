@@ -1,15 +1,24 @@
 import { GetCartsOutput, GetProductOutput, ShowModal } from "@custom-types/manager";
-import { PlusIcon } from "@heroicons/react/24/outline";
-import { Button, Spinner } from "@material-tailwind/react";
-import { addNewCarts, checkoutConfirm, deleteCarts, getAllCarts, getProducts, updateCarts } from "api/manager";
+import { IconButton } from "@material-tailwind/react";
+import {
+  addNewCarts,
+  checkoutConfirm,
+  deleteCarts,
+  getAllCarts,
+  getProduct,
+  getProducts,
+  updateCarts,
+} from "api/manager";
 import { Alert } from "components/alert";
 import DropDown from "components/dropdown-fieldset";
-import IconClose from "components/icons/source/close";
+import EmptyComp from "components/empty-cart";
 import ModalCustom from "components/modal-custom";
-import CardSlide from "components/slide";
+import Modal from "components/modal-dom";
 import useActionApi from "hooks/use-action-api";
+import useDebounce from "hooks/use-debounce";
 import useInitialized from "hooks/use-initialized";
 import { useAppSelector } from "hooks/use-redux";
+import useWindowResize from "hooks/use-window-resize";
 import { get, pick } from "lodash";
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -17,21 +26,15 @@ import { rootAction } from "redux/reducers/root-reducer";
 import CardItem from "section/manager/tao-hoa-don/card";
 import Invoice from "section/manager/tao-hoa-don/invoice";
 import TabsOrder from "section/manager/tao-hoa-don/tab-orders";
-import { convertKeyCart, getKeyCart } from "utils/cart";
-import {
-  ButtonCartWrapper,
-  CardInsuranceItemWrapper,
-  DropdownWrapper,
-  HeaderWrapper,
-  ListProductsWrapper,
-  SlideWrapper,
-  TaoHoaDonScreenWrapper,
-} from "./styled";
-import useWindowResize from "hooks/use-window-resize";
-import useDebounce from "hooks/use-debounce";
-import Empty from "components/empty";
+import { ButtonPrimary, ButtonSecondary } from "styles/buttons";
+import { getKeyCart } from "utils/cart";
+import { DropdownWrapper, HeaderWrapper, ListProductsWrapper, TaoHoaDonScreenWrapper } from "./styled";
+import dynamic from "next/dynamic";
+import IconClose from "components/icons/source/close";
 
 interface TaoHoaDonScreenProps {}
+
+const ScanBarCode = dynamic(() => import("components/scan-barcode"), { ssr: false });
 
 export interface GetProductOutputCustom extends GetCartsOutput {
   label?: string;
@@ -77,13 +80,9 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
   const actionGetAllCarts = useActionApi(getAllCarts);
   const actionAddNewCarts = useActionApi(addNewCarts);
   const actionUpdateCarts = useActionApi(updateCarts);
+  const actionGetProduct = useActionApi(getProduct);
 
   const actionCheckoutConfirm = useActionApi(checkoutConfirm);
-  useEffect(() => {
-    if (cacheData?.cart) {
-      setCurrentKeyOrder(cacheData?.cart?.currentKeyOrder);
-    }
-  }, [cacheData?.cart]);
 
   useInitialized(() => {
     if (currentUser || reLoading) {
@@ -115,7 +114,14 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
                   },
                 });
               });
-
+              dispatch(
+                rootAction.setCacheData({
+                  cart: {
+                    currentKeyOrder: `hoa-don-${data.data.products[0].id}`,
+                  },
+                })
+              );
+              setCurrentKeyOrder(`hoa-don-${data.data.products[0].id}`);
               dispatch(rootAction.setOrderCarts(newOrderCarts));
             }
           } else {
@@ -164,7 +170,7 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
   }, [currentKeyOrder, orderCarts]);
 
   const handleAddCart = () => {
-    if (orderCarts.length < 5) {
+    if (orderCarts.length < 1) {
       actionAddNewCarts(
         {
           products: [],
@@ -182,6 +188,14 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
                 products: [],
               },
             };
+            dispatch(
+              rootAction.setCacheData({
+                cart: {
+                  currentKeyOrder: `hoa-don-${data.data.id}`,
+                },
+              })
+            );
+
             setCurrentKeyOrder(`hoa-don-${data.data.id}`);
             dispatch(rootAction.setOrderCarts(orderCarts ? [...orderCarts, newCart] : [newCart]));
           } else {
@@ -190,7 +204,7 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
         })
         .catch((e) => console.log(get(e, "response.data.message")));
     } else {
-      Alert("WARNING", "Bạn chỉ được tạo tối đa 5 Hoá đơn");
+      return;
     }
   };
 
@@ -370,31 +384,25 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
     setShowModalOrder({
       show: true,
       title: "Thanh toán",
-      data: dataProductInCartCurrent[currentKeyOrder].id,
+      data: { id: dataProductInCartCurrent[currentKeyOrder].id },
     });
   };
 
   const handleSubmitOrder = async () => {
     if (showModalOrder.data) {
-      actionCheckoutConfirm(
-        {
-          id: showModalOrder.data,
-        },
-        {
-          type: "global",
-          name: "",
-        }
-      )
+      actionCheckoutConfirm(showModalOrder.data, {
+        type: "global",
+        name: "",
+      })
         .then(async ({ data }) => {
           if (data.status == "1") {
-            const newOrderCarts = orderCarts.filter((item) => !item[currentKeyOrder]);
             Alert("SUCCESSFUL", data.message);
 
             setShowModalOrder({
               show: false,
             });
 
-            dispatch(rootAction.setOrderCarts([...newOrderCarts]));
+            dispatch(rootAction.setOrderCarts([]));
             setReloading(true);
 
             dispatch(
@@ -449,6 +457,41 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
     };
   }, [barcodeDisplay]);
 
+  const sizeWindow = useWindowResize();
+  const [productBarCode, setProductBarCode] = useState(null);
+  const [showScan, setShowScan] = useState(false);
+
+  useEffect(() => {
+    if (productBarCode) {
+      if (productBarCode) {
+        actionGetProduct(
+          {
+            product_bar_code: productBarCode,
+          },
+          {
+            type: "global",
+            name: "",
+          }
+        ).then(({ data }) => {
+          if (data.status == "1") {
+            if (data.data?.product_bar_code) {
+              handleAddItemToCart(data.data);
+            } else {
+              Alert("ERROR", "Không tìm thấy sản phẩm! vui lòng nhập tên, mã để tìm kiếm!");
+            }
+          } else {
+            Alert("ERROR", "Quét thất bại! Vui lòng thử lại");
+          }
+        });
+      }
+    }
+  }, [productBarCode, showScan]);
+
+  const handleChange = (key, value) => {
+    console.log(value);
+    setProductBarCode(value);
+  };
+
   return (
     <TaoHoaDonScreenWrapper>
       <HeaderWrapper gapMb={16} align="center" justify="space-between" style={{ position: "sticky", top: 100 }}>
@@ -466,13 +509,17 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
               {listsProducts?.map((item: GetProductOutput) => (
                 <CardItem onClick={handleAddItemToCart} item={item} key={item.product_code} />
               ))}
-
-              {listsProducts?.length === 0 && <Empty text="Không có dữ liệu" />}
             </ListProductsWrapper>
           </DropDown>
         </DropdownWrapper>
 
-        <ButtonCartWrapper gap={16} gapMb={8} align="center" justify="flex-end">
+        {sizeWindow.width < 786 && showScan ? (
+          <div className="w-full">
+            <ScanBarCode hide={true} onChange={handleChange} />
+          </div>
+        ) : null}
+
+        {/* <ButtonCartWrapper align="center" justify="flex-end" className="mr-16">
           <SlideWrapper>
             <CardSlide col={size.width > 786 ? 4 : 2} showButton={true} length={orderCarts.length}>
               {orderCarts.map((item, index) => (
@@ -492,7 +539,7 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
                       );
                     }}
                     key={item.value}
-                    className="flex items-center p-8 w-full flex justify-between align-center"
+                    className="flex items-center p-6 w-full flex justify-between align-center "
                   >
                     <span className="mr-2">{convertKeyCart(item)}</span>
                     <span
@@ -511,20 +558,28 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
               ))}
             </CardSlide>
           </SlideWrapper>
+        </ButtonCartWrapper> */}
 
-          <Button disabled={Boolean(loadingCreateCart)} color="green" onClick={() => handleAddCart()}>
-            {loadingCreateCart ? <Spinner className="h-4 w-4" /> : <PlusIcon height={14} width={14} />}
-          </Button>
-        </ButtonCartWrapper>
+        {/* <Button
+          disabled={Boolean(loadingCreateCart) || orderCarts?.length == 1}
+          color="green"
+          onClick={() => handleAddCart()}
+        >
+          {loadingCreateCart ? <Spinner className="h-4 w-4" /> : <PlusIcon height={14} width={14} />}
+        </Button> */}
       </HeaderWrapper>
 
-      <TabsOrder
-        onSaveCart={handleSaveDraffOrder}
-        onReview={handleReviewOrder}
-        currentKeyOrder={currentKeyOrder}
-        dataCurrentOrder={dataProductInCartCurrent ? dataProductInCartCurrent[currentKeyOrder].products : []}
-        handleRemoveItemCarts={handleRemoveItemCarts}
-      />
+      {orderCarts?.length == 1 ? (
+        <TabsOrder
+          onSaveCart={handleSaveDraffOrder}
+          onReview={handleReviewOrder}
+          currentKeyOrder={currentKeyOrder}
+          dataCurrentOrder={dataProductInCartCurrent ? dataProductInCartCurrent[currentKeyOrder].products : []}
+          handleRemoveItemCarts={handleRemoveItemCarts}
+        />
+      ) : (
+        <EmptyComp loadingCreateCart={loadingCreateCart} onClick={handleAddCart} />
+      )}
 
       {showModal.show && (
         <ModalCustom
@@ -552,29 +607,61 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
       )}
 
       {showModalOrder.show && (
-        <ModalCustom
-          show={showModalOrder.show}
-          onCloseModal={() => {
+        <Modal
+          size="md"
+          sizeMobile="md"
+          showModal={showModalOrder.show}
+          onClose={() => {
             setShowModalOrder({
               show: false,
             });
           }}
           title={showModalOrder.title}
-          primaryBtn={{
-            text: "Xác nhận",
-            onClick: handleSubmitOrder,
-          }}
-          secondaryBtn={{
-            text: "Quay lại",
-            onClick: () =>
-              setShowModalOrder({
-                show: false,
-              }),
-          }}
+          actions={
+            <>
+              <ButtonSecondary
+                onClick={() =>
+                  setShowModalOrder({
+                    show: false,
+                  })
+                }
+              >
+                Quay lại
+              </ButtonSecondary>
+              ,<ButtonPrimary onClick={handleSubmitOrder}>Xác nhận</ButtonPrimary>
+            </>
+          }
         >
           <Invoice data={showModalOrder.data} />
-        </ModalCustom>
+        </Modal>
       )}
+
+      <IconButton
+        size="lg"
+        color="white"
+        className="fixed bottom-40 right-2 z-40 rounded-full shadow-blue-gray-900/10"
+        ripple={false}
+        onClick={() => {
+          setProductBarCode(null);
+          setShowScan(!showScan);
+        }}
+      >
+        {showScan ? (
+          <IconClose />
+        ) : (
+          <svg
+            className="h-5 w-5"
+            style={{ cursor: "pointer" }}
+            xmlns="http://www.w3.org/2000/svg"
+            width={24}
+            height={24}
+            fill="currentColor"
+            viewBox="0 0 16 16"
+          >
+            <path d="M1.5 1a.5.5 0 0 0-.5.5v3a.5.5 0 0 1-1 0v-3A1.5 1.5 0 0 1 1.5 0h3a.5.5 0 0 1 0 1h-3zM11 .5a.5.5 0 0 1 .5-.5h3A1.5 1.5 0 0 1 16 1.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 1-.5-.5zM.5 11a.5.5 0 0 1 .5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 1 0 1h-3A1.5 1.5 0 0 1 0 14.5v-3a.5.5 0 0 1 .5-.5zm15 0a.5.5 0 0 1 .5.5v3a1.5 1.5 0 0 1-1.5 1.5h-3a.5.5 0 0 1 0-1h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 1 .5-.5zM3 4.5a.5.5 0 0 1 1 0v7a.5.5 0 0 1-1 0v-7zm2 0a.5.5 0 0 1 1 0v7a.5.5 0 0 1-1 0v-7zm2 0a.5.5 0 0 1 1 0v7a.5.5 0 0 1-1 0v-7zm2 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-7zm3 0a.5.5 0 0 1 1 0v7a.5.5 0 0 1-1 0v-7z" />
+          </svg>
+        )}
+      </IconButton>
     </TaoHoaDonScreenWrapper>
   );
 };

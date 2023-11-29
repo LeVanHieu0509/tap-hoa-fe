@@ -1,3 +1,5 @@
+import { User } from "./login";
+
 // ------------------- APP ------------------------ //
 export interface ShowModal {
   type?: "add" | "fix" | "delete" | "detail" | "download";
@@ -145,11 +147,13 @@ export interface GetCartsOutput {
   createdAt?: string;
   updatedAt?: string;
   cart_code?: string;
+  user: User;
 }
 
 // ---------- checkout ---------- //
 export interface CheckoutIdInput {
-  id: number;
+  id?: number;
+  cart_Code?: number;
 }
 
 export interface CartProductCheckout {

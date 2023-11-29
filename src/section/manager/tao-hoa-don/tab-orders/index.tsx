@@ -3,6 +3,7 @@ import ListOrders from "section/manager/tao-hoa-don/orders";
 
 import { GetProductOutput } from "@custom-types/manager";
 import { ContentLeft, ContentOrder, ContentRight, TabsOrderWrapper } from "./styled";
+import Empty from "components/empty";
 
 interface TabsOrderProps {
   currentKeyOrder: string;
@@ -23,12 +24,16 @@ const TabsOrder = ({
     <TabsOrderWrapper>
       <ContentOrder className="mt-24">
         <ContentLeft>
-          <ListOrders
-            onSaveCart={onSaveCart}
-            currentKeyOrder={currentKeyOrder}
-            lists={dataCurrentOrder}
-            onClose={handleRemoveItemCarts}
-          />
+          {dataCurrentOrder.length > 0 ? (
+            <ListOrders
+              onSaveCart={onSaveCart}
+              currentKeyOrder={currentKeyOrder}
+              lists={dataCurrentOrder}
+              onClose={handleRemoveItemCarts}
+            />
+          ) : (
+            <Empty />
+          )}
         </ContentLeft>
 
         <ContentRight>

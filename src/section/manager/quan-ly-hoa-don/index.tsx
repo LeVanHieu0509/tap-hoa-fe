@@ -1,9 +1,7 @@
-import React, { Dispatch, SetStateAction, useMemo } from "react";
-import { QuanLyHoaDonModalWrapper } from "./styled";
-import AddModal from "./add-modal";
-import FixModal from "./fix-modal";
-import DeleteModal from "./delete-modal";
 import { ShowModal } from "@custom-types/manager";
+import { Dispatch, SetStateAction, useMemo } from "react";
+import DetailModal from "./detail-modal";
+import { QuanLyHoaDonModalWrapper } from "./styled";
 
 interface QuanLyHoaDonModalProps {
   type?: string;
@@ -14,14 +12,8 @@ interface QuanLyHoaDonModalProps {
 const QuanLyHoaDonModal = ({ setShowModal, data, type }: QuanLyHoaDonModalProps) => {
   const ModalContent = useMemo(() => {
     switch (type) {
-      case "add":
-        return AddModal;
-      case "fix":
-        return FixModal;
-      case "delete":
-        return DeleteModal;
       case "detail":
-        return DeleteModal;
+        return DetailModal;
     }
   }, [type]);
 

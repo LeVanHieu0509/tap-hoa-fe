@@ -84,7 +84,7 @@ export const checkoutConfirm = (cancelToken: CancelToken, body: CheckoutIdInput)
   return request.post<ResponseFormat<any>>("/checkout/confirm", body, { cancelToken });
 };
 
-export const checkoutReview = (cancelToken: CancelToken, body: CheckoutIdInput) => {
+export const checkoutReview = (cancelToken: CancelToken, body: any) => {
   return request.post<ResponseFormat<CheckoutReviewOutput>>("/checkout/review", body, { cancelToken });
 };
 

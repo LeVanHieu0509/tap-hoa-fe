@@ -5,7 +5,8 @@ import { useRouter } from "next/router";
 import { setOpenSidenav, useMaterialTailwindController } from "screens/manager/context";
 
 import { listSidenav } from "@constants";
-import React from "react";
+import React, { useRef } from "react";
+import useClickAway from "hooks/use-click-away";
 
 interface SidenavProps {
   brandImg: String;
@@ -25,9 +26,14 @@ export function Sidenav({
     white: "bg-white shadow-lg",
     transparent: "bg-transparent",
   };
+  const ref = useRef<HTMLDivElement>();
 
+  useClickAway(ref, () => {
+    setOpenSidenav(dispatch, false);
+  });
   return (
     <aside
+      ref={ref}
       className={`${sidenavTypes[sidenavType]} ${
         openSidenav ? "translate-x-0" : "-translate-x-80"
       } fixed inset-0 z-50 my-4 ml-4 h-[calc(100vh-32px)] w-72 rounded-xl transition-transform duration-300 xl:translate-x-0`}
@@ -56,12 +62,13 @@ export function Sidenav({
           <XMarkIcon strokeWidth={2.5} className="h-5 w-5 text-white" />
         </IconButton>
       </div>
-      <div className="m-4">
+      <div className="m-4 ">
         <ul className="mb-4 flex flex-col gap-4">
           {listSidenav.map((item, key) => (
             <li key={key}>
               <Link href={item.href}>
                 <Button
+                  onClick={() => setOpenSidenav(dispatch, false)}
                   variant={item.href == router.pathname ? "gradient" : "text"}
                   color={item.href == router.pathname ? sidenavColor : sidenavType === "dark" ? "white" : "blue-gray"}
                   className="flex items-center gap-4 px-4 capitalize"

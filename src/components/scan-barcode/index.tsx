@@ -3,6 +3,7 @@ import { ScanBarCodeWrapper } from "./styled";
 import { initCamera } from "./js";
 interface ScanBarCodeProps {
   onChange: any;
+  hide?: boolean;
 }
 
 declare global {
@@ -22,7 +23,7 @@ declare global {
 
 const canUseDOM = !!(typeof window !== "undefined" && window.document && window.document.createElement);
 
-const ScanBarCode = ({ onChange }: ScanBarCodeProps) => {
+const ScanBarCode = ({ onChange, hide = false }: ScanBarCodeProps) => {
   useEffect(() => {
     const callback = (value) => {
       onChange("product_bar_code", value);
@@ -35,12 +36,12 @@ const ScanBarCode = ({ onChange }: ScanBarCodeProps) => {
   }, [canUseDOM]);
 
   return (
-    <ScanBarCodeWrapper>
+    <ScanBarCodeWrapper hide={hide}>
       <>
         <noscript style={{ display: "none" }}>
           &lt;div class="noscript"&gt; JavaScript is required to properly view this site. &lt;/div&gt;
         </noscript>
-        <div className="global-actions" id="globalActions">
+        <div style={{ display: "none" }} className="global-actions w-full" id="globalActions">
           <button style={{ display: "none" }} id="historyBtn" title="History">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -72,7 +73,7 @@ const ScanBarCode = ({ onChange }: ScanBarCodeProps) => {
             <span>Settings</span>
           </button>
         </div>
-        <dialog id="historyDialog" className="modal history-modal">
+        <dialog style={{ display: "none" }} id="historyDialog" className="modal history-modal">
           <header>
             History
             <form method="dialog">
@@ -96,7 +97,7 @@ const ScanBarCode = ({ onChange }: ScanBarCodeProps) => {
             Delete history
           </button>
         </dialog>
-        <dialog id="settingsDialog" className="modal settings-modal">
+        <dialog style={{ display: "none" }} id="settingsDialog" className="modal settings-modal">
           <header>
             Cài đặt
             <form method="dialog">
@@ -276,9 +277,9 @@ const ScanBarCode = ({ onChange }: ScanBarCodeProps) => {
         <div className="toastContainer">
           <div id="toastContainer" />
         </div>
-        <div className="container">
+        <div className="container w-full">
           <a-tab-group>
-            <a-tab slot="tab" role="heading" id="cameraTab">
+            <a-tab slot="tab" role="heading" id="cameraTab" style={{ display: "none" }}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width={26}
@@ -295,7 +296,7 @@ const ScanBarCode = ({ onChange }: ScanBarCodeProps) => {
             <a-tab-panel slot="panel" id="cameraPanel">
               <div className="scan-frame-container">
                 <resize-observer>
-                  <capture-photo facing-mode="environment" no-image="">
+                  <capture-photo facing-mode="environment" no-image="" className={hide ? "height-200" : ""}>
                     <button type="button" id="scanBtn" className="scan-button">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -410,10 +411,10 @@ const ScanBarCode = ({ onChange }: ScanBarCodeProps) => {
                   </svg>
                 </div>
               </div>
-              <div id="scanInstructions" className="scan-instructions">
+              <div id="scanInstructions" className={hide ? "hide-mobile" : "scan-instructions mt-16"}>
                 <p>Vui lòng đặt Barcode/QR Code ở giữa khung hình</p>
               </div>
-              <dialog id="cameraResults" className="results">
+              <dialog id="cameraResults" className={hide ? "hide-mobile" : "results"}>
                 <div className="results__actions">
                   <custom-clipboard-copy from="#cameraResults .results__item" />
                   <web-share>
@@ -434,7 +435,7 @@ const ScanBarCode = ({ onChange }: ScanBarCodeProps) => {
                 </div>
               </dialog>
             </a-tab-panel>
-            <a-tab slot="tab" role="heading" id="fileTab">
+            <a-tab slot="tab" role="heading" id="fileTab" style={{ display: "none" }}>
               <svg
                 width={18}
                 height={18}
@@ -462,7 +463,7 @@ const ScanBarCode = ({ onChange }: ScanBarCodeProps) => {
               </svg>
               <span>Use image</span>
             </a-tab>
-            <a-tab-panel slot="panel" id="filePanel">
+            <a-tab-panel slot="panel" id="filePanel" style={{ display: "none" }}>
               <files-dropzone id="dropzone" className="dropzone">
                 <span className="dropzone-instructions">
                   <svg

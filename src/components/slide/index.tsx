@@ -70,9 +70,9 @@ const CardSlide = ({ type, col, background, length, children, showDot = true }: 
   return (
     <BannerSlideWrapper type={type}>
       <PlanMobile>
-        <ButtonIconLeft hide={disableBtn} col={col} onClick={handlePre}>
+        {/* <ButtonIconLeft hide={disableBtn} col={col} onClick={handlePre}>
           <ChevronLeft color="#E87722" />
-        </ButtonIconLeft>
+        </ButtonIconLeft> */}
 
         <SlideWrapper
           style={{
@@ -85,9 +85,9 @@ const CardSlide = ({ type, col, background, length, children, showDot = true }: 
           {children}
         </SlideWrapper>
 
-        <ButtonIconRight hide={disableBtn} onClick={handleNext}>
+        {/* <ButtonIconRight hide={disableBtn} onClick={handleNext}>
           <ChevronRight color="#E87722" />
-        </ButtonIconRight>
+        </ButtonIconRight> */}
       </PlanMobile>
     </BannerSlideWrapper>
   );

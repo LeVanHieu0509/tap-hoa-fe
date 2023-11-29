@@ -92,7 +92,6 @@ export function QuanLyComponent({
   const nameType = useMemo(() => listMappingTopic.find((item) => item.key == type).value, [type]);
 
   const formatValueRequest = (data: any, config: TableConfig) => {
-    console.log(data);
     switch (config.key) {
       case "button":
         return (

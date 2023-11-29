@@ -8,7 +8,7 @@ export const BannerSlideWrapper = styled.div<{ type?: any }>`
 
 export const PlanMobile = styled.div`
   overflow: hidden;
-  width: 85%;
+  width: 100%;
 
   display: flex;
   align-items: center;

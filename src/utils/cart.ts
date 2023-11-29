@@ -1,8 +1,8 @@
 export const convertKeyCart = (cartObj) => {
   return Object.keys(cartObj).map(function (k) {
     const num = k.split("-");
-
-    return `Hoá Đơn ${num[num.length - 1]}`;
+    const id = num[num.length - 1];
+    return `Đã tạo đơn`;
   });
 };
 

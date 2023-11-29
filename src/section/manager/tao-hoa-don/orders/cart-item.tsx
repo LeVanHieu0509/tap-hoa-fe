@@ -76,7 +76,7 @@ const CartItem = ({
             <div className="">
               <input
                 onChange={(e) => onChange(item.product_code, Number(e.target.value))}
-                className="mx-2 border text-center "
+                className="border text-center"
                 type="text"
                 defaultValue="0"
                 value={item.product_quantity}
@@ -135,7 +135,7 @@ const CartItem = ({
               <div className="">
                 <input
                   onChange={(e) => onChange(item.product_code, Number(e.target.value))}
-                  className="mx-2 border text-center "
+                  className="mx-4 border text-center "
                   type="text"
                   defaultValue="0"
                   value={item.product_quantity}
