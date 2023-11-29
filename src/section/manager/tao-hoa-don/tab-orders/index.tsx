@@ -3,7 +3,7 @@ import ListOrders from "section/manager/tao-hoa-don/orders";
 
 import { GetProductOutput } from "@custom-types/manager";
 import { ContentLeft, ContentOrder, ContentRight, TabsOrderWrapper } from "./styled";
-import Empty from "components/empty";
+import Empty from "components/empty-order";
 
 interface TabsOrderProps {
   currentKeyOrder: string;
