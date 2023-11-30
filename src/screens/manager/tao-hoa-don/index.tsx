@@ -463,38 +463,35 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
 
   useEffect(() => {
     if (productBarCode) {
-      if (productBarCode) {
-        actionGetProduct(
-          {
-            product_bar_code: productBarCode,
-          },
-          {
-            type: "global",
-            name: "",
-          }
-        ).then(({ data }) => {
-          if (data.status == "1") {
-            if (data.data?.product_bar_code) {
-              handleAddItemToCart(data.data);
-            } else {
-              Alert("ERROR", "Không tìm thấy sản phẩm! vui lòng nhập tên, mã để tìm kiếm!");
-            }
+      actionGetProduct(
+        {
+          product_bar_code: productBarCode,
+        },
+        {
+          type: "global",
+          name: "",
+        }
+      ).then(({ data }) => {
+        if (data.status == "1") {
+          if (data.data?.product_bar_code) {
+            handleAddItemToCart(data.data);
           } else {
-            Alert("ERROR", "Quét thất bại! Vui lòng thử lại");
+            Alert("ERROR", "Không tìm thấy sản phẩm! vui lòng nhập tên, mã để tìm kiếm!");
           }
-        });
-      }
+        } else {
+          Alert("ERROR", "Quét thất bại! Vui lòng thử lại");
+        }
+      });
     }
   }, [productBarCode, showScan]);
 
   const handleChange = (key, value) => {
-    console.log(value);
     setProductBarCode(value);
   };
 
   return (
     <TaoHoaDonScreenWrapper>
-      <HeaderWrapper gapMb={16} align="center" justify="space-between" style={{ position: "sticky", top: 100 }}>
+      <HeaderWrapper gapMb={16} align="center" justify="space-between">
         <DropdownWrapper className="">
           <DropDown
             setSearchText={setSearchText}
@@ -639,7 +636,7 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
       <IconButton
         size="lg"
         color="white"
-        className="fixed bottom-40 right-2 z-40 rounded-full shadow-blue-gray-900/10"
+        className="fixed bottom-36 right-2 z-40 rounded-full shadow-blue-gray-900/10"
         ripple={false}
         onClick={() => {
           setProductBarCode(null);

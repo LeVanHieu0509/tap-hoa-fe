@@ -25,7 +25,7 @@ export const ContentLeft = styled.div`
     width: 100%;
     height: unset;
 
-    margin-bottom: 150px;
+    margin-bottom: 170px;
   }
 `;
 
@@ -38,7 +38,7 @@ export const ContentRight = styled.div`
   @media ${device.mobile} {
     padding: 0 !important;
     width: 100%;
-    height: 120px;
+    height: 110px;
     padding: 16px 0px;
     z-index: 1;
     background: white;

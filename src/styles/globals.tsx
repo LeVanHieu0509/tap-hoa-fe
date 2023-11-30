@@ -267,6 +267,10 @@ const style = css`
     color: ${({ theme }) => theme.color.status.primary};
   }
 
+  .primary-color {
+    background: ${({ theme }) => theme.color.status.primary};
+  }
+
   .semibold {
     font-weight: 600;
   }

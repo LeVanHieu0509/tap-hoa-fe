@@ -1,7 +1,13 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { QuanLyNhanVienScreenWrapper } from "./styled";
-import QuanLyComponent from "../quan-ly-component";
 import { TableConfig } from "@custom-types/config-table";
+import { UserProps } from "@custom-types/login";
+import { getUsers } from "api/manager";
+import { Alert } from "components/alert";
+import useActionApi from "hooks/use-action-api";
+import { useAppSelector } from "hooks/use-redux";
+import { get } from "lodash";
+import { useEffect, useMemo, useState } from "react";
+import QuanLyComponent from "../quan-ly-component";
+import { QuanLyNhanVienScreenWrapper } from "./styled";
 
 interface QuanLyNhanVienScreenProps {}
 
@@ -15,20 +21,8 @@ const tableConfig: TableConfig[] = [
   },
   {
     key: "employee_name",
-    label: "Tên nhân viên",
+    label: "Tên đăng nhập",
     type: "string",
-    show: true,
-  },
-  {
-    key: "employee_phone",
-    label: "Số điện thoại",
-    type: "string",
-    show: true,
-  },
-  {
-    key: "employee_card",
-    label: "Số tài khoản",
-    type: "rich-text",
     show: true,
   },
   {
@@ -40,42 +34,48 @@ const tableConfig: TableConfig[] = [
 ];
 
 const QuanLyNhanVienScreen = ({}: QuanLyNhanVienScreenProps) => {
-  const [lists, setLists] = useState<any[]>([]);
+  const [lists, setLists] = useState<UserProps[]>([]);
+  const actionGetAllEmployee = useActionApi(getUsers);
+
+  const { reLoading, currentUser } = useAppSelector((r) => r.rootReducer);
   const listFormat = useMemo(
     () =>
-      lists.map((item) => {
+      lists?.map((item) => {
         return {
-          employee_code: item.employee_code,
-          employee_phone: item.employee_phone,
-          employee_name: item.employee_name,
-          employee_card: item.employee_card,
+          employee_code: item.usr_id,
+          employee_name: item.usr_name,
+          ...item,
         };
       }),
     [lists]
   );
 
   useEffect(() => {
-    setLists([
-      {
-        employee_code: "123",
-        employee_phone: "123",
-        employee_name: "123",
-        employee_card: "123",
-      },
-    ]);
-  }, []);
-
-  const handleAddProduct = () => {
-    console.log("add product");
-  };
-
-  const handleUpdateProduct = () => {
-    console.log("fix product");
-  };
-
-  const handleDeleteProduct = () => {
-    console.log("delete product");
-  };
+    if (currentUser || reLoading) {
+      actionGetAllEmployee(
+        {
+          limit: "",
+          sortOrder: "ASC",
+          sortBy: "createdAt",
+          page: "",
+          filter: {},
+          select: null,
+        },
+        {
+          type: "global",
+          name: "",
+        }
+      )
+        .then(({ data }) => {
+          if (data.status == "1") {
+            setLists(data.data.users);
+          } else {
+            Alert("ERROR", data.message);
+          }
+        })
+        .catch((e) => console.log(get(e, "response.data.message")));
+    }
+  }, [reLoading, currentUser]);
 
   return (
     <QuanLyNhanVienScreenWrapper>
@@ -83,15 +83,9 @@ const QuanLyNhanVienScreen = ({}: QuanLyNhanVienScreenProps) => {
         type="quan-ly-nhan-vien"
         tableConfig={tableConfig}
         listFormat={listFormat}
-        addBtn={{
-          onclick: handleAddProduct,
-        }}
-        updateBtn={{
-          onclick: handleUpdateProduct,
-        }}
-        deleteBtn={{
-          onclick: handleDeleteProduct,
-        }}
+        addBtn
+        updateBtn
+        // deleteBtn
       />
     </QuanLyNhanVienScreenWrapper>
   );

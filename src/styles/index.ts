@@ -152,3 +152,9 @@ export const FieldSet = styled.fieldset<FieldSetProp>`
   position: relative;
   max-width: 100%;
 `;
+
+export const StickyWrapper = styled.div<{ top?: number; zIndex?: number }>`
+  position: sticky;
+  top: ${({ top }) => top ?? "0"}px;
+  z-index: ${({ zIndex }) => zIndex};
+`;

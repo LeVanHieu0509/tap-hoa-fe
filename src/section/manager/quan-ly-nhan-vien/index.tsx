@@ -27,7 +27,7 @@ const QuanLyNhanVienModal = ({ setShowModal, data, type }: QuanLyNhanVienModalPr
 
   return (
     <QuanLyNhanVienModalWrapper>
-      <ModalContent data={data} />
+      <ModalContent data={data} setShowModal={setShowModal} />
     </QuanLyNhanVienModalWrapper>
   );
 };

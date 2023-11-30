@@ -1,10 +1,10 @@
 import { ForgotPasswordInput, LoginInput, LoginOutPut, LogoutInput } from "@custom-types/login";
-import { SignUpInput, SignUpOutput } from "@custom-types/manager";
+import { ResponseFormat, SignUpInput } from "@custom-types/manager";
 import request from "api";
 import { CancelToken } from "axios";
 
 export const signUp = (cancelToken: CancelToken, body: SignUpInput) => {
-  return request.post<SignUpOutput>("/user/signup", body, { cancelToken });
+  return request.post<ResponseFormat<any>>("/user/signup", body, { cancelToken });
 };
 
 export const onLogin = (cancelToken: CancelToken, body: LoginInput) => {

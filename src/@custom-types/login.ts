@@ -3,7 +3,7 @@ export interface LoginInput {
   usr_pass: string;
 }
 
-export interface User {
+export interface UserProps {
   usr_id: number;
   usr_email: string;
   usr_age: string;
@@ -24,7 +24,7 @@ export interface User {
 export interface LoginOutPut {
   status: string;
   data: {
-    user: User;
+    user: UserProps;
     tokens: {
       accessToken: string;
       refreshToken: string;

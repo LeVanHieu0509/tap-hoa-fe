@@ -155,7 +155,7 @@ const ListOrders = ({ onSaveCart, currentKeyOrder, lists, onClose }: ListOrdersP
           <div className="flex ">
             <div className="w-full ">
               <Flex justify="flex-end">
-                <Button variant="outlined" size="sm" onClick={() => onSaveCart("draff")}>
+                <Button style={{ position: "static" }} variant="outlined" size="sm" onClick={() => onSaveCart("draff")}>
                   Lưu tạm
                 </Button>
               </Flex>

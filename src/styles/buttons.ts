@@ -114,8 +114,8 @@ export const ButtonLinkSecondary = styled.a`
 `;
 
 export const ButtonIcon = styled.button`
-  width: max-content;
-  height: max-content;
+  width: 24px;
+  height: 24px;
 
   display: flex;
   align-items: center;

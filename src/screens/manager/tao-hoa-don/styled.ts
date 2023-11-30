@@ -6,7 +6,7 @@ export const ListProductsWrapper = styled.div``;
 
 export const TaoHoaDonScreenWrapper = styled.div``;
 export const DropdownWrapper = styled(Flex)`
-  min-width: 32%;
+  min-width: 50%;
 
   @media ${device.mobile} {
     width: 100%;
@@ -14,6 +14,11 @@ export const DropdownWrapper = styled(Flex)`
 `;
 
 export const HeaderWrapper = styled(Flex)`
+  position: -webkit-sticky; /* Safari */
+  position: sticky;
+  top: 0;
+  left: 0;
+
   border-radius: 8px;
   background: ${({ theme }) => theme.color.status.primary};
   padding: 10px;

@@ -10,6 +10,7 @@ import { useRouter } from "next/router";
 import { Dialog, DialogBody, DialogFooter, DialogHeader } from "@material-tailwind/react";
 import { ButtonPrimary } from "styles/buttons";
 import LoadingPage from "components/loading-page";
+import { listSidenav } from "@constants";
 
 interface ThemeWrapperProps {
   children: React.ReactNode;
@@ -88,6 +89,15 @@ const ThemeWrapper = ({ children, component }: ThemeWrapperProps) => {
       router.replace("/auth/sign-in");
     }
   }, []);
+
+  useEffect(() => {
+    const currentUser = loadLocalItem("currentUser");
+    const listLinkAccess = listSidenav.filter((item) => item.role.includes(currentUser?.user.usr_roles));
+
+    if (!listLinkAccess.find((item) => item.href === router.pathname)) {
+      router.push("/manager/tao-hoa-don");
+    }
+  }, [router.pathname]);
 
   return (
     <ThemeProvider theme={LightTheme}>

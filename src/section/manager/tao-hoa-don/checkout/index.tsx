@@ -3,6 +3,7 @@ import LoadingSection from "components/loading";
 import { useAppSelector } from "hooks/use-redux";
 import { sum } from "lodash";
 import { useMemo } from "react";
+import { useTheme } from "styled-components";
 import { formatCurrency } from "utils/format-value";
 import { CheckoutWrapper, TotalWrapper } from "./styles";
 
@@ -12,6 +13,7 @@ interface CheckoutProps {
 }
 
 const Checkout = ({ lists, onReview }: CheckoutProps) => {
+  const theme = useTheme();
   const {
     loading: { loadingActionUpdateCarts },
   } = useAppSelector((r) => r.rootReducer);
@@ -31,7 +33,7 @@ const Checkout = ({ lists, onReview }: CheckoutProps) => {
 
         <div className=" mt-8">
           <TotalWrapper className="flex font-semibold justify-between py-6 text-sm uppercase">
-            <span>Tổng đơn hàng</span>
+            <span>Tổng đơn hàng ({lists.length})</span>
             <span>{formatCurrency(sum(listPrice))}</span>
           </TotalWrapper>
 
@@ -39,9 +41,8 @@ const Checkout = ({ lists, onReview }: CheckoutProps) => {
             disabled={sum(listPrice) <= 0 && true}
             onClick={onReview}
             variant="filled"
-            color="green"
             fullWidth
-            className="text-sm text-white uppercase "
+            className="text-sm text-white uppercase primary-color"
           >
             {loadingActionUpdateCarts ? <LoadingSection loading={true} /> : "Đặt hàng"}
           </Button>

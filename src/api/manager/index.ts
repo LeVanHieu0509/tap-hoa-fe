@@ -19,6 +19,7 @@ import {
   GetProductInput,
   GetProductOutput,
   GetProductsOutput,
+  GetUsersOutput,
   ResponseFormat,
   UpdateCartsInput,
 } from "@custom-types/manager";
@@ -99,4 +100,17 @@ export const getBill = (cancelToken: CancelToken, body: GetBillInput) => {
 
 export const getBills = (cancelToken: CancelToken, body: GetAllListInput) => {
   return request.post<ResponseFormat<GetBillsOutput>>("/bills/get-bills", body, { cancelToken });
+};
+
+//employee
+
+export const getUsers = (cancelToken: CancelToken, body: GetAllListInput) => {
+  return request.post<ResponseFormat<GetUsersOutput>>("/user/get-users", body, { cancelToken });
+};
+
+export const resetPass = (cancelToken: CancelToken, body: { usr_id: string; usr_name: string; usr_pass: string }) => {
+  return request.post<ResponseFormat<any>>("/user/reset-password", body, { cancelToken });
+};
+export const deleteUser = (cancelToken: CancelToken, body: { usr_id: string }) => {
+  return request.post<ResponseFormat<any>>("/user/delete-user", body, { cancelToken });
 };

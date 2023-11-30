@@ -5,8 +5,9 @@ import { useRouter } from "next/router";
 import { setOpenSidenav, useMaterialTailwindController } from "screens/manager/context";
 
 import { listSidenav } from "@constants";
-import React, { useRef } from "react";
+import React, { useMemo, useRef } from "react";
 import useClickAway from "hooks/use-click-away";
+import { useAppSelector } from "hooks/use-redux";
 
 interface SidenavProps {
   brandImg: String;
@@ -20,6 +21,7 @@ export function Sidenav({
   const router = useRouter();
   const [controller, dispatch] = useMaterialTailwindController();
   const { sidenavColor, sidenavType, openSidenav } = controller;
+  const { currentUser } = useAppSelector((r) => r.rootReducer);
 
   const sidenavTypes = {
     dark: "bg-gradient-to-br from-blue-gray-800 to-blue-gray-900",
@@ -31,6 +33,11 @@ export function Sidenav({
   useClickAway(ref, () => {
     setOpenSidenav(dispatch, false);
   });
+
+  const listSidenavFilter = useMemo(
+    () => listSidenav.filter((item) => item.role.includes(currentUser?.user?.usr_roles)),
+    [currentUser?.user?.usr_roles]
+  );
   return (
     <aside
       ref={ref}
@@ -64,7 +71,7 @@ export function Sidenav({
       </div>
       <div className="m-4 ">
         <ul className="mb-4 flex flex-col gap-4">
-          {listSidenav.map((item, key) => (
+          {listSidenavFilter.map((item, key) => (
             <li key={key}>
               <Link href={item.href}>
                 <Button

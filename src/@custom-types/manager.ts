@@ -1,4 +1,4 @@
-import { User } from "./login";
+import { UserProps } from "./login";
 
 // ------------------- APP ------------------------ //
 export interface ShowModal {
@@ -16,16 +16,11 @@ export interface ResponseFormat<T> {
   message: string;
 }
 export interface SignUpInput {
-  availableTime: string;
-  mobileNumber: string;
-  status: string;
+  usr_name: string;
+  password: string;
 }
 
-export interface SignUpOutput {
-  availableTime: string;
-  mobileNumber: string;
-  status: string;
-}
+export interface SignUpOutput {}
 
 export interface GetProductInput {
   product_code?: string;
@@ -147,7 +142,7 @@ export interface GetCartsOutput {
   createdAt?: string;
   updatedAt?: string;
   cart_code?: string;
-  user: User;
+  user: UserProps;
 }
 
 // ---------- checkout ---------- //
@@ -186,6 +181,11 @@ export interface BillData {
 }
 export interface GetBillsOutput {
   products: BillData[];
+  total: number;
+}
+
+export interface GetUsersOutput {
+  users: UserProps[];
   total: number;
 }
 

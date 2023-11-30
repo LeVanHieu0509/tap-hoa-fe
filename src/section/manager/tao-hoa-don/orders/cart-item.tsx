@@ -57,7 +57,7 @@ const CartItem = ({
             <span className="font-bold text-sm mb-2">{` ${item.product_code}`}</span>
           </div>
 
-          <div className="flex  w-1/5 items-center relative">
+          <div className="flex  w-1/5 items-center">
             {productCurrent?.product_quantity < item?.product_quantity ? (
               <Tooltip content={`Số lượng tồn: ${productCurrent.product_quantity}`}>
                 <div className="absolute -left-7">
@@ -68,8 +68,11 @@ const CartItem = ({
               </Tooltip>
             ) : null}
 
-            <ButtonIcon onClick={() => onDecrease(item.product_code, item.product_quantity)}>
-              <svg className="fill-current text-gray-600 w-3" viewBox="0 0 448 512">
+            <ButtonIcon
+              style={{ position: "unset" }}
+              onClick={() => onDecrease(item.product_code, item.product_quantity)}
+            >
+              <svg className="fill-current text-gray-600 w-3 " viewBox="0 0 448 512">
                 <path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" />
               </svg>
             </ButtonIcon>
@@ -82,7 +85,11 @@ const CartItem = ({
                 value={item.product_quantity}
               />
             </div>
-            <ButtonIcon onClick={() => onIncrease(item.product_code, item.product_quantity)}>
+            <ButtonIcon
+              style={{ position: "unset" }}
+              className="h-10 w-5"
+              onClick={() => onIncrease(item.product_code, item.product_quantity)}
+            >
               <svg className="fill-current text-gray-600 w-3 items-center" viewBox="0 0 448 512">
                 <path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" />
               </svg>
@@ -108,14 +115,14 @@ const CartItem = ({
           </div>
 
           <div className="flex ">
-            <span className=" text-sm mb-2">{` ${item.product_code}`}</span>
+            <span className=" text-sm mb-0">{` ${item.product_code}`}</span>
           </div>
           <div className="flex justify-between  items-center">
             <Flex>
               <span className="  font-semibold text-sm">{formatCurrency(item.product_price_sell)}</span>
             </Flex>
 
-            <div className="flex  items-center relative">
+            <div className="flex  items-center ">
               {productCurrent?.product_quantity < item?.product_quantity ? (
                 <Tooltip content={`Số lượng tồn: ${productCurrent.product_quantity}`}>
                   <div className="absolute -left-7">
@@ -126,7 +133,10 @@ const CartItem = ({
                 </Tooltip>
               ) : null}
 
-              <ButtonIcon onClick={() => onDecrease(item.product_code, item.product_quantity)}>
+              <ButtonIcon
+                style={{ position: "unset" }}
+                onClick={() => onDecrease(item.product_code, item.product_quantity)}
+              >
                 <svg className="fill-current text-gray-600 w-3" viewBox="0 0 448 512">
                   <path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" />
                 </svg>
@@ -142,7 +152,10 @@ const CartItem = ({
                 />
               </div>
 
-              <ButtonIcon onClick={() => onIncrease(item.product_code, item.product_quantity)}>
+              <ButtonIcon
+                style={{ position: "unset" }}
+                onClick={() => onIncrease(item.product_code, item.product_quantity)}
+              >
                 <svg className="fill-current text-gray-600 w-3 items-center" viewBox="0 0 448 512">
                   <path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" />
                 </svg>
