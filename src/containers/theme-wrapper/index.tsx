@@ -94,7 +94,7 @@ const ThemeWrapper = ({ children, component }: ThemeWrapperProps) => {
     const currentUser = loadLocalItem("currentUser");
     const listLinkAccess = listSidenav.filter((item) => item.role.includes(currentUser?.user?.usr_roles));
 
-    if (!listLinkAccess.find((item) => item.href === router.pathname)) {
+    if (currentUser.tokens && !listLinkAccess.find((item) => item.href === router.pathname)) {
       router.push("/manager/tao-hoa-don");
     }
   }, []);
