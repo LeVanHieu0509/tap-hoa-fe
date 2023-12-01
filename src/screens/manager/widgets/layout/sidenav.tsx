@@ -36,8 +36,9 @@ export function Sidenav({
 
   const listSidenavFilter = useMemo(
     () => listSidenav.filter((item) => item.role.includes(currentUser?.user?.usr_roles)),
-    [currentUser?.user?.usr_roles]
+    []
   );
+
   return (
     <aside
       ref={ref}

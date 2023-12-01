@@ -92,12 +92,12 @@ const ThemeWrapper = ({ children, component }: ThemeWrapperProps) => {
 
   useEffect(() => {
     const currentUser = loadLocalItem("currentUser");
-    const listLinkAccess = listSidenav.filter((item) => item.role.includes(currentUser?.user.usr_roles));
+    const listLinkAccess = listSidenav.filter((item) => item.role.includes(currentUser?.user?.usr_roles));
 
     if (!listLinkAccess.find((item) => item.href === router.pathname)) {
       router.push("/manager/tao-hoa-don");
     }
-  }, [router.pathname]);
+  }, []);
 
   return (
     <ThemeProvider theme={LightTheme}>
