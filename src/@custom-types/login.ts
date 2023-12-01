@@ -10,7 +10,7 @@ export interface UserProps {
   usr_name: string;
   usr_status: 1;
   usr_address: string;
-  usr_roles: "EMPLOYEE" | "MANAGER";
+  usr_roles: "EMPLOYEE" | "ADMINIE";
   usr_phone: string;
   usr_blocked: boolean;
   usr_lock_count: boolean;

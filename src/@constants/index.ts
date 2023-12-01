@@ -14,52 +14,52 @@ export const listSidenav = [
   {
     title: "Tổng quan",
     href: "/manager",
-    role: ["ADMIN"],
+    role: ["ADMINIE"],
     icon: HomeIcon,
   },
   {
     title: "Tạo hoá đơn",
     href: "/manager/tao-hoa-don",
-    role: ["ADMIN", "EMPLOYEE"],
+    role: ["ADMINIE", "EMPLOYEE"],
     icon: PlusCircleIcon,
   },
   {
     title: "Quản lý sản phẩm",
     href: "/manager/quan-ly-san-pham",
-    role: ["ADMIN", "EMPLOYEE"],
+    role: ["ADMINIE", "EMPLOYEE"],
     icon: GlobeAmericasIcon,
   },
 
   {
     title: "Quản lý hoá đơn",
     href: "/manager/quan-ly-hoa-don",
-    role: ["ADMIN", "EMPLOYEE"],
+    role: ["ADMINIE", "EMPLOYEE"],
     icon: ShoppingCartIcon,
   },
   {
     title: "Quản lý thanh toán",
     href: "/manager/quan-ly-thanh-toan",
-    role: ["ADMIN", "EMPLOYEE"],
+    role: ["ADMINIE", "EMPLOYEE"],
     icon: CreditCardIcon,
   },
   {
     title: "Quản lý nhân viên",
     href: "/manager/quan-ly-nhan-vien",
-    role: ["ADMIN"],
+    role: ["ADMINIE"],
     icon: UserCircleIcon,
   },
 
   //   {
   //     title: "Trang cá nhân",
   //     href: "/manager/trang-ca-nhan",
-  //     role: ["ADMIN", "EMPLOYEE"],
+  //     role: ["ADMINIE", "EMPLOYEE"],
   //     icon: BanknotesIcon,
   //   },
 
   //   {
   //     title: "Quản lý khách hàng",
   //     href: "/manager/quan-ly-khach-hang",
-  //     role: ["ADMIN", "EMPLOYEE"],
+  //     role: ["ADMINIE", "EMPLOYEE"],
   //     icon: BanknotesIcon,
   //   },
 ];

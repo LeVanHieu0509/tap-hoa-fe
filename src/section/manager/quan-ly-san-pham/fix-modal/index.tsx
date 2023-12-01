@@ -1,13 +1,13 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { FixModalWrapper } from "./styles";
 import { ModifiedData } from "@custom-types";
-import { CreateAndUpdateProductsInput } from "@custom-types/manager";
+import { CategoriesOutput, CreateAndUpdateProductsInput } from "@custom-types/manager";
 import { useTheme } from "styled-components";
 import { Button, Card } from "@material-tailwind/react";
 import FormInput from "components/form-input";
 import { Flex } from "styles/common";
 import useActionApi from "hooks/use-action-api";
-import { getProduct, updateProduct } from "api/manager";
+import { getCategories, getProduct, updateProduct } from "api/manager";
 import { formatValue } from "utils/format-value";
 import { Alert } from "components/alert";
 import { get, toNumber } from "lodash";
@@ -39,8 +39,15 @@ const FixModal = ({ setShowModal, data }: FixModalProps) => {
   };
 
   const [modifiedData, setModifiedData] = useState<ModifiedData<CreateAndUpdateProductsInput>>(initData);
+  const [categories, setCategories] = useState<CategoriesOutput[]>([]);
   const actionGetProduct = useActionApi(getProduct);
   const actionUpdateProduct = useActionApi(updateProduct);
+  const actionGetCategories = useActionApi(getCategories);
+
+  const listDropdownCate = useMemo(
+    () => categories?.map((item) => ({ key: item.title, value: item.id.toString() })),
+    [categories]
+  );
 
   const listInput: any = useMemo(
     () => [
@@ -52,6 +59,7 @@ const FixModal = ({ setShowModal, data }: FixModalProps) => {
           note: "",
           subType: "text",
           type: "input",
+          disabled: true,
         },
         {
           label: "Mã vạch",
@@ -60,6 +68,7 @@ const FixModal = ({ setShowModal, data }: FixModalProps) => {
           subType: "text",
           type: "input",
           placeHolder: "Nhập hoặc quét",
+          showScanCode: false,
           error: null,
         },
       ],
@@ -81,7 +90,7 @@ const FixModal = ({ setShowModal, data }: FixModalProps) => {
           subType: "number",
           type: "select",
           placeHolder: "Min 300",
-          listDropdown: [{ value: 1, key: "sản phẩm" }],
+          listDropdown: listDropdownCate ?? [],
           error: null,
         },
         {
@@ -146,6 +155,20 @@ const FixModal = ({ setShowModal, data }: FixModalProps) => {
     [modifiedData]
   );
 
+  //get categories
+  useEffect(() => {
+    actionGetCategories({
+      type: "global",
+      name: "",
+    })
+      .then(({ data }) => {
+        if (data.status == "1") {
+          setCategories(data.data);
+        }
+      })
+      .catch((e) => e);
+  }, []);
+
   useEffect(() => {
     if (data) {
       actionGetProduct(
@@ -161,6 +184,7 @@ const FixModal = ({ setShowModal, data }: FixModalProps) => {
           if (data.data.product_bar_code) {
             setModifiedData({
               ...data.data,
+              categories: data.data.categories.id.toString(),
               product_expired_date: formatValue(data.data.product_expired_date, "date"),
               product_manufacture_date: formatValue(data.data.product_manufacture_date, "date"),
             });

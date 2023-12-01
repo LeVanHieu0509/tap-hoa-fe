@@ -12,6 +12,7 @@ import {
 import { Alert } from "components/alert";
 import DropDown from "components/dropdown-fieldset";
 import EmptyComp from "components/empty-cart";
+import IconClose from "components/icons/source/close";
 import ModalCustom from "components/modal-custom";
 import Modal from "components/modal-dom";
 import useActionApi from "hooks/use-action-api";
@@ -20,6 +21,7 @@ import useInitialized from "hooks/use-initialized";
 import { useAppSelector } from "hooks/use-redux";
 import useWindowResize from "hooks/use-window-resize";
 import { get, pick } from "lodash";
+import dynamic from "next/dynamic";
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { rootAction } from "redux/reducers/root-reducer";
@@ -29,8 +31,6 @@ import TabsOrder from "section/manager/tao-hoa-don/tab-orders";
 import { ButtonPrimary, ButtonSecondary } from "styles/buttons";
 import { getKeyCart } from "utils/cart";
 import { DropdownWrapper, HeaderWrapper, ListProductsWrapper, TaoHoaDonScreenWrapper } from "./styled";
-import dynamic from "next/dynamic";
-import IconClose from "components/icons/source/close";
 
 interface TaoHoaDonScreenProps {}
 
@@ -95,6 +95,7 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
           page: "",
           filter: {
             cart_state: "active",
+            usr_id: currentUser?.user?.usr_id,
           },
           select: null,
         },
@@ -105,7 +106,7 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
       )
         .then(({ data }) => {
           if (data.status == "1") {
-            if (data.data.products.length) {
+            if (data.data.products.length > 0) {
               const newOrderCarts = data.data.products.map((elem, index) => {
                 return Object.assign({}, pick(elem, `hoa-don-${elem.id}`), {
                   [`hoa-don-${elem.id}`]: {
@@ -123,6 +124,10 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
               );
               setCurrentKeyOrder(`hoa-don-${data.data.products[0].id}`);
               dispatch(rootAction.setOrderCarts(newOrderCarts));
+            } else {
+              dispatch(rootAction.setCacheData({}));
+              setCurrentKeyOrder(null);
+              dispatch(rootAction.setOrderCarts([]));
             }
           } else {
             Alert("ERROR", data.message);
@@ -131,6 +136,8 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
         .catch((e) => console.log(get(e, "response.data.message")));
     }
   }, [reLoading]);
+
+  //save cart when product cache empty
 
   // gọi api products
   useEffect(() => {
@@ -357,7 +364,7 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
     }
   };
 
-  const handleRemoveItemCarts = (product_code: string) => {
+  const handleRemoveItemCarts = async (product_code: string) => {
     if (currentKeyOrder) {
       let products = dataProductInCartCurrent[currentKeyOrder].products;
 
@@ -373,6 +380,17 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
           },
         });
       });
+
+      await actionUpdateCarts(
+        {
+          id: dataProductInCartCurrent[currentKeyOrder]?.id,
+          products: productCurrent,
+        },
+        {
+          type: "global",
+          name: "",
+        }
+      );
 
       dispatch(rootAction.setOrderCarts(newOrderCarts));
     }
@@ -491,32 +509,34 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
 
   return (
     <TaoHoaDonScreenWrapper>
-      <HeaderWrapper gapMb={16} align="center" justify="space-between">
-        <DropdownWrapper className="">
-          <DropDown
-            setSearchText={setSearchText}
-            isChildren
-            list={[]}
-            loading={Boolean(getProductsLoading)}
-            value={"null"}
-            onChange={(e, o) => {}}
-            isSearch
-          >
-            <ListProductsWrapper>
-              {listsProducts?.map((item: GetProductOutput) => (
-                <CardItem onClick={handleAddItemToCart} item={item} key={item.product_code} />
-              ))}
-            </ListProductsWrapper>
-          </DropDown>
-        </DropdownWrapper>
+      {orderCarts?.length == 1 ? (
+        <>
+          <HeaderWrapper gapMb={16} align="center" justify="space-between">
+            <DropdownWrapper className="">
+              <DropDown
+                setSearchText={setSearchText}
+                isChildren
+                list={[]}
+                loading={Boolean(getProductsLoading)}
+                value={"null"}
+                onChange={(e, o) => {}}
+                isSearch
+              >
+                <ListProductsWrapper>
+                  {listsProducts?.map((item: GetProductOutput) => (
+                    <CardItem onClick={handleAddItemToCart} item={item} key={item.product_code} />
+                  ))}
+                </ListProductsWrapper>
+              </DropDown>
+            </DropdownWrapper>
 
-        {sizeWindow.width < 786 && showScan ? (
-          <div className="w-full">
-            <ScanBarCode hide={true} onChange={handleChange} />
-          </div>
-        ) : null}
+            {sizeWindow.width < 786 && showScan ? (
+              <div className="w-full">
+                <ScanBarCode hide={true} onChange={handleChange} />
+              </div>
+            ) : null}
 
-        {/* <ButtonCartWrapper align="center" justify="flex-end" className="mr-16">
+            {/* <ButtonCartWrapper align="center" justify="flex-end" className="mr-16">
           <SlideWrapper>
             <CardSlide col={size.width > 786 ? 4 : 2} showButton={true} length={orderCarts.length}>
               {orderCarts.map((item, index) => (
@@ -557,23 +577,22 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
           </SlideWrapper>
         </ButtonCartWrapper> */}
 
-        {/* <Button
+            {/* <Button
           disabled={Boolean(loadingCreateCart) || orderCarts?.length == 1}
           color="green"
           onClick={() => handleAddCart()}
         >
           {loadingCreateCart ? <Spinner className="h-4 w-4" /> : <PlusIcon height={14} width={14} />}
         </Button> */}
-      </HeaderWrapper>
-
-      {orderCarts?.length == 1 ? (
-        <TabsOrder
-          onSaveCart={handleSaveDraffOrder}
-          onReview={handleReviewOrder}
-          currentKeyOrder={currentKeyOrder}
-          dataCurrentOrder={dataProductInCartCurrent ? dataProductInCartCurrent[currentKeyOrder].products : []}
-          handleRemoveItemCarts={handleRemoveItemCarts}
-        />
+          </HeaderWrapper>
+          <TabsOrder
+            onSaveCart={handleSaveDraffOrder}
+            onReview={handleReviewOrder}
+            currentKeyOrder={currentKeyOrder}
+            dataCurrentOrder={dataProductInCartCurrent ? dataProductInCartCurrent[currentKeyOrder].products : []}
+            handleRemoveItemCarts={handleRemoveItemCarts}
+          />
+        </>
       ) : (
         <EmptyComp loadingCreateCart={loadingCreateCart} onClick={handleAddCart} />
       )}

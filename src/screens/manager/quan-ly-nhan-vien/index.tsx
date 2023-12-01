@@ -40,13 +40,15 @@ const QuanLyNhanVienScreen = ({}: QuanLyNhanVienScreenProps) => {
   const { reLoading, currentUser } = useAppSelector((r) => r.rootReducer);
   const listFormat = useMemo(
     () =>
-      lists?.map((item) => {
-        return {
-          employee_code: item.usr_id,
-          employee_name: item.usr_name,
-          ...item,
-        };
-      }),
+      lists
+        .filter((item) => item.usr_roles !== "ADMINIE")
+        ?.map((item) => {
+          return {
+            employee_code: item.usr_id,
+            employee_name: item.usr_name,
+            ...item,
+          };
+        }),
     [lists]
   );
 

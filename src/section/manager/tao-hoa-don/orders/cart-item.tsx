@@ -5,7 +5,7 @@ import { useMemo } from "react";
 import { ButtonIcon } from "styles/buttons";
 import { Flex } from "styles/common";
 import { formatCurrency } from "utils/format-value";
-import { CartItemWrapper } from "./styled";
+import { CartItemWrapper, MobileWrapper } from "./styled";
 
 function TrashIcon() {
   return (
@@ -105,17 +105,17 @@ const CartItem = ({
         </div>
       </div>
 
-      <div className="w-full z-10  hide-desktop">
+      <MobileWrapper className="w-full z-10  hide-desktop">
         <div className=" items-center">
           <div className="flex justify-between  ">
-            <span className="font-bold text-sm mb-2">{`${index}, ${item.product_name}`}</span>
+            <span className="font-bold text-xs mb-2 ">{`${index}, ${item.product_name}`}</span>
             <ButtonIcon color="white" className="mt-2" onClick={() => onClose(item.product_code)}>
               <TrashIcon />
             </ButtonIcon>
           </div>
 
           <div className="flex ">
-            <span className=" text-sm mb-0">{` ${item.product_code}`}</span>
+            <span className="text-xs mb-0">{` ${item.product_code}`}</span>
           </div>
           <div className="flex justify-between  items-center">
             <Flex>
@@ -145,7 +145,7 @@ const CartItem = ({
               <div className="">
                 <input
                   onChange={(e) => onChange(item.product_code, Number(e.target.value))}
-                  className="mx-4 border text-center "
+                  className="mx-1 border text-center "
                   type="text"
                   defaultValue="0"
                   value={item.product_quantity}
@@ -163,7 +163,7 @@ const CartItem = ({
             </div>
           </div>
         </div>
-      </div>
+      </MobileWrapper>
     </CartItemWrapper>
   );
 };

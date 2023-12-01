@@ -1,12 +1,10 @@
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { Button, IconButton, Typography } from "@material-tailwind/react";
 import { logout } from "api/auth";
-import { getCategories } from "api/manager";
 import useActionApi from "hooks/use-action-api";
 import { useAppSelector } from "hooks/use-redux";
 import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
-import { rootAction } from "redux/reducers/root-reducer";
 import { removeLocalItem } from "redux/store";
 import {
   setOpenConfigurator,
@@ -74,7 +72,7 @@ export function Configurator() {
           removeLocalItem("currentUser");
           removeLocalItem("orderCarts");
           removeLocalItem("cacheData");
-
+          setOpenConfigurator(dispatch, false);
           router.push("/auth/sign-in");
         }
       })

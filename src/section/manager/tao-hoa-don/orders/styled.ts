@@ -24,3 +24,5 @@ export const TableContent = styled.div`
   display: flex;
   gap: 16px;
 `;
+
+export const MobileWrapper = styled.div``;

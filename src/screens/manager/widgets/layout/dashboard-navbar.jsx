@@ -2,7 +2,6 @@ import { listSidenav } from "@constants";
 import { Bars3Icon, BellIcon, ClockIcon, CreditCardIcon, UserCircleIcon } from "@heroicons/react/24/solid";
 import {
   Avatar,
-  Breadcrumbs,
   Button,
   IconButton,
   Menu,
@@ -13,7 +12,6 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import { useAppSelector } from "hooks/use-redux";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
 import { setOpenConfigurator, setOpenSidenav, useMaterialTailwindController } from "screens/manager/context";
@@ -38,21 +36,19 @@ export function DashboardNavbar() {
     >
       <div className="flex flex-col-reverse justify-between gap-2 md:flex-row md:items-center">
         <div className="capitalize">
-          <Breadcrumbs className={`bg-transparent p-0 transition-all ${fixedNavbar ? "mt-2" : ""}`}>
-            <Link href={`/${layout}`}>
-              <Typography
-                variant="small"
-                color="blue-gray"
-                className="mb-0 font-normal opacity-50 transition-all hover:text-blue-500 hover:opacity-100"
-              >
-                {layout}
-              </Typography>
-            </Link>
+          {/* <Breadcrumbs className={`bg-transparent p-0 transition-all ${fixedNavbar ? "mt-2" : ""}`}>
+            <Typography
+              variant="small"
+              color="blue-gray"
+              className="mb-0 font-normal opacity-50 transition-all hover:text-blue-500 hover:opacity-100"
+            >
+              {layout}
+            </Typography>
 
             <Typography variant="small" color="blue-gray" className="mb-0 font-normal">
               {namePage}
             </Typography>
-          </Breadcrumbs>
+          </Breadcrumbs> */}
 
           <Typography variant="h6" color="blue-gray" className="mb-16 hide-mobile">
             {namePage}
@@ -78,7 +74,12 @@ export function DashboardNavbar() {
             <UserCircleIcon className="h-5 w-5 text-blue-gray-500" />
             {currentUser?.user?.usr_name}
           </Button>
-          <IconButton variant="text" color="blue-gray" className="grid xl:hidden">
+          <IconButton
+            onClick={() => setOpenConfigurator(dispatch, true)}
+            variant="text"
+            color="blue-gray"
+            className="grid xl:hidden"
+          >
             <UserCircleIcon className="h-5 w-5 text-blue-gray-500" />
           </IconButton>
 

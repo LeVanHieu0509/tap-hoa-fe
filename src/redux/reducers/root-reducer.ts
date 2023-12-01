@@ -11,7 +11,7 @@ interface RootState {
     user: {
       usr_id: number;
       usr_name: string;
-      usr_roles: "EMPLOYEE" | "MANAGER";
+      usr_roles: "EMPLOYEE" | "ADMINIE";
     };
     tokens: {
       accessToken: string;

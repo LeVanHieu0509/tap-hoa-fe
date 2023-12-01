@@ -12,6 +12,7 @@ import { Button } from "@material-tailwind/react";
 import useActionApi from "hooks/use-action-api";
 import { getProducts } from "api/manager";
 import { Alert } from "components/alert";
+import { ButtonSecondary } from "styles/buttons";
 
 interface ListOrdersProps {
   currentKeyOrder: string;
@@ -155,9 +156,13 @@ const ListOrders = ({ onSaveCart, currentKeyOrder, lists, onClose }: ListOrdersP
           <div className="flex ">
             <div className="w-full ">
               <Flex justify="flex-end">
-                <Button style={{ position: "static" }} variant="outlined" size="sm" onClick={() => onSaveCart("draff")}>
+                <ButtonSecondary
+                  style={{ position: "unset", padding: "4px", fontSize: "13px" }}
+                  size="sm"
+                  onClick={() => onSaveCart("draff")}
+                >
                   Lưu tạm
-                </Button>
+                </ButtonSecondary>
               </Flex>
 
               <FlexColumn className="w-full" gap={16} gapMb={16}>

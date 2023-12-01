@@ -3,7 +3,6 @@ import { Avatar, Button, IconButton, Typography } from "@material-tailwind/react
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { setOpenSidenav, useMaterialTailwindController } from "screens/manager/context";
-
 import { listSidenav } from "@constants";
 import React, { useMemo, useRef } from "react";
 import useClickAway from "hooks/use-click-away";
@@ -36,7 +35,7 @@ export function Sidenav({
 
   const listSidenavFilter = useMemo(
     () => listSidenav.filter((item) => item.role.includes(currentUser?.user?.usr_roles)),
-    []
+    [currentUser]
   );
 
   return (
@@ -47,7 +46,10 @@ export function Sidenav({
       } fixed inset-0 z-50 my-4 ml-4 h-[calc(100vh-32px)] w-72 rounded-xl transition-transform duration-300 xl:translate-x-0`}
     >
       <div className={`relative border-b ${sidenavType === "dark" ? "border-white/20" : "border-blue-gray-50"}`}>
-        <Link href="/manager" className="flex items-center gap-4 py-6 px-8">
+        <Link
+          href={currentUser?.user?.usr_roles == "ADMINIE" ? "/manager" : "/manager/tao-hoa-don"}
+          className="flex items-center gap-4 py-6 px-8"
+        >
           <Avatar
             size="sm"
             src="https://demos.creative-tim.com/material-tailwind-dashboard-react/img/logo-ct.png"

@@ -1,3 +1,6 @@
+import { useRouter } from "next/router";
+import { useEffect } from "react";
+import { loadLocalItem } from "redux/store";
 import { useMaterialTailwindController } from "screens/manager/context";
 import { DashboardScreen } from "screens/manager/dashboard";
 
@@ -7,8 +10,17 @@ import { Footer, Sidenav } from "screens/manager/widgets/layout";
 interface ManagerPageProps {}
 
 const ManagerPage = ({}: ManagerPageProps) => {
+  const router = useRouter();
   const [controller] = useMaterialTailwindController();
   const { sidenavType } = controller;
+
+  const currentUser = loadLocalItem("currentUser");
+
+  useEffect(() => {
+    if (currentUser?.user?.usr_roles !== "ADMINIE") {
+      router.replace("/auth/sign-in");
+    }
+  }, [currentUser]);
 
   return (
     <div className="min-h-screen bg-blue-gray-50/50 w-full">

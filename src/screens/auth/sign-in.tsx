@@ -1,4 +1,4 @@
-import { Button, Card, CardBody, CardFooter, CardHeader, Checkbox, Input, Typography } from "@material-tailwind/react";
+import { Button, Card, CardBody, CardFooter, CardHeader, Input, Typography } from "@material-tailwind/react";
 import { onLogin } from "api/auth";
 import { Alert } from "components/alert";
 import useActionApi from "hooks/use-action-api";
@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { rootAction } from "redux/reducers/root-reducer";
+import { LoginLayoutWrapper } from "./styled";
 
 export function SignIn() {
   const dispatch = useDispatch();
@@ -36,7 +37,12 @@ export function SignIn() {
       .then(({ data }) => {
         if (data.status == "1") {
           dispatch(rootAction.setCurrentUser({ user: data.data.user, tokens: data.data.tokens }));
-          router.replace("/manager");
+          if (data.data?.user?.usr_roles == "ADMINIE") {
+            router.replace("/manager");
+          }
+          if (data.data?.user?.usr_roles == "EMPLOYEE") {
+            router.replace("/manager/tao-hoa-don");
+          }
         } else {
           Alert("ERROR", data.message);
         }
@@ -71,7 +77,7 @@ export function SignIn() {
   };
 
   return (
-    <>
+    <LoginLayoutWrapper>
       <img
         src="https://images.unsplash.com/photo-1497294815431-9365093b7331?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auhref=format&fit=crop&w=1950&q=80"
         className="absolute inset-0 z-0 h-full w-full object-cover"
@@ -86,6 +92,10 @@ export function SignIn() {
           </CardHeader>
           <CardBody className="flex flex-col gap-4">
             <Input
+              className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
+              labelProps={{
+                className: " ml-4 before:content-none after:content-none",
+              }}
               crossOrigin
               value={login.username}
               label="Username"
@@ -93,15 +103,16 @@ export function SignIn() {
               onChange={(e) => onChangeInput("username", e.target.value)}
             />
             <Input
+              className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
+              labelProps={{
+                className: " ml-4 before:content-none after:content-none",
+              }}
               crossOrigin
               value={login.password}
               label="Password"
               size="lg"
               onChange={(e) => onChangeInput("password", e.target.value)}
             />
-            <div className="-ml-2.5">
-              <Checkbox crossOrigin label="Lưu tài khoản và mật khẩu?" />
-            </div>
           </CardBody>
           <CardFooter className="pt-0">
             <Button variant="gradient" fullWidth onClick={handleLogin}>
@@ -118,7 +129,7 @@ export function SignIn() {
           </CardFooter>
         </Card>
       </div>
-    </>
+    </LoginLayoutWrapper>
   );
 }
 

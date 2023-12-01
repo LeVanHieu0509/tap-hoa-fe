@@ -3,14 +3,14 @@ import { GetCartsOutput, GetProductOutput } from "@custom-types/manager";
 import { getAllCarts } from "api/manager";
 import { Alert } from "components/alert";
 import useActionApi from "hooks/use-action-api";
+import { useAppSelector } from "hooks/use-redux";
 import { get } from "lodash";
 import { useEffect, useMemo, useState } from "react";
+import { useDispatch } from "react-redux";
+import { rootAction } from "redux/reducers/root-reducer";
 import { formatCurrency } from "utils/format-value";
 import QuanLyComponent from "../quan-ly-component";
 import { QuanLyHoaDonScreenWrapper } from "./styled";
-import { useAppSelector } from "hooks/use-redux";
-import { useDispatch } from "react-redux";
-import { rootAction } from "redux/reducers/root-reducer";
 
 interface QuanLyHoaDonScreenProps {}
 
@@ -72,6 +72,7 @@ const QuanLyHoaDonScreen = ({}: QuanLyHoaDonScreenProps) => {
           page: "",
           filter: {
             cart_state: "",
+            usr_id: currentUser?.user?.usr_roles == "ADMINIE" ? null : currentUser?.user?.usr_id,
           },
           select: null,
         },

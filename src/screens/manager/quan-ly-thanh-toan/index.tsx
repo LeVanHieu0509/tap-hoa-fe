@@ -3,13 +3,13 @@ import { BillData } from "@custom-types/manager";
 import { getBills } from "api/manager";
 import { Alert } from "components/alert";
 import useActionApi from "hooks/use-action-api";
-import { useEffect, useMemo, useState } from "react";
-import QuanLyComponent from "../quan-ly-component";
-import { QuanLyThanhToanScreenWrapper } from "./styled";
-import { get } from "lodash";
 import { useAppSelector } from "hooks/use-redux";
+import { get } from "lodash";
+import { useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { rootAction } from "redux/reducers/root-reducer";
+import QuanLyComponent from "../quan-ly-component";
+import { QuanLyThanhToanScreenWrapper } from "./styled";
 
 interface QuanLyThanhToanScreenProps {}
 
@@ -84,7 +84,9 @@ const QuanLyThanhToanScreen = ({}: QuanLyThanhToanScreenProps) => {
           // sortOrder: "ASC",
           sortBy: "createdAt",
           page: "",
-          filter: {},
+          filter: {
+            usr_id: currentUser?.user?.usr_roles == "ADMINIE" ? null : currentUser?.user?.usr_id,
+          },
           select: null,
         },
         {

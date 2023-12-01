@@ -12,7 +12,6 @@ interface FormProps {
 }
 
 const FormInput = ({ listInput, modifiedData, onChange }: FormProps) => {
-  console.log("modifiedData", modifiedData);
   return (
     <FormWrapper>
       <FormContainer>
@@ -24,7 +23,7 @@ const FormInput = ({ listInput, modifiedData, onChange }: FormProps) => {
                   <div>
                     <Input
                       icon={
-                        col.name == "product_bar_code" && (
+                        col.showScanCode && (
                           <svg
                             style={{ cursor: "pointer" }}
                             onClick={col.onClick}

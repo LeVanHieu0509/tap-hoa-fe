@@ -55,10 +55,10 @@ const AddModal = ({ data, setShowModal, categories }: AddModalProps) => {
   });
 
   const debounceProductBarCode = useDebounce(modifiedData.product_bar_code, 500);
+  const debounceProductCode = useDebounce(modifiedData.product_code, 500);
 
   const actionCreateProducts = useActionApi(createProduct);
   const actionGetProduct = useActionApi(getProduct);
-
   const actionGeneralAutoProduct = useActionApi(generalAutoProduct);
 
   let barcodeScan = "";
@@ -87,6 +87,7 @@ const AddModal = ({ data, setShowModal, categories }: AddModalProps) => {
           subType: "text",
           type: "input",
           placeHolder: "Nhập hoặc quét",
+          showScanCode: true,
           error: null,
           disabled: disabled?.product_bar_code,
           onClick: () => setShowBarCode({ show: true, title: "Quét mã ở đây" }),
@@ -276,20 +277,20 @@ const AddModal = ({ data, setShowModal, categories }: AddModalProps) => {
 
   //handle auto fill info product
   useEffect(() => {
-    if (debounceProductBarCode) {
+    if (debounceProductBarCode || debounceProductCode) {
       setShowBarCode({
         show: false,
       });
 
-      actionGetProduct(
-        {
-          product_bar_code: debounceProductBarCode,
-        },
-        {
-          type: "global",
-          name: "",
-        }
-      )
+      let payload =
+        debounceProductBarCode !== ""
+          ? { product_bar_code: debounceProductBarCode }
+          : { product_code: debounceProductCode };
+
+      actionGetProduct(payload, {
+        type: "global",
+        name: "",
+      })
         .then(({ data }) => {
           if (data.status == "1") {
             if (data.data.product_bar_code) {
@@ -321,7 +322,7 @@ const AddModal = ({ data, setShowModal, categories }: AddModalProps) => {
           }
         })
         .then((data) => {
-          if (data.status == "-1") {
+          if (data.status == "-1" && debounceProductBarCode !== "") {
             //sản phẩm chưa có trong kho thì sẽ phải nhập từ đầu trừ name ra nếu như có mã vạch.
             actionGeneralAutoProduct(
               {
@@ -369,7 +370,7 @@ const AddModal = ({ data, setShowModal, categories }: AddModalProps) => {
 
         .catch((e) => console.log(get(e, "response.data.message")));
     }
-  }, [debounceProductBarCode]);
+  }, [debounceProductBarCode, debounceProductCode]);
 
   const disabledBtn = useMemo(
     () =>
