@@ -149,7 +149,7 @@ export function Configurator() {
 
         <div className="mb-12 w-full">
           <hr />
-          <div className="my-8 flex flex-col gap-4">
+          <div className="ml-20 mr-20">
             <Button variant="filled" color="blue-gray" fullWidth onClick={handleLogout}>
               Đăng xuất
             </Button>

@@ -118,7 +118,7 @@ export const ListWrapper = styled.div`
   left: 0px;
   width: 100%;
   z-index: 1200;
-  max-height: 500px;
+  max-height: 320px;
   overflow: auto;
   border: 1px solid #dbdfe1;
   box-shadow: 0px 16px 30px rgba(132, 156, 152, 0.2);

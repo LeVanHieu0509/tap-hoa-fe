@@ -50,14 +50,6 @@ const Invoice = ({ data }: InvoiceProps) => {
         <div className="bg-white   mx-auto">
           <div className="hide-mobile rounded-lg shadow-lg px-4 py-2">
             <div className="flex items-center justify-between mb-8">
-              <div className="flex items-center">
-                <img
-                  className="h-8 w-8 mr-2"
-                  src="https://tailwindflex.com/public/images/logos/favicon-32x32.png"
-                  alt="Logo"
-                />
-                <div className="text-gray-700 font-semibold text-lg">TAP HOA JUN BF</div>
-              </div>
               <div className="text-gray-700"></div>
             </div>
 
@@ -87,12 +79,12 @@ const Invoice = ({ data }: InvoiceProps) => {
               </tbody>
             </table>
 
-            <div className="flex justify-end mb-8" style={{ height: 30 }}>
-              <div className="text-gray-700 mr-2">Total:</div>
+            <Flex justify="flex-end" align="center" className="mb-8">
+              <div className="text-gray-700 mr-2">Tổng:</div>
               <div className="text-gray-700 font-bold text-xl">
                 {dataCheckout ? formatCurrency(dataCheckout?.totalPrice) : 0}
               </div>
-            </div>
+            </Flex>
 
             <div className="border-t-2 border-gray-300 pt-8 mb-8">
               <div className="text-gray-700 mb-2 text-center">

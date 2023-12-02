@@ -15,7 +15,6 @@ export const ContentOrder = styled.div`
 
 export const ContentLeft = styled.div`
   height: calc(100vh - 250px);
-  padding: 16px;
   width: 70%;
   border-radius: 10px;
   background: ${({ theme }) => theme.color.status.grey};

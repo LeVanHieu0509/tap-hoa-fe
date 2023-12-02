@@ -174,7 +174,7 @@ const ListOrders = ({ onSaveCart, currentKeyOrder, lists, onClose }: ListOrdersP
                   <h3 className="font-semibold  text-gray-600 text-xs uppercase w-1/5">Tổng</h3>
                 </TableHeader>
 
-                <TableContent className="w-full mt-5 flex-col">
+                <TableContent className="w-full mt-3 flex-col">
                   {lists?.map((item, index) => (
                     <CartItem
                       listsProducts={listsProducts}

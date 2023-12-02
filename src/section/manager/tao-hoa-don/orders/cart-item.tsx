@@ -60,7 +60,7 @@ const CartItem = ({
           <div className="flex  w-1/5 items-center">
             {productCurrent?.product_quantity < item?.product_quantity ? (
               <Tooltip content={`Số lượng tồn: ${productCurrent.product_quantity}`}>
-                <div className="absolute -left-7">
+                <div className=" -left-7">
                   <ButtonIcon>
                     <IconError />
                   </ButtonIcon>
@@ -76,6 +76,7 @@ const CartItem = ({
                 <path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" />
               </svg>
             </ButtonIcon>
+
             <div className="">
               <input
                 onChange={(e) => onChange(item.product_code, Number(e.target.value))}
@@ -108,8 +109,8 @@ const CartItem = ({
       <MobileWrapper className="w-full z-10  hide-desktop">
         <div className=" items-center">
           <div className="flex justify-between  ">
-            <span className="font-bold text-xs mb-2 ">{`${index}, ${item.product_name}`}</span>
-            <ButtonIcon color="white" className="mt-2" onClick={() => onClose(item.product_code)}>
+            <span className="font-bold text-xs">{`${index}, ${item.product_name}`}</span>
+            <ButtonIcon color="white" onClick={() => onClose(item.product_code)}>
               <TrashIcon />
             </ButtonIcon>
           </div>
@@ -125,7 +126,7 @@ const CartItem = ({
             <div className="flex  items-center ">
               {productCurrent?.product_quantity < item?.product_quantity ? (
                 <Tooltip content={`Số lượng tồn: ${productCurrent.product_quantity}`}>
-                  <div className="absolute -left-7">
+                  <div className=" -left-7">
                     <ButtonIcon>
                       <IconError />
                     </ButtonIcon>

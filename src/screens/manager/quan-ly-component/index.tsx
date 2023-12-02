@@ -186,7 +186,7 @@ export function QuanLyComponent({
   return (
     <div className="mt-12 mb-8 flex flex-col gap-12">
       <Card>
-        <CardBody className="overflow-x-scroll p-24 pt-0 pb-2">
+        <CardBody className="overflow-x-scroll p-16 pt-0 pb-2">
           <ActionsWrapper justify={isSelectAll ? "space-between" : null}>
             {isSelectAll && (
               <Actions

@@ -109,7 +109,9 @@ const QuanLyHoaDonScreen = ({}: QuanLyHoaDonScreenProps) => {
           updatedAt: item.updatedAt,
           totalMoney: formatCurrency(
             JSON.parse(item.cart_products).reduce((accumulator: GetProductOutput, currentValue) => {
-              return currentValue.product_price_sell + accumulator;
+              let price = currentValue.product_price_sell * currentValue.product_quantity;
+
+              return Number((price as any) + accumulator);
             }, 0)
           ),
         };

@@ -46,27 +46,28 @@ function getKeyByValue(object, value) {
 
 const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
   const dispatch = useDispatch();
+  const size = useWindowResize();
 
   const [reLoading, setReloading] = useState(false);
   const [listsProducts, setListProducts] = useState<GetProductOutput[]>();
   const [currentKeyOrder, setCurrentKeyOrder] = useState<any>(null);
   const [searchText, setSearchText] = useState("");
-  const size = useWindowResize();
-  const debounceSearchText = useDebounce(searchText, 500);
-
+  const [productBarCode, setProductBarCode] = useState(null);
+  const [showScan, setShowScan] = useState(false);
   const [showModal, setShowModal] = useState<ShowModal>({
     type: null,
     show: false,
     data: null,
     title: "",
   });
-
   const [showModalOrder, setShowModalOrder] = useState<ShowModal>({
     type: null,
     show: false,
     data: null,
     title: "",
   });
+
+  const debounceSearchText = useDebounce(searchText, 500);
 
   const {
     orderCarts,
@@ -81,7 +82,6 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
   const actionAddNewCarts = useActionApi(addNewCarts);
   const actionUpdateCarts = useActionApi(updateCarts);
   const actionGetProduct = useActionApi(getProduct);
-
   const actionCheckoutConfirm = useActionApi(checkoutConfirm);
 
   useInitialized(() => {
@@ -442,12 +442,14 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
 
   //handle scan product_bar_code
   let barcodeScan = "";
-  const [barcodeDisplay, setBarcodeDisplay] = useState("");
-
   const handleScan = (barcodeString) => {
-    setBarcodeDisplay(barcodeString);
     const productCurrent = listsProducts && listsProducts.find((i) => i.product_bar_code == barcodeString);
-    handleAddItemToCart(productCurrent);
+
+    if (productCurrent) {
+      handleAddItemToCart(productCurrent);
+    } else {
+      Alert("WARNING", "Sản phẩm chưa được thêm vào kho, vui lòng kiểm tra lại!");
+    }
   };
 
   useEffect(() => {
@@ -473,14 +475,10 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
     return function cleanup() {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [barcodeDisplay]);
-
-  const sizeWindow = useWindowResize();
-  const [productBarCode, setProductBarCode] = useState(null);
-  const [showScan, setShowScan] = useState(false);
+  });
 
   useEffect(() => {
-    if (productBarCode) {
+    if (productBarCode && size.width <= 876) {
       actionGetProduct(
         {
           product_bar_code: productBarCode,
@@ -501,7 +499,7 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
         }
       });
     }
-  }, [productBarCode, showScan]);
+  }, [productBarCode]);
 
   const handleChange = (key, value) => {
     setProductBarCode(value);
@@ -530,7 +528,7 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
               </DropDown>
             </DropdownWrapper>
 
-            {sizeWindow.width < 786 && showScan ? (
+            {size.width < 786 && showScan ? (
               <div className="w-full">
                 <ScanBarCode hide={true} onChange={handleChange} />
               </div>
@@ -655,7 +653,7 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
       <IconButton
         size="lg"
         color="white"
-        className="fixed bottom-36 right-2 z-40 rounded-full shadow-blue-gray-900/10"
+        className="fixed bottom-36 right-2 z-40 rounded-full shadow-blue-gray-900/10 hide-desktop"
         ripple={false}
         onClick={() => {
           setProductBarCode(null);
