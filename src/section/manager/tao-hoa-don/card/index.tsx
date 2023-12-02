@@ -12,7 +12,7 @@ interface CardItemProps {
 const CardItem = ({ item, onClick }: CardItemProps) => {
   return (
     <CardItemWrapper onClick={() => onClick(item)}>
-      <div className="p-2 w-full border-b hide-mobile">
+      <div className=" w-full border-b hide-mobile">
         <Flex align="center" className=" hover:color-blue">
           {item.product_image_url ? (
             <img className="rounded ml-1" width={70} src={item.product_image_url} alt="card-image" />
@@ -36,7 +36,7 @@ const CardItem = ({ item, onClick }: CardItemProps) => {
                   </div>
                 </Flex>
 
-                <Flex align="center" justify="space-between" className="w-full">
+                <Flex justify="space-between" className="w-full">
                   <span className="text-left">Hàng tồn: {item.product_quantity}</span>
                   <Typography className="text-right">{formatCurrency(item.product_price_sell)}</Typography>
                 </Flex>
