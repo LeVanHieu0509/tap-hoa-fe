@@ -58,11 +58,11 @@ const CardItem = ({ item, onClick }: CardItemProps) => {
 
           <CardBody className="w-full ">
             <Flex justify="space-between" className="w-full">
-              <FlexColumn className="w-full">
+              <FlexColumn className="w-full" justify="flex-start">
                 <Typography variant="h6" color="blue-gray" className="text-left">
                   {item.product_name}
                 </Typography>
-                <FlexColumn>
+                <FlexColumn justify="flex-start">
                   <span className="text-left">Mã sản phẩm: {item.product_code}</span>
                   <span className="text-left">Mã vạch: {item.product_bar_code}</span>
                 </FlexColumn>
