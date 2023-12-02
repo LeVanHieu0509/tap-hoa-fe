@@ -14,8 +14,11 @@ export const CardItemWrapper = styled.div`
   }
 
   span {
+    text-align: left !important;
     font-size: 11px;
     line-height: 16px;
+
+    display: block;
   }
   p {
     font-weight: 700;

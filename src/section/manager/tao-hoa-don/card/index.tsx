@@ -28,11 +28,14 @@ const CardItem = ({ item, onClick }: CardItemProps) => {
           <CardBody className="w-full ">
             <Flex justify="space-between" className="w-full">
               <FlexColumn className="w-full">
-                <Typography variant="h6" color="blue-gray" className="mb-2 text-left">
-                  {item.product_name}
-                </Typography>
-                <span className="text-left">Mã sản phẩm: {item.product_code}</span>
-                <span className="text-left">Mã vạch: {item.product_bar_code}</span>
+                <Flex justify="space-between" className="w-full">
+                  <div>
+                    <h6 className="bold text-left">{item.product_name}</h6>
+                    <span>Mã sản phẩm: {item.product_code}</span>
+                    <span>Mã vạch: {item.product_bar_code}</span>
+                  </div>
+                </Flex>
+
                 <Flex align="center" justify="space-between" className="w-full">
                   <span className="text-left">Hàng tồn: {item.product_quantity}</span>
                   <Typography className="text-right">{formatCurrency(item.product_price_sell)}</Typography>
@@ -57,24 +60,22 @@ const CardItem = ({ item, onClick }: CardItemProps) => {
           )}
 
           <CardBody className="w-full ">
-            <Flex justify="space-between" className="w-full">
-              <FlexColumn className="w-full" justify="flex-start">
-                <Typography variant="h6" color="blue-gray" className="text-left">
-                  {item.product_name}
-                </Typography>
-                <FlexColumn justify="flex-start">
-                  <span className="text-left">Mã sản phẩm: {item.product_code}</span>
-                  <span className="text-left">Mã vạch: {item.product_bar_code}</span>
-                </FlexColumn>
+            <FlexColumn className="w-full" justify="flex-start">
+              <Flex justify="space-between" className="w-full">
+                <div>
+                  <h6 className="bold text-left">{item.product_name}</h6>
+                  <span>Mã sản phẩm: {item.product_code}</span>
+                  <span>Mã vạch: {item.product_bar_code}</span>
+                </div>
+              </Flex>
 
-                <Flex justify="space-between" className="w-full h-5">
-                  <p className="text-left">Hàng tồn: {item.product_quantity}</p>
-                  <Typography variant="small" className="text-right">
-                    {formatCurrency(item.product_price_sell)}
-                  </Typography>
-                </Flex>
-              </FlexColumn>
-            </Flex>
+              <Flex justify="space-between" className="w-full h-5">
+                <p className="text-left">Hàng tồn: {item.product_quantity}</p>
+                <Typography variant="small" className="text-right">
+                  {formatCurrency(item.product_price_sell)}
+                </Typography>
+              </Flex>
+            </FlexColumn>
           </CardBody>
         </Flex>
       </MobileWrapper>
