@@ -7,7 +7,7 @@ import { useAppSelector } from "hooks/use-redux";
 import { useEffect, useState } from "react";
 import { formatNumberTwoString, getDateTo } from "utils";
 import { formatCurrency } from "utils/format-value";
-import { InvoiceWrapper } from "./styles";
+import { InvoiceWrapper, MobileWrapper } from "./styles";
 import { get } from "lodash";
 import { CardBody, Typography } from "@material-tailwind/react";
 import { Flex, FlexColumn } from "styles/common";
@@ -94,13 +94,13 @@ const Invoice = ({ data }: InvoiceProps) => {
             </div>
           </div>
 
-          <div className="hide-desktop w-full">
-            <FlexColumn gap={16} gapMb={16}>
+          <MobileWrapper className="hide-desktop w-full">
+            <FlexColumn gap={8} gapMb={8}>
               {dataCheckout &&
                 dataCheckout.cartProducts.map((item, index) => (
                   <>
                     <CardBody key={item.product_code} className="border-b-2 w-full">
-                      <Typography variant="h6" color="blue-gray" className="mb-1">
+                      <Typography variant="h6" color="blue-gray" className="">
                         {index + 1}, {item.product_name}
                       </Typography>
                       <Flex justify="space-between">
@@ -108,7 +108,9 @@ const Invoice = ({ data }: InvoiceProps) => {
                           <h3>{formatCurrency(item.product_total_price)}</h3>
                           <h6 className="text-gray-400">{formatCurrency(item.product_price_sell)}</h6>
                         </div>
-                        <div>Số lượng: {formatNumberTwoString(item.product_quantity_order)}</div>
+                        <h6>
+                          Số lượng: <span className="bold">{formatNumberTwoString(item.product_quantity_order)}</span>
+                        </h6>
                       </Flex>
                     </CardBody>
                   </>
@@ -120,7 +122,7 @@ const Invoice = ({ data }: InvoiceProps) => {
                 {dataCheckout ? formatCurrency(dataCheckout?.totalPrice) : 0}
               </div>
             </div>
-          </div>
+          </MobileWrapper>
         </div>
       )}
     </InvoiceWrapper>

@@ -20,7 +20,7 @@ import useDebounce from "hooks/use-debounce";
 import useInitialized from "hooks/use-initialized";
 import { useAppSelector } from "hooks/use-redux";
 import useWindowResize from "hooks/use-window-resize";
-import { get, pick } from "lodash";
+import { get, isNil, pick } from "lodash";
 import dynamic from "next/dynamic";
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -31,6 +31,8 @@ import TabsOrder from "section/manager/tao-hoa-don/tab-orders";
 import { ButtonPrimary, ButtonSecondary } from "styles/buttons";
 import { getKeyCart } from "utils/cart";
 import { DropdownWrapper, HeaderWrapper, ListProductsWrapper, TaoHoaDonScreenWrapper } from "./styled";
+import Empty from "components/empty-order";
+import EmptyData from "components/empty";
 
 interface TaoHoaDonScreenProps {}
 
@@ -137,11 +139,9 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
     }
   }, [reLoading]);
 
-  //save cart when product cache empty
-
   // gọi api products
   useEffect(() => {
-    if (currentUser || reLoading || debounceSearchText) {
+    if (currentUser || debounceSearchText) {
       actionGetProducts(
         {
           searchText: debounceSearchText,
@@ -169,7 +169,7 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
         })
         .catch((e) => console.log(get(e, "response.data.message")));
     }
-  }, [currentUser, reLoading, debounceSearchText]);
+  }, [currentUser, debounceSearchText]);
 
   // Lấy ra product trong hoá đơn hiện tại mà user chọn
   const dataProductInCartCurrent: any = useMemo(() => {
@@ -306,10 +306,13 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
     product_price_sell,
     product_quantity,
   }: GetProductOutput) => {
+    setSearchText("");
+
     if (product_quantity == 0) {
       Alert("WARNING", `Sản phẩm ${product_code} đã hết hàng! Vui lòng chọn sản phẩm khác`);
       return;
     }
+
     if (dataProductInCartCurrent && currentKeyOrder && orderCarts.length > 0) {
       const newProduct = {
         product_code,
@@ -442,13 +445,31 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
 
   //handle scan product_bar_code
   let barcodeScan = "";
+
   const handleScan = (barcodeString) => {
     const productCurrent = listsProducts && listsProducts.find((i) => i.product_bar_code == barcodeString);
-
     if (productCurrent) {
       handleAddItemToCart(productCurrent);
     } else {
-      Alert("WARNING", "Sản phẩm chưa được thêm vào kho, vui lòng kiểm tra lại!");
+      actionGetProduct(
+        {
+          product_bar_code: barcodeString,
+        },
+        {
+          type: "local",
+          name: "",
+        }
+      ).then(({ data }) => {
+        if (data.status == "1") {
+          if (data.data?.product_bar_code) {
+            handleAddItemToCart(data.data);
+          } else {
+            Alert("ERROR", "Không tìm thấy sản phẩm! vui lòng nhập tên, mã để tìm kiếm!");
+          }
+        } else {
+          Alert("ERROR", "Quét thất bại! Vui lòng thử lại");
+        }
+      });
     }
   };
 
@@ -477,6 +498,7 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
     };
   });
 
+  //mobile
   useEffect(() => {
     if (productBarCode && size.width <= 876) {
       actionGetProduct(
@@ -516,14 +538,18 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
                 isChildren
                 list={[]}
                 loading={Boolean(getProductsLoading)}
-                value={"null"}
+                value={searchText}
                 onChange={(e, o) => {}}
                 isSearch
               >
                 <ListProductsWrapper>
-                  {listsProducts?.map((item: GetProductOutput) => (
-                    <CardItem onClick={handleAddItemToCart} item={item} key={item.product_code} />
-                  ))}
+                  {listsProducts?.length > 0 ? (
+                    listsProducts?.map((item: GetProductOutput) => (
+                      <CardItem onClick={handleAddItemToCart} item={item} key={item.product_code} />
+                    ))
+                  ) : (
+                    <EmptyData text="Không tìm thấy sản phẩm nào!" />
+                  )}
                 </ListProductsWrapper>
               </DropDown>
             </DropdownWrapper>

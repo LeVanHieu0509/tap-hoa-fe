@@ -1,8 +1,9 @@
 import styled from "styled-components";
 
-export default function Empty({ text }: { text: string }) {
+export default function EmptyData({ text }: { text: string }) {
   return (
     <Wrap>
+      <img src={`${process.env.basePath}/img/empty.svg`} alt="Empty" />
       <p>{text}</p>
     </Wrap>
   );

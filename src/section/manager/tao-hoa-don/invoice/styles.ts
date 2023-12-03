@@ -19,3 +19,12 @@ export const InvoiceWrapper = styled.div`
     }
   }
 `;
+
+export const MobileWrapper = styled.div`
+  h6 {
+    font-size: 12px;
+  }
+  h3 {
+    font-size: 14px;
+  }
+`;

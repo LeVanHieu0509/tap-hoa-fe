@@ -226,9 +226,9 @@ function DropDown({
             <input
               placeholder="Nhập tên, mã vạch, hoặc mã code..."
               style={{ padding: "7px 10px", width: "100%" }}
-              value={isFocus ? searchKey : selectedLabel}
+              value={value}
               onChange={(e) => {
-                setSearchKey(e.target.value);
+                // setSearchKey(e.target.value);
                 setSearchText(e.target.value);
               }}
               // placeholder={selectedLabel.toString()}
