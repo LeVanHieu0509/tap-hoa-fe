@@ -20,7 +20,7 @@ export const Alert = (type: AlertType, message: string, options?: ToastOptions) 
       toast.error(message, {
         position: toast.POSITION.TOP_RIGHT,
         toastId: message,
-        autoClose: 10000,
+        autoClose: 5000,
         ...options,
       });
       break;
