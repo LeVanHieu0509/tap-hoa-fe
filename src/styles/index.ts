@@ -124,6 +124,11 @@ export const ActionsWrapper = styled.div<{ justify?: string }>`
   justify-content: ${({ justify }) => justify ?? "end"};
 
   align-items: center;
+
+  @media ${device.mobile} {
+    gap: 16px;
+    flex-direction: column-reverse;
+  }
 `;
 
 export const ServicesScreenWrapper = styled.div`

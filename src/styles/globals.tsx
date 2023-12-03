@@ -313,6 +313,10 @@ const style = css`
     width: 100%;
   }
 
+  .w-50 {
+    width: 50%;
+  }
+
   .flex-1 {
     flex: 1;
   }
@@ -409,6 +413,12 @@ const style = css`
   }
 
   .Toastify__close-button {
+  }
+
+  @media ${device.mobile} {
+    .sm-w-100 {
+      width: 100%;
+    }
   }
 `;
 

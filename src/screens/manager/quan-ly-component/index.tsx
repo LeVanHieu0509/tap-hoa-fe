@@ -1,7 +1,7 @@
 import { listMappingTopic } from "@constants";
 import { DataTable, TableConfig } from "@custom-types/config-table";
 import { ShowModal } from "@custom-types/manager";
-import { Card, CardBody } from "@material-tailwind/react";
+import { Card, CardBody, Input } from "@material-tailwind/react";
 import Modal from "components/modal-dom";
 import Table from "components/table";
 import TableMobile from "components/table-mobile";
@@ -17,9 +17,11 @@ import { ActionsWrapper, ScrollCustom } from "styles";
 import { formatValueTable } from "utils/format-value";
 import Actions from "../components/actions";
 import TaoHoaDonModal from "section/manager/tao-hoa-don";
+import SearchInputIcon from "components/icons/source/search-input";
 
 interface QuanLyComponent {
   isSelectAll?: boolean;
+  isSearch?: boolean;
   tableConfig: TableConfig[];
   listFormat: any;
   type:
@@ -70,6 +72,7 @@ interface QuanLyComponent {
 
 export function QuanLyComponent({
   isSelectAll = false,
+  isSearch = false,
   tableConfig,
   listFormat,
   type,
@@ -82,6 +85,9 @@ export function QuanLyComponent({
 }: QuanLyComponent) {
   const dispatch = useDispatch();
   const [multiSelect, setMultiSelect] = useState([]);
+  const [searchText, setSearchText] = useState<string>("");
+  const [placeSearch, setPlaceSearch] = useState<string>("");
+
   const [showModal, setShowModal] = useState<ShowModal>({
     type: null,
     show: false,
@@ -154,9 +160,37 @@ export function QuanLyComponent({
     }
   };
 
+  const dataFilter = useMemo(() => {
+    if (listFormat?.length > 0) {
+      switch (type) {
+        case "quan-ly-san-pham":
+          setPlaceSearch("Nhập tên sản phẩm, mã vạch, mã code..");
+          return listFormat.length > 0
+            ? listFormat.filter(
+                (item) =>
+                  item.product_bar_code.includes(searchText) ||
+                  item.product_code.includes(searchText) ||
+                  item.product_name.includes(searchText)
+              )
+            : [];
+        case "quan-ly-hoa-don":
+          setPlaceSearch("Nhập mã hoá đơn");
+          return listFormat.length > 0 ? listFormat.filter((item: any) => item.cart_code.includes(searchText)) : [];
+        case "quan-ly-thanh-toan":
+          setPlaceSearch("Nhập mã thanh toán, mã hoá đơn...");
+          return listFormat.length > 0
+            ? listFormat.filter((item) => item.cart_code.includes(searchText) || item.bills_code.includes(searchText))
+            : [];
+
+        default:
+          break;
+      }
+    }
+  }, [searchText, type, listFormat]);
+
   const dataTableFormat: DataTable[][] = useMemo(
     () =>
-      listFormat?.map((d: any) =>
+      dataFilter?.map((d: any) =>
         tableConfig.map((config) => ({
           config: config,
           node: formatValueRequest(d, config),
@@ -165,7 +199,7 @@ export function QuanLyComponent({
           },
         }))
       ),
-    [listFormat]
+    [dataFilter]
   );
 
   const ModalContent = useMemo(() => {
@@ -187,17 +221,38 @@ export function QuanLyComponent({
     <div className="mt-12 mb-8 flex flex-col gap-12">
       <Card>
         <CardBody className="overflow-x-scroll p-16 pt-0 pb-2">
-          <ActionsWrapper justify={isSelectAll ? "space-between" : null}>
-            {isSelectAll && (
-              <Actions
-                data={dataTableFormat}
-                successBtn={{
-                  disabled: multiSelect.length == 0 || multiSelect.every((i) => i.disabled == true),
-                  text: "Xoá tất cả ✅",
-                  onClick: () => {},
-                }}
-              />
-            )}
+          <ActionsWrapper justify={"space-between"}>
+            <div className="sm-w-100 w-50">
+              {isSearch && (
+                <Input
+                  icon={<SearchInputIcon />}
+                  disabled={false}
+                  label={""}
+                  crossOrigin
+                  size="lg"
+                  className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
+                  labelProps={{
+                    className: " ml-4 before:content-none after:content-none",
+                  }}
+                  value={searchText}
+                  onChange={(e) => setSearchText(e.target.value)}
+                  type="text"
+                  placeholder={placeSearch}
+                  containerProps={{ className: "min-w-[100px]" }}
+                />
+              )}
+
+              {isSelectAll && (
+                <Actions
+                  data={dataTableFormat}
+                  successBtn={{
+                    disabled: multiSelect.length == 0 || multiSelect.every((i) => i.disabled == true),
+                    text: "Xoá tất cả ✅",
+                    onClick: () => {},
+                  }}
+                />
+              )}
+            </div>
 
             <Actions
               data={dataTableFormat}

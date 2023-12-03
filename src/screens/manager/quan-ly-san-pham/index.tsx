@@ -145,6 +145,7 @@ const QuanLySanPhamScreen = ({}: QuanLySanPhamScreenProps) => {
     <QuanLySanPhamScreenWrapper>
       <QuanLyComponent
         type="quan-ly-san-pham"
+        isSearch
         addBtn
         updateBtn
         deleteBtn

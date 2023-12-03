@@ -104,7 +104,7 @@ const QuanLyHoaDonScreen = ({}: QuanLyHoaDonScreenProps) => {
           usr_name: item.user.usr_name,
           cart_code: item.cart_code,
           cart_products: item.cart_products,
-          cart_state: item.cart_state,
+          cart_state: item.cart_state == "active" ? "Lưu tạm" : "Đã thanh toán",
           createdAt: item.createdAt,
           updatedAt: item.updatedAt,
           totalMoney: formatCurrency(
@@ -122,6 +122,7 @@ const QuanLyHoaDonScreen = ({}: QuanLyHoaDonScreenProps) => {
   return (
     <QuanLyHoaDonScreenWrapper>
       <QuanLyComponent
+        isSearch
         type="quan-ly-hoa-don"
         tableConfig={tableConfig}
         listFormat={listFormat}

@@ -404,6 +404,7 @@ export const initCamera = async (callback) => {
     log("Scanning...");
 
     scanInstructionsEl.hidden = false;
+    scanBtn.hidden = true;
 
     try {
       let barcode = {};

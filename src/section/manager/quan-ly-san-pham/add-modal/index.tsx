@@ -45,7 +45,6 @@ const AddModal = ({ data, setShowModal, categories }: AddModalProps) => {
   };
 
   const [disabled, setDisabled] = useState<any>({});
-  const [barcodeDisplay, setBarcodeDisplay] = useState("Not Found Barcode");
   const [modifiedData, setModifiedData] = useState<ModifiedData<CreateAndUpdateProductsInput>>(initData);
   const [showBarCode, setShowBarCode] = useState<ShowModal>({
     type: null,
@@ -268,10 +267,9 @@ const AddModal = ({ data, setShowModal, categories }: AddModalProps) => {
     return function cleanup() {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [barcodeDisplay]);
+  });
 
   const handleScan = (barcodeString) => {
-    setBarcodeDisplay(barcodeString);
     handleChange("product_bar_code", barcodeString);
   };
 
@@ -288,7 +286,7 @@ const AddModal = ({ data, setShowModal, categories }: AddModalProps) => {
           : { product_code: debounceProductCode };
 
       actionGetProduct(payload, {
-        type: "global",
+        type: "local",
         name: "",
       })
         .then(({ data }) => {
@@ -354,15 +352,24 @@ const AddModal = ({ data, setShowModal, categories }: AddModalProps) => {
               } else {
                 handleChange("product_name", "");
                 handleChange("product_image_url", "");
+                handleChange("product_code", "");
+                handleChange("product_quantity", null);
+                handleChange("product_price_origin", null);
+                handleChange("product_price_sell", null);
+                handleChange("product_manufacture_date", null);
+                handleChange("product_expired_date", "");
+                handleChange("product_description", "");
+                handleChange("categories", null);
 
                 setDisabled({
                   product_bar_code: false,
-                  product_code: false,
+                  product_code: true,
                   product_name: false,
                   categories: false,
                 });
 
                 Alert("WARNING", "Không lấy được tên sản phẩm, vui lòng nhập vào!");
+                return;
               }
             });
           }

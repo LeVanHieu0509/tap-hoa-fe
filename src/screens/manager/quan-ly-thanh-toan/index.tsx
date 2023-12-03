@@ -68,7 +68,7 @@ const QuanLyThanhToanScreen = ({}: QuanLyThanhToanScreenProps) => {
           bills_code: item.bills_code,
           cart_code: item.cart.cart_code,
           total_price: item.total_price,
-          status: item.status,
+          status: item.status == "success" ? "Thành công" : "Thất bại",
           createdAt: item.createdAt,
         };
       }),
@@ -106,26 +106,9 @@ const QuanLyThanhToanScreen = ({}: QuanLyThanhToanScreenProps) => {
     }
   }, [reLoading, currentUser]);
 
-  const handleDetailProduct = () => {
-    console.log("add product");
-  };
-
   return (
     <QuanLyThanhToanScreenWrapper>
-      <QuanLyComponent
-        type="quan-ly-thanh-toan"
-        detailBtn={{
-          onclick: handleDetailProduct,
-        }}
-        // updateBtn={{
-        //   onclick: handleUpdateProduct,
-        // }}
-        // deleteBtn={{
-        //   onclick: handleDeleteProduct,
-        // }}
-        tableConfig={tableConfig}
-        listFormat={listFormat}
-      />
+      <QuanLyComponent type="quan-ly-thanh-toan" isSearch tableConfig={tableConfig} listFormat={listFormat} detailBtn />
     </QuanLyThanhToanScreenWrapper>
   );
 };
