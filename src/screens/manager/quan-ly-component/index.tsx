@@ -183,7 +183,7 @@ export function QuanLyComponent({
             : [];
 
         default:
-          break;
+          return listFormat;
       }
     }
   }, [searchText, type, listFormat]);
