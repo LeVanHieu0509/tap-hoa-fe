@@ -1,8 +1,8 @@
 import styled from "styled-components";
 
 export const CardItemWrapper = styled.div`
-  margin: 0 8px;
-  max-width: 700px;
+  margin: 8px;
+  max-width: 100%;
 
   :hover {
     background: #ccc;
@@ -10,19 +10,19 @@ export const CardItemWrapper = styled.div`
   }
 
   h6 {
-    font-size: 13px;
+    font-size: 16px;
   }
 
   span {
     text-align: left !important;
-    font-size: 11px;
+    font-size: 13px;
     line-height: 16px;
 
     display: block;
   }
   p {
     font-weight: 700;
-    font-size: 12px;
+    font-size: 18px;
   }
 `;
 

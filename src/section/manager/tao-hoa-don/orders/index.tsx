@@ -1,18 +1,19 @@
 import { GetProductOutput } from "@custom-types/manager";
-import { useAppSelector } from "hooks/use-redux";
-import { cloneDeep, get } from "lodash";
-import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { rootAction } from "redux/reducers/root-reducer";
-import { Flex, FlexColumn } from "styles/common";
-import { getKeyCart } from "utils/cart";
-import CartItem from "./cart-item";
-import { ListOrdersWrapper, TableContent, TableHeader } from "./styled";
-import { Button } from "@material-tailwind/react";
-import useActionApi from "hooks/use-action-api";
 import { getProducts } from "api/manager";
 import { Alert } from "components/alert";
+import useActionApi from "hooks/use-action-api";
+import { useAppSelector } from "hooks/use-redux";
+import { cloneDeep, get, sum } from "lodash";
+import { useEffect, useMemo, useState } from "react";
+import { useDispatch } from "react-redux";
+import { rootAction } from "redux/reducers/root-reducer";
 import { ButtonSecondary } from "styles/buttons";
+import { Flex, FlexColumn } from "styles/common";
+import { getKeyCart } from "utils/cart";
+import { formatCurrency } from "utils/format-value";
+import { TotalWrapper } from "../checkout/styles";
+import CartItem from "./cart-item";
+import { ListOrdersWrapper, TableContent, TableHeader } from "./styled";
 
 interface ListOrdersProps {
   currentKeyOrder: string;
@@ -149,13 +150,28 @@ const ListOrders = ({ onSaveCart, currentKeyOrder, lists, onClose }: ListOrdersP
       .catch((e) => console.log(get(e, "response.data.message")));
   }, []);
 
+  const listPrice = useMemo(() => {
+    return lists?.map((item) => {
+      const price = item.product_price_sell * item.product_quantity;
+
+      return price;
+    });
+  }, [lists]);
+
   return (
     <ListOrdersWrapper>
       <>
-        <div className="container mx-auto ">
+        <div className=" mx-auto w-full">
           <div className="flex ">
             <div className="w-full ">
-              <Flex justify="flex-end">
+              <Flex justify="space-between" align="center">
+                <TotalWrapper className="flex-col text-left justify-end py-1 text-sm ">
+                  <h6 className="bold hide-mobile">Tổng số lượng đơn hàng ({lists.length})</h6>
+                  <h6 className="bold hide-mobile">
+                    Tổng thanh toán: <span>{formatCurrency(sum(listPrice))}</span>
+                  </h6>
+                </TotalWrapper>
+
                 <ButtonSecondary
                   style={{ position: "unset", padding: "4px", fontSize: "13px" }}
                   size="sm"
@@ -167,11 +183,11 @@ const ListOrders = ({ onSaveCart, currentKeyOrder, lists, onClose }: ListOrdersP
 
               <FlexColumn className="w-full" gap={16} gapMb={16}>
                 <TableHeader className="flex mt-10 w-full hide-mobile">
-                  <h3 className="font-semibold text-gray-600 text-xs uppercase w-2/5">Tên sản phẩm</h3>
-                  <h3 className="font-semibold text-gray-600 text-xs uppercase w-1/5">Mã code</h3>
-                  <h3 className="font-semibold text-gray-600 text-xs uppercase w-1/5">Số lượng</h3>
-                  <h3 className="font-semibold text-gray-600 text-xs uppercase w-1/5 ">Giá</h3>
-                  <h3 className="font-semibold  text-gray-600 text-xs uppercase w-1/5">Tổng</h3>
+                  <h3 className="font-semibold ml-24 text-gray-600 text-xs uppercase w-2/5">Tên sản phẩm</h3>
+                  <h3 className="font-semibold ml-24 text-gray-600 text-xs uppercase w-1/5">Mã code</h3>
+                  <h3 className="font-semibold ml-24 text-gray-600 text-xs uppercase w-1/5">Số lượng</h3>
+                  <h3 className="font-semibold ml-24 text-gray-600 text-xs uppercase w-1/5 ">Giá</h3>
+                  <h3 className="font-semibold ml-24 text-gray-600 text-xs uppercase w-1/5">Tổng</h3>
                 </TableHeader>
 
                 <TableContent className="w-full mt-3 flex-col">

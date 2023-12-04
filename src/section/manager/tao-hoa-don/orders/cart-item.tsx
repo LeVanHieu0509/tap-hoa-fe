@@ -51,10 +51,10 @@ const CartItem = ({
       <div className="w-full z-10  hide-mobile">
         <div className="flex items-center">
           <div className="flex w-2/5">
-            <span className="font-bold text-sm mb-2">{`${index}, ${item.product_name}`}</span>
+            <h5 className="font-bold mb-2">{`${index}, ${item.product_name}`}</h5>
           </div>
           <div className="flex w-1/5">
-            <span className="font-bold text-sm mb-2">{` ${item.product_code}`}</span>
+            <h5 className="font-bold mb-2">{` ${item.product_code}`}</h5>
           </div>
 
           <div className="flex  w-1/5 items-center">
@@ -96,10 +96,8 @@ const CartItem = ({
               </svg>
             </ButtonIcon>
           </div>
-          <span className=" w-1/5 font-semibold text-sm">{formatCurrency(item.product_price_sell)}</span>
-          <span className=" w-1/6 font-semibold text-sm">
-            {formatCurrency(item.product_price_sell * item.product_quantity)}
-          </span>
+          <h6 className=" w-1/5 font-semibold ">{formatCurrency(item.product_price_sell)}</h6>
+          <h6 className=" w-1/6 font-semibold ">{formatCurrency(item.product_price_sell * item.product_quantity)}</h6>
           <ButtonIcon color="white" className="" onClick={() => onClose(item.product_code)}>
             <TrashIcon />
           </ButtonIcon>

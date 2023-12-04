@@ -20,7 +20,11 @@ export default function Empty() {
 
 const Wrap = styled.div`
   text-align: center;
-  padding-top: 16px;
+
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+
   img {
     display: inline-block;
   }

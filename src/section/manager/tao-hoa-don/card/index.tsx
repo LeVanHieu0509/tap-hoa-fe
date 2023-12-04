@@ -37,7 +37,7 @@ const CardItem = ({ item, onClick }: CardItemProps) => {
                 </Flex>
 
                 <Flex justify="space-between" className="w-full">
-                  <span className="text-left">Hàng tồn: {item.product_quantity}</span>
+                  <span className="text-left bold">Hàng tồn: {item.product_quantity}</span>
                   <Typography className="text-right">{formatCurrency(item.product_price_sell)}</Typography>
                 </Flex>
               </FlexColumn>

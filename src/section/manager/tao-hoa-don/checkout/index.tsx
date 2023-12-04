@@ -29,12 +29,15 @@ const Checkout = ({ lists, onReview }: CheckoutProps) => {
   return (
     <CheckoutWrapper>
       <div id="summary" className="w-1/4 px-8 py-10 w-full">
-        <h1 className="hide-mobile font-semibold text-2xl border-b pb-8">Tổng hoá đơn</h1>
+        <h1 className="hide-mobile font-semibold text-2xl border-b pb-8">Hoá đơn</h1>
 
         <div className=" mt-8">
           <TotalWrapper className="flex font-semibold justify-between py-6 text-sm uppercase">
-            <span>Tổng đơn hàng ({lists.length})</span>
-            <span>{formatCurrency(sum(listPrice))}</span>
+            <h3 className="bold hide-mobile">Tổng Tiền</h3>
+            <h6 className="bold hide-desktop">
+              Tổng Tiền <span className="hide-desktop"> ({lists.length})</span>:
+            </h6>
+            <h3 className="bold">{formatCurrency(sum(listPrice))}</h3>
           </TotalWrapper>
 
           <Button

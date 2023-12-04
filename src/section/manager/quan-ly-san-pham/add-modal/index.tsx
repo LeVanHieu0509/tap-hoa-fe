@@ -218,8 +218,12 @@ const AddModal = ({ data, setShowModal, categories }: AddModalProps) => {
         product_price_origin: toNumber(modifiedData.product_price_origin),
         product_price_sell: toNumber(modifiedData.product_price_sell),
         product_quantity: toNumber(modifiedData.product_quantity),
-        product_manufacture_date: formatDateRequest(modifiedData.product_manufacture_date),
-        product_expired_date: formatDateRequest(modifiedData.product_expired_date),
+        product_manufacture_date: modifiedData.product_manufacture_date
+          ? formatDateRequest(modifiedData.product_manufacture_date)
+          : null,
+        product_expired_date: modifiedData.product_expired_date
+          ? formatDateRequest(modifiedData.product_expired_date)
+          : null,
       },
       {
         type: "global",
@@ -388,8 +392,6 @@ const AddModal = ({ data, setShowModal, categories }: AddModalProps) => {
           "product_quantity",
           "product_price_sell",
           "product_price_origin",
-          "product_expired_date",
-          "product_manufacture_date",
         ])
       ).some((item) => item == "" || isNil(item)),
     [modifiedData]

@@ -5,8 +5,9 @@ import { device } from "styles/media";
 export const ListProductsWrapper = styled.div``;
 
 export const TaoHoaDonScreenWrapper = styled.div``;
+
 export const DropdownWrapper = styled(Flex)`
-  min-width: 50%;
+  min-width: 30%;
 
   @media ${device.mobile} {
     width: 100%;
