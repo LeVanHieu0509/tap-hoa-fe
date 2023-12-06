@@ -124,6 +124,8 @@ const AddModal = ({ data, setShowModal, categories }: AddModalProps) => {
           placeHolder: "Nhập số lượng sản phẩm...",
           error: null,
           disabled: disabled?.product_quantity,
+          showMaxQuantity: true,
+          onClick: () => setModifiedData((pre) => ({ ...pre, product_quantity: 999999999 })),
         },
       ],
       [
