@@ -185,8 +185,12 @@ const FixModal = ({ setShowModal, data }: FixModalProps) => {
             setModifiedData({
               ...data.data,
               categories: data.data.categories.id.toString(),
-              product_expired_date: formatValue(data.data.product_expired_date, "date"),
-              product_manufacture_date: formatValue(data.data.product_manufacture_date, "date"),
+              product_expired_date: data.data.product_expired_date
+                ? formatValue(data.data.product_expired_date, "date")
+                : null,
+              product_manufacture_date: data.data.product_manufacture_date
+                ? formatValue(data.data.product_manufacture_date, "date")
+                : null,
             });
           }
         } else {
@@ -216,8 +220,12 @@ const FixModal = ({ setShowModal, data }: FixModalProps) => {
           product_price_origin: toNumber(modifiedData.product_price_origin),
           product_price_sell: toNumber(modifiedData.product_price_sell),
           product_quantity: toNumber(modifiedData.product_quantity),
-          product_manufacture_date: formatDateRequest(modifiedData.product_manufacture_date),
-          product_expired_date: formatDateRequest(modifiedData.product_expired_date),
+          product_manufacture_date: modifiedData.product_manufacture_date
+            ? formatDateRequest(modifiedData.product_manufacture_date)
+            : null,
+          product_expired_date: modifiedData.product_expired_date
+            ? formatDateRequest(modifiedData.product_expired_date)
+            : null,
         },
         {
           type: "global",

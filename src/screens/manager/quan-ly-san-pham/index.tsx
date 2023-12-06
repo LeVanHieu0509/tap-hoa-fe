@@ -135,7 +135,7 @@ const QuanLySanPhamScreen = ({}: QuanLySanPhamScreenProps) => {
           product_manufacture_date: item.product_manufacture_date,
           product_expired_date: item.product_expired_date,
           is_gen_product_bar_code: item.is_gen_product_bar_code,
-          categories: item.categories.title,
+          categories: item.categories?.title,
         };
       }),
     [lists]
