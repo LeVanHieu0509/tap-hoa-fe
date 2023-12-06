@@ -10,6 +10,7 @@ import { useAppSelector } from "hooks/use-redux";
 import { rootAction } from "redux/reducers/root-reducer";
 import { useDispatch } from "react-redux";
 import { get } from "lodash";
+import { formatCurrency } from "utils/number";
 
 interface QuanLySanPhamScreenProps {}
 
@@ -48,13 +49,13 @@ const tableConfig: TableConfig[] = [
   {
     key: "product_price_origin",
     label: "Giá vốn",
-    type: "number",
+    type: "string",
     show: true,
   },
   {
     key: "product_price_sell",
     label: "Giá bán",
-    type: "number",
+    type: "string",
     show: true,
   },
   {
@@ -129,8 +130,8 @@ const QuanLySanPhamScreen = ({}: QuanLySanPhamScreenProps) => {
           product_bar_code: item.product_bar_code,
           product_name: item.product_name,
           product_description: item.product_description,
-          product_price_origin: item.product_price_origin,
-          product_price_sell: item.product_price_sell,
+          product_price_origin: formatCurrency(item.product_price_origin),
+          product_price_sell: formatCurrency(item.product_price_sell),
           product_quantity: item.product_quantity,
           product_manufacture_date: item.product_manufacture_date,
           product_expired_date: item.product_expired_date,

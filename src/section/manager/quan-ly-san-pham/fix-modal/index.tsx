@@ -101,6 +101,8 @@ const FixModal = ({ setShowModal, data }: FixModalProps) => {
           type: "input",
           placeHolder: "Nhập số lượng sản phẩm...",
           error: null,
+          showMaxQuantity: true,
+          onClick: () => setModifiedData((pre) => ({ ...pre, product_quantity: 999999999 })),
         },
       ],
       [
@@ -130,7 +132,7 @@ const FixModal = ({ setShowModal, data }: FixModalProps) => {
           name: "product_manufacture_date",
           note: "",
           subType: "input",
-          type: "input",
+          type: "inputDate",
         },
         {
           label: "Ngày hết hạn",
@@ -138,7 +140,7 @@ const FixModal = ({ setShowModal, data }: FixModalProps) => {
           name: "product_expired_date",
           note: "",
           subType: "input",
-          type: "input",
+          type: "inputDate",
         },
       ],
       [

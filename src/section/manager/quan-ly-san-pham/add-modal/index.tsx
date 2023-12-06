@@ -385,15 +385,9 @@ const AddModal = ({ data, setShowModal, categories }: AddModalProps) => {
 
   const disabledBtn = useMemo(
     () =>
-      Object.values(
-        pick(modifiedData, [
-          "categories",
-          "product_name",
-          "product_quantity",
-          "product_price_sell",
-          "product_price_origin",
-        ])
-      ).some((item) => item == "" || isNil(item)),
+      Object.values(pick(modifiedData, ["categories", "product_name", "product_quantity", "product_price_sell"])).some(
+        (item) => item == "" || isNil(item)
+      ),
     [modifiedData]
   );
 

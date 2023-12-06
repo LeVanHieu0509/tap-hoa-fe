@@ -1,9 +1,10 @@
 import { Input, Option, Select, Textarea } from "@material-tailwind/react";
 import DateInput from "components/date-picker/input";
 import DropDown from "components/dropdown-fieldset";
-import { Col, Row } from "styles/common";
+import { Col, IconCircle, Row } from "styles/common";
 import { formatCurrency } from "utils/format-value";
 import { FormContainer, FormWrapper } from "./styled";
+import { WalletIcon } from "@heroicons/react/24/outline";
 
 interface FormProps {
   listInput: any;
@@ -23,7 +24,7 @@ const FormInput = ({ listInput, modifiedData, onChange }: FormProps) => {
                   <div>
                     <Input
                       icon={
-                        col.showScanCode && (
+                        col.showScanCode ? (
                           <svg
                             style={{ cursor: "pointer" }}
                             onClick={col.onClick}
@@ -35,7 +36,9 @@ const FormInput = ({ listInput, modifiedData, onChange }: FormProps) => {
                           >
                             <path d="M1.5 1a.5.5 0 0 0-.5.5v3a.5.5 0 0 1-1 0v-3A1.5 1.5 0 0 1 1.5 0h3a.5.5 0 0 1 0 1h-3zM11 .5a.5.5 0 0 1 .5-.5h3A1.5 1.5 0 0 1 16 1.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 1-.5-.5zM.5 11a.5.5 0 0 1 .5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 1 0 1h-3A1.5 1.5 0 0 1 0 14.5v-3a.5.5 0 0 1 .5-.5zm15 0a.5.5 0 0 1 .5.5v3a1.5 1.5 0 0 1-1.5 1.5h-3a.5.5 0 0 1 0-1h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 1 .5-.5zM3 4.5a.5.5 0 0 1 1 0v7a.5.5 0 0 1-1 0v-7zm2 0a.5.5 0 0 1 1 0v7a.5.5 0 0 1-1 0v-7zm2 0a.5.5 0 0 1 1 0v7a.5.5 0 0 1-1 0v-7zm2 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-7zm3 0a.5.5 0 0 1 1 0v7a.5.5 0 0 1-1 0v-7z" />
                           </svg>
-                        )
+                        ) : col.showMaxQuantity ? (
+                          <WalletIcon className="cursor-pointer" onClick={col.onClick} />
+                        ) : null
                       }
                       disabled={col.disabled}
                       label={col.label}
