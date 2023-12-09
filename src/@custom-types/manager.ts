@@ -194,3 +194,22 @@ export interface GetBillInput {
 }
 
 export interface GetBillOutput extends BillData {}
+
+//Overview
+export interface Top5ListProduct {
+  id: number;
+  product_code: string;
+  product_name: string;
+  product_price_sell: number;
+  product_price_origin: number;
+  product_quantity_order: number;
+  product_total_price: number;
+}
+
+export interface GetOverViewOutput {
+  totalProfit: number;
+  totalRevenue: number;
+  quantityBills: number;
+  quantityProduct: number;
+  listAllProduct: Top5ListProduct[];
+}

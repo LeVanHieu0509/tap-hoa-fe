@@ -304,6 +304,7 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
     product_code,
     product_name,
     product_price_sell,
+    product_price_origin,
     product_quantity,
   }: GetProductOutput) => {
     setSearchText("");
@@ -318,6 +319,7 @@ const TaoHoaDonScreen = ({}: TaoHoaDonScreenProps) => {
         product_code,
         product_name,
         product_price_sell,
+        product_price_origin,
         product_quantity: 1,
       };
 

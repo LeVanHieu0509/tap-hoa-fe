@@ -39,5 +39,5 @@ export function formatCurrency(amount: number) {
     style: "currency",
     currency: "VND",
   });
-  return formatter.format(amount);
+  return amount ? formatter.format(amount) : 0;
 }

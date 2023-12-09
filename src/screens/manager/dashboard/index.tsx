@@ -1,0 +1,48 @@
+import { GetOverViewOutput } from "@custom-types/manager";
+import { getOverview } from "api/manager";
+import { Alert } from "components/alert";
+import useActionApi from "hooks/use-action-api";
+import { useAppSelector } from "hooks/use-redux";
+import { get } from "lodash";
+import { useEffect, useState } from "react";
+import CardStatistics from "section/manager/home/card-statistics";
+import ProductOverview from "section/manager/home/product-overview";
+
+export function DashboardScreen() {
+  const [overviewData, setOverviewData] = useState<GetOverViewOutput>();
+  const { currentUser } = useAppSelector((r) => r.rootReducer);
+
+  const actionGetOverview = useActionApi(getOverview);
+  console.log(overviewData);
+  useEffect(() => {
+    if (currentUser) {
+      actionGetOverview(
+        {
+          data: 1,
+        },
+        {
+          type: "local",
+          name: "",
+        }
+      )
+        .then(({ data }) => {
+          if (data.status == "1") {
+            setOverviewData(data.data);
+          } else {
+            Alert("ERROR", data.message);
+          }
+        })
+        .catch((e) => console.log(get(e, "response.data.message")));
+    }
+  }, [currentUser]);
+
+  return (
+    <div className="mt-12">
+      <CardStatistics data={overviewData} />
+      {/* <ChartOverview /> */}
+      <ProductOverview data={overviewData?.listAllProduct} />
+    </div>
+  );
+}
+
+export default DashboardScreen;

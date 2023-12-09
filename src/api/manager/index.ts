@@ -16,6 +16,7 @@ import {
   GetBillsOutput,
   GetCartsOutput,
   GetDetailCartsInput,
+  GetOverViewOutput,
   GetProductInput,
   GetProductOutput,
   GetProductsOutput,
@@ -113,4 +114,9 @@ export const resetPass = (cancelToken: CancelToken, body: { usr_id: string; usr_
 };
 export const deleteUser = (cancelToken: CancelToken, body: { usr_id: string }) => {
   return request.post<ResponseFormat<any>>("/user/delete-user", body, { cancelToken });
+};
+
+//overview
+export const getOverview = (cancelToken: CancelToken, body) => {
+  return request.post<ResponseFormat<GetOverViewOutput>>("/dashboard/get-overview", body, { cancelToken });
 };
