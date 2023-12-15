@@ -26,7 +26,7 @@ export const listSidenav = [
   {
     title: "Quản lý sản phẩm",
     href: "/manager/quan-ly-san-pham",
-    role: ["ADMINIE", "EMPLOYEE"],
+    role: ["ADMINIE"],
     icon: GlobeAmericasIcon,
   },
 
