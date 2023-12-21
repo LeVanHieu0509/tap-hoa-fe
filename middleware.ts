@@ -2,6 +2,10 @@
 import { NextRequest, NextResponse as res } from "next/server";
 import { parse, stringifyUrl } from "query-string";
 
+export const config = {
+  matcher: ["/backend/:path*"],
+};
+
 const middleware = async (req: NextRequest) => {
   const pathName = req.nextUrl.pathname;
   const query = parse(req.nextUrl.search?.replace(/^\?/, ""));
@@ -15,7 +19,3 @@ const middleware = async (req: NextRequest) => {
 };
 
 export default middleware;
-
-export const config = {
-  matcher: ["/backend/:path*"],
-};

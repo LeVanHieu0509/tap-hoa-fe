@@ -11,6 +11,8 @@ import { rootAction } from "redux/reducers/root-reducer";
 import { useDispatch } from "react-redux";
 import { get } from "lodash";
 import { formatCurrency } from "utils/number";
+import { listSidenav } from "@constants";
+import { useRouter } from "next/router";
 
 interface QuanLySanPhamScreenProps {}
 
@@ -85,11 +87,22 @@ const tableConfig: TableConfig[] = [
 ];
 
 const QuanLySanPhamScreen = ({}: QuanLySanPhamScreenProps) => {
+  const router = useRouter();
+
   const dispatch = useDispatch();
   const [lists, setLists] = useState<GetProductOutput[]>();
   const { reLoading, currentUser } = useAppSelector((r) => r.rootReducer);
 
   const actionGetProducts = useActionApi(getProducts);
+
+  useEffect(() => {
+    if (currentUser) {
+      const roles = listSidenav.find((item) => item.href == router.pathname)?.role;
+      if (!roles.includes(currentUser?.user?.usr_roles)) {
+        router.push("/manager/tao-hoa-don");
+      }
+    }
+  }, [currentUser]);
 
   useEffect(() => {
     if (currentUser || reLoading) {

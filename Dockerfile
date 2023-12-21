@@ -46,7 +46,6 @@ USER 1001
 WORKDIR /opt/app-root/src
 
 ENV NODE_ENV production
-ENV API_ENDPOINT https://tap-hoa-api.levanhieu.click/v1/api
 
 
 #RUN addgroup -g 1001 -S nodejs

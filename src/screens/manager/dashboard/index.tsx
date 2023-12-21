@@ -1,19 +1,31 @@
+import { listSidenav } from "@constants";
 import { GetOverViewOutput } from "@custom-types/manager";
 import { getOverview } from "api/manager";
 import { Alert } from "components/alert";
 import useActionApi from "hooks/use-action-api";
 import { useAppSelector } from "hooks/use-redux";
 import { get } from "lodash";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import CardStatistics from "section/manager/home/card-statistics";
 import ProductOverview from "section/manager/home/product-overview";
 
 export function DashboardScreen() {
+  const router = useRouter();
   const [overviewData, setOverviewData] = useState<GetOverViewOutput>();
   const { currentUser } = useAppSelector((r) => r.rootReducer);
 
   const actionGetOverview = useActionApi(getOverview);
-  console.log(overviewData);
+
+  useEffect(() => {
+    if (currentUser) {
+      const roles = listSidenav.find((item) => item.href == router.pathname)?.role;
+      if (!roles.includes(currentUser?.user?.usr_roles)) {
+        router.push("/manager/tao-hoa-don");
+      }
+    }
+  }, [currentUser]);
+
   useEffect(() => {
     if (currentUser) {
       actionGetOverview(

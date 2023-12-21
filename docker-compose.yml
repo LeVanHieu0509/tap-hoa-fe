@@ -1,13 +1,15 @@
 services:
-  web:
+  tap-hoa-fe:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: nails-fe
+    container_name: tap-hoa-fe
     restart: always
+    networks:
+      - my-networks
     volumes:
       - ./:/app
       - /app/node_modules
       - /app/.next
     ports:
-      - 8888:3000
+      - 9999:3000
