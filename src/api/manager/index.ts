@@ -117,6 +117,6 @@ export const deleteUser = (cancelToken: CancelToken, body: { usr_id: string }) =
 };
 
 //overview
-export const getOverview = (cancelToken: CancelToken, body) => {
+export const getOverview = (cancelToken: CancelToken, body: any) => {
   return request.post<ResponseFormat<GetOverViewOutput>>("/dashboard/get-overview", body, { cancelToken });
 };
