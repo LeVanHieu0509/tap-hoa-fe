@@ -8,11 +8,14 @@ export const config = {
 
 const middleware = async (req: NextRequest) => {
   const pathName = req.nextUrl.pathname;
-  const query = parse(req.nextUrl.search?.replace(/^\?/, ""));
 
   if (pathName.startsWith("/backend")) {
-    const url = `${process.env.API_ENDPOINT}${pathName.replace(/^\/backend/, "")}`;
-    return res.rewrite(stringifyUrl({ url, query }));
+    const redirect = stringifyUrl({
+      url: `${process.env.API_ENDPOINT}${pathName.replace(/^\/backend/, "")}`,
+      query: parse(req.nextUrl.search?.replace("?", "")),
+    });
+
+    return res.rewrite(redirect);
   }
 
   return res.next();

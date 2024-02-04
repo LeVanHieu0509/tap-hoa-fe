@@ -57,6 +57,7 @@ ENV NODE_ENV production
 
 COPY --from=builder /opt/app-root/src/public ./public
 COPY --from=builder /opt/app-root/src/.next ./.next
+COPY --from=builder /opt/app-root/src/.env ./
 COPY --from=builder /opt/app-root/src/node_modules ./node_modules
 COPY --from=builder /opt/app-root/src/package.json ./package.json
 COPY --from=builder /opt/app-root/src/next.config.js ./

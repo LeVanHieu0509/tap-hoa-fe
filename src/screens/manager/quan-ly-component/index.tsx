@@ -5,7 +5,7 @@ import { Card, CardBody, Input } from "@material-tailwind/react";
 import Modal from "components/modal-dom";
 import Table from "components/table";
 import TableMobile from "components/table-mobile";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { rootAction } from "redux/reducers/root-reducer";
 import QuanLyHoaDonModal from "section/manager/quan-ly-hoa-don";
@@ -18,6 +18,10 @@ import { formatValueTable } from "utils/format-value";
 import Actions from "../components/actions";
 import TaoHoaDonModal from "section/manager/tao-hoa-don";
 import SearchInputIcon from "components/icons/source/search-input";
+import dynamic from "next/dynamic";
+import { ButtonIcon, ButtonSecondary } from "styles/buttons";
+import useWindowResize from "hooks/use-window-resize";
+import IconClose from "components/icons/source/close";
 
 interface QuanLyComponent {
   isSelectAll?: boolean;
@@ -30,7 +34,8 @@ interface QuanLyComponent {
     | "quan-ly-thanh-toan"
     | "quan-ly-nhan-vien"
     | "quan-ly-khach-hang"
-    | "tao-hoa-don";
+    | "tao-hoa-don"
+    | "show-scan";
   addBtn?: {
     text?: string;
     onClick?: (value?: any) => void;
@@ -70,6 +75,8 @@ interface QuanLyComponent {
   };
 }
 
+const ScanBarCode = dynamic(() => import("components/scan-barcode"), { ssr: false });
+
 export function QuanLyComponent({
   isSelectAll = false,
   isSearch = false,
@@ -83,6 +90,8 @@ export function QuanLyComponent({
   customBtn,
   downloadBtn,
 }: QuanLyComponent) {
+  const size = useWindowResize();
+  const [showCodeScan, setShowCodeScan] = useState(false);
   const dispatch = useDispatch();
   const [multiSelect, setMultiSelect] = useState([]);
   const [searchText, setSearchText] = useState<string>("");
@@ -217,6 +226,14 @@ export function QuanLyComponent({
     }
   }, [showModal.type]);
 
+  const handleChange = useCallback(
+    (name: string, value: any) => {
+      setSearchText(value);
+      setShowCodeScan(false);
+    },
+    [searchText]
+  );
+
   return (
     <div className="mt-12 mb-8 flex flex-col gap-12">
       <Card>
@@ -225,7 +242,39 @@ export function QuanLyComponent({
             <div className="sm-w-100 w-50">
               {isSearch && (
                 <Input
-                  icon={<SearchInputIcon />}
+                  icon={
+                    size.width <= 876 ? (
+                      <>
+                        {searchText.length ? (
+                          <ButtonIcon onClick={() => setSearchText("")}>
+                            <IconClose />
+                          </ButtonIcon>
+                        ) : (
+                          <svg
+                            style={{ cursor: "pointer" }}
+                            onClick={() => setShowCodeScan(true)}
+                            xmlns="http://www.w3.org/2000/svg"
+                            width={24}
+                            height={24}
+                            fill="currentColor"
+                            viewBox="0 0 16 16"
+                          >
+                            <path d="M1.5 1a.5.5 0 0 0-.5.5v3a.5.5 0 0 1-1 0v-3A1.5 1.5 0 0 1 1.5 0h3a.5.5 0 0 1 0 1h-3zM11 .5a.5.5 0 0 1 .5-.5h3A1.5 1.5 0 0 1 16 1.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 1-.5-.5zM.5 11a.5.5 0 0 1 .5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 1 0 1h-3A1.5 1.5 0 0 1 0 14.5v-3a.5.5 0 0 1 .5-.5zm15 0a.5.5 0 0 1 .5.5v3a1.5 1.5 0 0 1-1.5 1.5h-3a.5.5 0 0 1 0-1h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 1 .5-.5zM3 4.5a.5.5 0 0 1 1 0v7a.5.5 0 0 1-1 0v-7zm2 0a.5.5 0 0 1 1 0v7a.5.5 0 0 1-1 0v-7zm2 0a.5.5 0 0 1 1 0v7a.5.5 0 0 1-1 0v-7zm2 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-7zm3 0a.5.5 0 0 1 1 0v7a.5.5 0 0 1-1 0v-7z" />
+                          </svg>
+                        )}
+                      </>
+                    ) : (
+                      <>
+                        {searchText.length ? (
+                          <ButtonIcon onClick={() => setSearchText("")}>
+                            <IconClose />
+                          </ButtonIcon>
+                        ) : (
+                          <SearchInputIcon />
+                        )}
+                      </>
+                    )
+                  }
                   disabled={false}
                   label={""}
                   crossOrigin
@@ -304,6 +353,23 @@ export function QuanLyComponent({
           sizeMobile="full"
         >
           <ModalContent setShowModal={setShowModal} type={showModal.type} data={showModal.data} />
+        </Modal>
+      )}
+
+      {showCodeScan == true && (
+        <Modal
+          showModal={showCodeScan}
+          onClose={() => setShowCodeScan(false)}
+          title={"Quét mã để tìm kiếm sản phẩm"}
+          size="md"
+          sizeMobile="full"
+          actions={
+            <>
+              <ButtonSecondary onClick={() => setShowCodeScan(false)}>Quay về</ButtonSecondary>
+            </>
+          }
+        >
+          <ScanBarCode onChange={handleChange} />
         </Modal>
       )}
     </div>
