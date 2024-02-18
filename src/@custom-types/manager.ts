@@ -206,10 +206,20 @@ export interface Top5ListProduct {
   product_total_price: number;
 }
 
+interface DashboardItem {
+  totalToday: number;
+  totalMonth: number;
+}
 export interface GetOverViewOutput {
   totalProfit: number;
   totalRevenue: number;
   quantityBills: number;
   quantityProduct: number;
   listAllProduct: Top5ListProduct[];
+  overview: {
+    revenue: DashboardItem;
+    profit: DashboardItem;
+    bills: DashboardItem;
+    product: DashboardItem;
+  };
 }

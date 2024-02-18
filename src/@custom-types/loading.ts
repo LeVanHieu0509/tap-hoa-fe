@@ -7,6 +7,7 @@ export type LoadingName =
   | "loadingSubmitOrder"
   | "loadingCreateCart"
   | "getProductsLoading"
+  | "getOverview"
   | "";
 
 export interface LoadingProps {

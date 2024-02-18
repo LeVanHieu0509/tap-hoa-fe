@@ -34,7 +34,7 @@ export function DashboardScreen() {
         },
         {
           type: "local",
-          name: "",
+          name: "getOverview",
         }
       )
         .then(({ data }) => {
